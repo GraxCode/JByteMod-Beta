@@ -152,6 +152,10 @@ public class JByteMod extends JFrame {
     return file;
   }
 
+  public MyCodeList getCodeList() {
+    return clist;
+  }
+
   public void setCodeList(MyCodeList list) {
     this.clist = list;
   }

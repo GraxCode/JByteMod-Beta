@@ -323,4 +323,8 @@ public abstract class AbstractInsnNode {
         }
         return this;
     }
+
+    public void setOpcode(int opcodeIndex) {
+      this.opcode = opcodeIndex;
+    }
 }
