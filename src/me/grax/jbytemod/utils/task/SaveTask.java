@@ -33,14 +33,20 @@ public class SaveTask extends SwingWorker<Void, Integer> {
     Map<String, ClassNode> classes = this.file.getClasses();
     Map<String, byte[]> outputBytes = this.file.getOutput();
     System.out.println("Writing..");
+    publish(0);
+    double size = classes.keySet().size();
+    double i = 0;
     for (String s : classes.keySet()) {
       ClassNode node = classes.get(s);
       ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
       node.accept(writer);
       outputBytes.put(s, writer.toByteArray());
+      publish((int) ((i++ / size) * 50d));
     }
+    publish(50);
     System.out.println("Saving..");
     JarUtils.saveAsJar(outputBytes, output.getAbsolutePath());
+    publish(100);
     System.out.println("Done!");
     return null;
   }
@@ -52,8 +58,4 @@ public class SaveTask extends SwingWorker<Void, Integer> {
     super.process(chunks);
   }
 
-  @Override
-  protected void done() {
-    jbm.refreshTree();
-  }
 }

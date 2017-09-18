@@ -132,7 +132,6 @@ public class JByteMod extends JFrame {
   public void saveFile(File output) {
     try {
       new SaveTask(this, output, file).execute();
-      
     } catch (Throwable t) {
       new ErrorDisplay(t);
     }
