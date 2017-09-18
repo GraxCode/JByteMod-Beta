@@ -1,0 +1,129 @@
+package me.grax.jbytemod.ui;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
+
+import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.JarFile;
+import me.grax.jbytemod.utils.gui.CellRenderer;
+import me.grax.jbytemod.utils.tree.SortedTreeNode;
+
+public class ClassTree extends JTree {
+
+  public ClassTree(JByteMod jam) {
+    this.setRootVisible(false);
+    this.setShowsRootHandles(true);
+    this.setCellRenderer(new CellRenderer());
+    this.addTreeSelectionListener(new TreeSelectionListener() {
+      public void valueChanged(TreeSelectionEvent e) {
+        SortedTreeNode node = (SortedTreeNode) ClassTree.this.getLastSelectedPathComponent();
+        if (node == null)
+          return;
+        if (node.getCn() != null && node.getMn() != null) {
+          jam.selectMethod(node.getCn(), node.getMn());
+        } else if (node.getCn() != null) {
+          jam.selectClass(node.getCn());
+        } else {
+          ClassTree.this.clearSelection();
+          if (node.isLeaf()) {
+            return;
+          }
+          if (ClassTree.this.isExpanded(e.getPath())) {
+            ClassTree.this.collapsePath(e.getPath());
+          } else {
+            ClassTree.this.expandPath(e.getPath());
+          }
+        }
+      }
+    });
+    this.setModel(new DefaultTreeModel(new SortedTreeNode("", null, null)));
+    //TODO Transfer Handler
+  }
+
+  public void refreshTree(JarFile jar) {
+    DefaultTreeModel tm = (DefaultTreeModel) this.getModel();
+    SortedTreeNode root = (SortedTreeNode) tm.getRoot();
+    root.removeAllChildren();
+    tm.reload();
+
+    for (ClassNode c : jar.getClasses().values()) {
+      for (MethodNode m : c.methods) {
+        String name = c.name + ".class/" + m.name;
+        if (name.isEmpty())
+          continue;
+        if (!name.contains("/")) {
+          root.add(new SortedTreeNode(name, c, m));
+        } else {
+          String[] names = name.split("/");
+          SortedTreeNode node = root;
+          int i = 1;
+          for (String n : names) {
+            SortedTreeNode newnode = new SortedTreeNode(n, i >= names.length - 1 ? c : null, null);
+            if (i == names.length) {
+              newnode.setMn(m);
+              node.add(newnode);
+              tm.getChildCount(node);
+            } else {
+              SortedTreeNode extnode = addUniqueNode(tm, node, newnode);
+              if (extnode != null) {
+                node = extnode;
+              } else {
+                node = newnode;
+              }
+            }
+            i++;
+          }
+        }
+      }
+    }
+    sort(tm, root);
+    tm.reload();
+    this.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent me) {
+        if (SwingUtilities.isRightMouseButton(me)) {
+          TreePath tp = ClassTree.this.getPathForLocation(me.getX(), me.getY());
+          if (tp != null && tp.getParentPath() != null) {
+            ClassTree.this.setSelectionPath(tp);
+            if (ClassTree.this.getLastSelectedPathComponent() == null) {
+              return;
+            }
+            MethodNode mn = ((SortedTreeNode) ClassTree.this.getLastSelectedPathComponent()).getMn();
+            ClassNode cn = ((SortedTreeNode) ClassTree.this.getLastSelectedPathComponent()).getCn();
+            //TODO listener
+          }
+        }
+      }
+    });
+  }
+
+  private SortedTreeNode addUniqueNode(DefaultTreeModel model, SortedTreeNode node, SortedTreeNode childNode) {
+    for (int i = 0; i < model.getChildCount(node); i++) {
+      Object compUserObj = ((SortedTreeNode) model.getChild(node, i)).getUserObject();
+      if (compUserObj.equals(childNode.getUserObject())) {
+        return (SortedTreeNode) model.getChild(node, i);
+      }
+    }
+    node.add(childNode);
+    return null;
+  }
+
+  private void sort(DefaultTreeModel model, SortedTreeNode node) {
+    if (!node.isLeaf()) {
+      node.sort();
+      for (int i = 0; i < model.getChildCount(node); i++) {
+        SortedTreeNode child = ((SortedTreeNode) model.getChild(node, i));
+        sort(model, child);
+      }
+    }
+  }
+}
