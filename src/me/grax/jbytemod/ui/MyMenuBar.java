@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -17,9 +18,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.res.LanguageRes;
+import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.lists.SearchList;
 
 public class MyMenuBar extends JMenuBar {
@@ -75,6 +80,25 @@ public class MyMenuBar extends JMenuBar {
     });
     search.add(ldc);
     this.add(search);
+    this.add(getSettings());
+  }
+
+  private JMenu getSettings() {
+    JMenu settings = new JMenu("Settings");
+    Options o = jam.getOps();
+    LanguageRes lr = jam.getRes();
+    for(String s : Options.bools) {
+      JCheckBoxMenuItem jmi = new JCheckBoxMenuItem(lr.getResource(s), o.getBool(s));
+      jmi.addActionListener(new ActionListener() {
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          o.setProperty(s, String.valueOf(jmi.isSelected()));
+        }
+      });
+      settings.add(jmi);
+    }
+    return settings;
   }
 
   protected void searchLDC() {

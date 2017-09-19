@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -16,11 +15,11 @@ import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.res.LanguageRes;
+import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.ClassTree;
 import me.grax.jbytemod.ui.MyMenuBar;
 import me.grax.jbytemod.ui.MySplitPane;
@@ -30,7 +29,6 @@ import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
-import me.lpk.util.JarUtils;
 import me.lpk.util.OpUtils;
 
 public class JByteMod extends JFrame {
@@ -38,6 +36,7 @@ public class JByteMod extends JFrame {
   private JPanel contentPane;
 
   private final LanguageRes res = new LanguageRes();
+  private final Options ops = new Options();
 
   private JarFile file;
 
@@ -170,4 +169,13 @@ public class JByteMod extends JFrame {
   public SearchList getSearchList() {
     return slist;
   }
+
+  public Options getOps() {
+    return ops;
+  }
+
+  public LanguageRes getRes() {
+    return res;
+  }
+  
 }

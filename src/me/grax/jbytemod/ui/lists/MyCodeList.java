@@ -36,6 +36,7 @@ public class MyCodeList extends JList<InstrEntry> {
     this.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent e) {
         InstrEntry entry = (InstrEntry) MyCodeList.this.getSelectedValue();
+        if(entry == null) return;
         MethodNode mn = entry.getMethod();
         AbstractInsnNode ain = entry.getInstr();
         if (SwingUtilities.isRightMouseButton(e)) {
