@@ -31,20 +31,28 @@ public class SearchList extends JList<SearchEntry> {
     this.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
   }
 
-
-  public void searchForString(String ldc) {
-    new TaskSearch(jbm, ldc).execute();
+  public void searchForString(String ldc, boolean exact, boolean cs) {
+    new TaskSearch(jbm, ldc, exact, cs).execute();
   }
+
   class TaskSearch extends SwingWorker<Void, Integer> {
 
     private PageEndPanel jpb;
     private JByteMod jbm;
     private String ldc;
+    private boolean exact;
+    private boolean caseSens;
 
-    public TaskSearch(JByteMod jbm, String ldc) {
+    public TaskSearch(JByteMod jbm, String ldc, boolean exact, boolean caseSens) {
       this.jbm = jbm;
       this.jpb = jbm.getPP();
-      this.ldc = ldc;
+      this.exact = exact;
+      this.caseSens = caseSens;
+      if (!caseSens) {
+        this.ldc = ldc.toLowerCase();
+      } else {
+        this.ldc = ldc;
+      }
     }
 
     @Override
@@ -53,12 +61,17 @@ public class SearchList extends JList<SearchEntry> {
       Collection<ClassNode> values = jbm.getFile().getClasses().values();
       double size = values.size();
       double i = 0;
-      for(ClassNode cn : values) {
-        for(MethodNode mn : cn.methods) {
-          for(AbstractInsnNode ain : mn.instructions) {
-            if(ain.getType() == AbstractInsnNode.LDC_INSN) {
+      boolean exact = this.exact;
+      for (ClassNode cn : values) {
+        for (MethodNode mn : cn.methods) {
+          for (AbstractInsnNode ain : mn.instructions) {
+            if (ain.getType() == AbstractInsnNode.LDC_INSN) {
               LdcInsnNode lin = (LdcInsnNode) ain;
-              if(lin.cst.equals(ldc)) {
+              String cst = lin.cst.toString();
+              if (!caseSens) {
+                cst = cst.toLowerCase();
+              }
+              if (exact ? cst.equals(ldc) : cst.contains(ldc)) {
                 model.addElement(new SearchEntry(cn, mn, lin.cst.toString()));
               }
             }
@@ -76,11 +89,11 @@ public class SearchList extends JList<SearchEntry> {
       jpb.setValue(i);
       super.process(chunks);
     }
-    
+
     @Override
     protected void done() {
       System.out.println("Search finished!");
-//      jbm.refreshTree();
+      //      jbm.refreshTree();
     }
   }
 }
