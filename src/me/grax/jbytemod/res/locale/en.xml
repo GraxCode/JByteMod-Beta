@@ -1,4 +1,5 @@
 <resources>
     <string name="exit_warn">Do you really want to exit? All unsaved changes will be lost.</string>
     <string name="is_sure">Are you sure?</string>
+    <string name="sort_methods">Sort Methods</string>
 </resources>
