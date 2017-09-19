@@ -50,7 +50,6 @@ public class SearchList extends JList<SearchEntry> {
     @Override
     protected Void doInBackground() throws Exception {
       DefaultListModel<SearchEntry> model = new DefaultListModel<>();
-      SearchList.this.setModel(model);
       Collection<ClassNode> values = jbm.getFile().getClasses().values();
       double size = values.size();
       double i = 0;
@@ -67,6 +66,7 @@ public class SearchList extends JList<SearchEntry> {
         }
         publish(Math.min((int) (i++ / size * 100d) + 1, 100));
       }
+      SearchList.this.setModel(model);
       return null;
     }
 
