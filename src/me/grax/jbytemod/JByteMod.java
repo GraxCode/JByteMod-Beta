@@ -170,6 +170,10 @@ public class JByteMod extends JFrame {
     return slist;
   }
 
+  public ClassTree getJarTree() {
+    return jarTree;
+  }
+
   public Options getOps() {
     return ops;
   }

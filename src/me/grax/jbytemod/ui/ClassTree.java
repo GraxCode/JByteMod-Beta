@@ -20,7 +20,10 @@ import me.grax.jbytemod.utils.tree.SortedTreeNode;
 
 public class ClassTree extends JTree {
 
+  private JByteMod jbm;
+
   public ClassTree(JByteMod jam) {
+    this.jbm = jam;
     this.setRootVisible(false);
     this.setShowsRootHandles(true);
     this.setCellRenderer(new CellRenderer());
@@ -51,6 +54,7 @@ public class ClassTree extends JTree {
   }
 
   public void refreshTree(JarFile jar) {
+    
     DefaultTreeModel tm = (DefaultTreeModel) this.getModel();
     SortedTreeNode root = (SortedTreeNode) tm.getRoot();
     root.removeAllChildren();
@@ -86,8 +90,10 @@ public class ClassTree extends JTree {
         }
       }
     }
-    sort(tm, root);
+    boolean sort = jbm.getOps().getBool("sort_methods");
+    sort(tm, root, sort);
     tm.reload();
+    
     this.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent me) {
         if (SwingUtilities.isRightMouseButton(me)) {
@@ -117,12 +123,12 @@ public class ClassTree extends JTree {
     return null;
   }
 
-  private void sort(DefaultTreeModel model, SortedTreeNode node) {
-    if (!node.isLeaf()) {
+  private void sort(DefaultTreeModel model, SortedTreeNode node, boolean sm) {
+    if (!node.isLeaf() && (sm ? true : (!node.getUserObject().toString().endsWith(".class")))) {
       node.sort();
       for (int i = 0; i < model.getChildCount(node); i++) {
         SortedTreeNode child = ((SortedTreeNode) model.getChild(node, i));
-        sort(model, child);
+        sort(model, child, sm);
       }
     }
   }

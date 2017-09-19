@@ -80,6 +80,28 @@ public class MyMenuBar extends JMenuBar {
     });
     search.add(ldc);
     this.add(search);
+    JMenu utils = new JMenu("Utils");
+    JMenuItem accman = new JMenuItem("Access Helper");
+    accman.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        new JAccessHelper().setVisible(true);
+      }
+    });
+    utils.add(accman);
+    this.add(utils);
+    JMenu tree = new JMenu("Tree");
+    utils.add(tree);
+    JMenuItem rltree = new JMenuItem("Reload Tree");
+    rltree.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        jam.getJarTree().refreshTree(jam.getFile());
+      }
+    });
+    tree.add(rltree);
     this.add(getSettings());
   }
 
