@@ -18,9 +18,11 @@ import javax.swing.border.LineBorder;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import me.grax.jbytemod.decompiler.DecompileThread;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.ClassTree;
+import me.grax.jbytemod.ui.DecompilerPanel;
 import me.grax.jbytemod.ui.MyMenuBar;
 import me.grax.jbytemod.ui.MySplitPane;
 import me.grax.jbytemod.ui.PageEndPanel;
@@ -47,6 +49,8 @@ public class JByteMod extends JFrame {
   private PageEndPanel pp;
 
   private SearchList slist;
+
+  private DecompilerPanel dp;
 
   public static JByteMod instance;
 
@@ -141,6 +145,11 @@ public class JByteMod extends JFrame {
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);
     }
+    if(ops.getBool("decompile")) {
+    new DecompileThread(this, cn, dp).start();
+    } else {
+      dp.setText("");
+    }
   }
 
   public void selectClass(ClassNode cn) {
@@ -180,6 +189,10 @@ public class JByteMod extends JFrame {
 
   public LanguageRes getRes() {
     return res;
+  }
+
+  public void setDP(DecompilerPanel dp) {
+    this.dp = dp;
   }
   
 }
