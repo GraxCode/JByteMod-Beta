@@ -62,7 +62,6 @@ public class JarFile {
       publish(50);
       JarFile.this.output = JarUtils.loadNonClassEntries(input);
       publish(90);
-      jbm.refreshTree();
       publish(100);
       return null;
     }

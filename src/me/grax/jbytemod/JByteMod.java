@@ -124,7 +124,7 @@ public class JByteMod extends JFrame {
         new ErrorDisplay(e);
       }
     } else {
-      new ErrorDisplay(new UnsupportedOperationException("Other files than .jar are not supported yet, please select a java archive."));
+      new ErrorDisplay(new UnsupportedOperationException(res.getResource("jar_warn")));
     }
   }
 
@@ -156,6 +156,7 @@ public class JByteMod extends JFrame {
   }
 
   public void selectClass(ClassNode cn) {
+    clist.loadFields(cn);
   }
 
   public JarFile getFile() {
@@ -199,11 +200,13 @@ public class JByteMod extends JFrame {
   }
 
   public void treeSelection(ClassNode cn, MethodNode mn) {
-    //selection may take some time
-    new Thread(() -> {
-      DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
-      this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
-    }).start();
+    if (ops.getBool("tree_search_sel")) {
+      //selection may take some time
+      new Thread(() -> {
+        DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
+        this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
+      }).start();
+    }
   }
 
   private void selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {

@@ -20,7 +20,7 @@ public class MyTabbedPane extends JTabbedPane {
     JLabel editor = new JLabel("Editor");
     MyCodeEditor list = new MyCodeEditor(jam, editor);
     jam.setCodeList(list.getEditor());
-    this.addTab("Bytecode", this.withBorder(editor, list));
+    this.addTab("Code", this.withBorder(editor, list));
     SearchList searchList = new SearchList(jam);
     jam.setSearchlist(searchList);
     JLabel search = new JLabel("Search Results");

@@ -1,8 +1,13 @@
 package me.grax.jbytemod.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
@@ -15,6 +20,8 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarFile;
+import me.grax.jbytemod.utils.MethodUtils;
+import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.gui.CellRenderer;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
 
@@ -105,7 +112,38 @@ public class ClassTree extends JTree {
             }
             MethodNode mn = ((SortedTreeNode) ClassTree.this.getLastSelectedPathComponent()).getMn();
             ClassNode cn = ((SortedTreeNode) ClassTree.this.getLastSelectedPathComponent()).getCn();
-            //TODO listener
+            if (mn != null) {
+              JPopupMenu menu = new JPopupMenu();
+              JMenuItem edit = new JMenuItem("Edit");
+              edit.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  EditDialogue.createMethodDialogue(mn);
+                }
+              });
+              menu.add(edit);
+              JMenuItem clear = new JMenuItem("Clear");
+              clear.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, "Are you sure you want to clear that method?", "Confirm",
+                      JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    MethodUtils.clear(mn);
+                    jbm.selectMethod(cn, mn);
+                  }
+                }
+              });
+              menu.add(clear);
+              menu.show(ClassTree.this, me.getX(), me.getY());
+            } else if (cn != null) {
+              JPopupMenu menu = new JPopupMenu();
+              JMenuItem edit = new JMenuItem("Edit");
+              edit.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  EditDialogue.createClassDialogue(cn);
+                }
+              });
+              menu.add(edit);
+              menu.show(ClassTree.this, me.getX(), me.getY());
+            }
           }
         }
       }
