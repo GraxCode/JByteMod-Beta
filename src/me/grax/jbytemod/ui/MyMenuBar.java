@@ -10,22 +10,28 @@ import java.io.File;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.commons.io.IOUtils;
+
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.lists.SearchList;
+import me.grax.jbytemod.utils.ErrorDisplay;
 
 public class MyMenuBar extends JMenuBar {
 
@@ -49,7 +55,7 @@ public class MyMenuBar extends JMenuBar {
     });
     save.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if(lastFile != null) {
+        if (lastFile != null) {
           jam.saveFile(lastFile);
         } else {
           openSaveDialogue();
@@ -67,44 +73,43 @@ public class MyMenuBar extends JMenuBar {
     file.add(saveas);
     file.add(load);
     this.add(file);
-    
-    
+
     JMenu search = new JMenu("Search");
     JMenuItem ldc = new JMenuItem("Search LDC");
     ldc.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         searchLDC();
       }
     });
-    
+
     search.add(ldc);
     JMenuItem field = new JMenuItem("Search FieldInsnNode");
     field.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         searchField();
       }
     });
-    
+
     search.add(field);
     JMenuItem method = new JMenuItem("Search MethodInsnNode");
     method.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         searchMethod();
       }
     });
-    
+
     search.add(method);
     this.add(search);
     JMenu utils = new JMenu("Utils");
     JMenuItem accman = new JMenuItem("Access Helper");
     accman.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         new JAccessHelper().setVisible(true);
@@ -116,7 +121,7 @@ public class MyMenuBar extends JMenuBar {
     utils.add(tree);
     JMenuItem rltree = new JMenuItem("Reload Tree");
     rltree.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         jam.getJarTree().refreshTree(jam.getFile());
@@ -124,16 +129,36 @@ public class MyMenuBar extends JMenuBar {
     });
     tree.add(rltree);
     this.add(getSettings());
+    JMenu help = new JMenu("Help");
+    JMenuItem licenses = new JMenuItem("Licenses");
+    licenses.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          JFrame jf = new JFrame();
+          jf.setBounds(100, 100, 700, 800);
+          jf.add(new JScrollPane(new JTextArea(IOUtils.toString(MyMenuBar.class.getResourceAsStream("/resources/LICENSES")))));
+          jf.setTitle("Licenses");
+          jf.setVisible(true);
+        } catch (Exception ex) {
+          new ErrorDisplay(ex);
+        }
+      }
+    });
+
+    help.add(licenses);
+    this.add(help);
   }
 
   private JMenu getSettings() {
     JMenu settings = new JMenu("Settings");
     Options o = jam.getOps();
     LanguageRes lr = jam.getRes();
-    for(String s : Options.bools) {
+    for (String s : Options.bools) {
       JCheckBoxMenuItem jmi = new JCheckBoxMenuItem(lr.getResource(s), o.getBool(s));
       jmi.addActionListener(new ActionListener() {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
           o.setProperty(s, String.valueOf(jmi.isSelected()));
@@ -158,12 +183,10 @@ public class MyMenuBar extends JMenuBar {
     JCheckBox snstv = new JCheckBox("Case sensitive");
     labels.add(exact);
     input.add(snstv);
-    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", 2) == JOptionPane.OK_OPTION
-        && !cst.getText().isEmpty()) {
+    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", 2) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
       jam.getSearchList().searchForString(cst.getText(), exact.isSelected(), snstv.isSelected());
-    }    
+    }
   }
-
 
   protected void searchField() {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));
@@ -214,7 +237,7 @@ public class MyMenuBar extends JMenuBar {
       jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), false);
     }
   }
-  
+
   protected void openSaveDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);
