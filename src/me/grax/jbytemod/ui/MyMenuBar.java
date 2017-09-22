@@ -78,7 +78,28 @@ public class MyMenuBar extends JMenuBar {
         searchLDC();
       }
     });
+    
     search.add(ldc);
+    JMenuItem field = new JMenuItem("Search FieldInsnNode");
+    field.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        searchField();
+      }
+    });
+    
+    search.add(field);
+    JMenuItem method = new JMenuItem("Search MethodInsnNode");
+    method.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        searchMethod();
+      }
+    });
+    
+    search.add(method);
     this.add(search);
     JMenu utils = new JMenu("Utils");
     JMenuItem accman = new JMenuItem("Access Helper");
@@ -143,6 +164,57 @@ public class MyMenuBar extends JMenuBar {
     }    
   }
 
+
+  protected void searchField() {
+    final JPanel panel = new JPanel(new BorderLayout(5, 5));
+    final JPanel input = new JPanel(new GridLayout(0, 1));
+    final JPanel labels = new JPanel(new GridLayout(0, 1));
+    panel.add(labels, "West");
+    panel.add(input, "Center");
+    panel.add(new JLabel("Warning: This could take some time\n on big jars!"), "South");
+    labels.add(new JLabel("Owner:"));
+    JTextField owner = new JTextField();
+    input.add(owner);
+    labels.add(new JLabel("Name:"));
+    JTextField name = new JTextField();
+    input.add(name);
+    labels.add(new JLabel("Desc:"));
+    JTextField desc = new JTextField();
+    input.add(desc);
+    JCheckBox exact = new JCheckBox("Exact");
+    labels.add(exact);
+    input.add(new JPanel());
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", 2) == JOptionPane.OK_OPTION
+        && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
+      jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), true);
+    }
+  }
+
+  protected void searchMethod() {
+    final JPanel panel = new JPanel(new BorderLayout(5, 5));
+    final JPanel input = new JPanel(new GridLayout(0, 1));
+    final JPanel labels = new JPanel(new GridLayout(0, 1));
+    panel.add(labels, "West");
+    panel.add(input, "Center");
+    panel.add(new JLabel("Warning: This could take some time\n on big jars!"), "South");
+    labels.add(new JLabel("Owner:"));
+    JTextField owner = new JTextField();
+    input.add(owner);
+    labels.add(new JLabel("Name:"));
+    JTextField name = new JTextField();
+    input.add(name);
+    labels.add(new JLabel("Desc:"));
+    JTextField desc = new JTextField();
+    input.add(desc);
+    JCheckBox exact = new JCheckBox("Exact");
+    labels.add(exact);
+    input.add(new JPanel());
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", 2) == JOptionPane.OK_OPTION
+        && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
+      jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), false);
+    }
+  }
+  
   protected void openSaveDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);

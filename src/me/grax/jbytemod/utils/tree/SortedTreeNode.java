@@ -8,7 +8,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-
 public class SortedTreeNode extends DefaultMutableTreeNode {
 
   private ClassNode c;
@@ -45,13 +44,17 @@ public class SortedTreeNode extends DefaultMutableTreeNode {
     return new Comparator<DefaultMutableTreeNode>() {
       @Override
       public int compare(DefaultMutableTreeNode o1, DefaultMutableTreeNode o2) {
-        if (o1.isLeaf() && !o2.isLeaf()) {
+        boolean leaf1 = o1.toString().endsWith(".class");
+        boolean leaf2 = o2.toString().endsWith(".class");
+
+        if (leaf1 && !leaf2) {
           return 1;
         }
-        if (!o1.isLeaf() && o2.isLeaf()) {
+        if (!leaf1 && leaf2) {
           return -1;
         }
         return o1.getUserObject().toString().compareTo(o2.getUserObject().toString());
+
       }
     };
   }

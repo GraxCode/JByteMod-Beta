@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -31,6 +33,7 @@ import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
+import me.grax.jbytemod.utils.tree.SortedTreeNode;
 import me.lpk.util.OpUtils;
 
 public class JByteMod extends JFrame {
@@ -88,7 +91,7 @@ public class JByteMod extends JFrame {
       }
     });
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.0.0");
+    this.setTitle("JByteMod 1.0.1");
     this.setJMenuBar(new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -119,10 +122,9 @@ public class JByteMod extends JFrame {
         this.file = new JarFile(this, input);
       } catch (Throwable e) {
         new ErrorDisplay(e);
-        //        System.exit(0);
       }
     } else {
-      new ErrorDisplay(new UnsupportedOperationException("Other files than .jar are not supported yet, please open an apk file"));
+      new ErrorDisplay(new UnsupportedOperationException("Other files than .jar are not supported yet, please select a java archive."));
     }
   }
 
@@ -145,8 +147,9 @@ public class JByteMod extends JFrame {
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);
     }
-    if(ops.getBool("decompile")) {
-    new DecompileThread(this, cn, dp).start();
+    if (ops.getBool("decompile")) {
+      //run async
+      new DecompileThread(this, cn, dp).start();
     } else {
       dp.setText("");
     }
@@ -194,5 +197,28 @@ public class JByteMod extends JFrame {
   public void setDP(DecompilerPanel dp) {
     this.dp = dp;
   }
-  
+
+  public void treeSelection(ClassNode cn, MethodNode mn) {
+    //selection may take some time
+    new Thread(() -> {
+      DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
+      this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
+    }).start();
+  }
+
+  private void selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
+    for (int i = 0; i < tm.getChildCount(node); i++) {
+      SortedTreeNode child = (SortedTreeNode) tm.getChild(node, i);
+      if (child.getMn() != null && child.getMn().equals(mn)) {
+        TreePath tp = new TreePath(tm.getPathToRoot(child));
+        jarTree.setSelectionPath(tp);
+        jarTree.scrollPathToVisible(tp);
+        break;
+      }
+      if (!child.isLeaf()) {
+        selectEntry(mn, tm, child);
+      }
+    }
+  }
+
 }
