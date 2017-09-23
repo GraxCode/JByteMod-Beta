@@ -24,7 +24,7 @@ public class DecompileThread extends Thread {
   private JByteMod jbm;
   private ClassNode cn;
   private DecompilerPanel dp;
-  private static ClassNode last;
+  public static ClassNode last;
   private static String lastOutput;
 
   public DecompileThread(JByteMod jbm, ClassNode cn, DecompilerPanel dp) {

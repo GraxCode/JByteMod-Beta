@@ -113,7 +113,7 @@ public class JByteMod extends JFrame {
   }
 
   /**
-   * Load .dex or .apk file
+   * Load .jar file
    */
   public void loadFile(File input) {
     String ap = input.getAbsolutePath();
