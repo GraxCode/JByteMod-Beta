@@ -148,7 +148,7 @@ public class JByteMod extends JFrame {
       clist.setSelectedIndex(-1);
     }
     if (ops.getBool("decompile")) {
-      //run async
+      //run async thread
       new DecompileThread(this, cn, dp).start();
     } else {
       dp.setText("");
