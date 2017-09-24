@@ -1,78 +1,9 @@
 package me.lpk.util;
 
 import java.util.regex.Matcher;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import me.lpk.mapping.MappedClass;
-
 public class StringUtils {
-	/**
-	 * Given an obfuscated description, finds the new values for class names and
-	 * updates the description.
-	 * 
-	 * @param description
-	 * @param oldNamestoClasses
-	 * @return
-	 */
-	public static String fixDesc(String description, Map<String, MappedClass> oldNamestoClasses) {
-		if (description == null || description.length() == 0 || isPrimitive(description)) {
-			return description;
-		}
-		if (description.contains("L") && description.contains(";")) {
-			if (description.startsWith("(") || (description.startsWith("L") || description.startsWith("[")) && description.endsWith(";")) {
-				String regex = "(?<=[L])[^;]*(?=;)";
-				Pattern p = Pattern.compile(regex);
-				Matcher m = p.matcher(Pattern.quote(description));
-				for (int i = 0; i < m.groupCount(); i++) {
-					String found = m.group(i);
-					description = description.replace(found, fixDesc(found, oldNamestoClasses));
-				}
-				return description;
-			}
-		} else {
-			MappedClass mc = oldNamestoClasses.get(description);
-			if (mc == null) {
-				return description;
-			}
-			return mc.getNewName();
-		}
-		return description;
-	}
-
-	/**
-	 * Unfixes descriptions. (Lknown/class/Name; --> Lobfu;)
-	 * 
-	 * @param description
-	 * @param oldNamestoClasses
-	 * @param newNamesToClasses
-	 * @return
-	 */
-	public static String fixDescReverse(String description, Map<String, MappedClass> oldNamestoClasses, Map<String, MappedClass> newNamesToClasses) {
-		if (description == null || description.length() == 0 || isPrimitive(description)) {
-			return description;
-		}
-		if (description.contains("L") && description.contains(";")) {
-			if (description.startsWith("(") || (description.startsWith("L") || description.startsWith("[")) && description.endsWith(";")) {
-				List<String> findClasses = RegexUtils.matchDescriptionClasses(description);
-				for (String found : findClasses) {
-					MappedClass mc = newNamesToClasses.get(found);
-					if (mc != null) {
-						description = description.replace(found, mc.getOriginalName());
-					}
-				}
-				return description;
-			}
-		} else {
-			MappedClass mc = oldNamestoClasses.get(description);
-			if (mc == null) {
-				return description;
-			}
-			return mc.getNewName();
-		}
-		return description;
-	}
 
 	/**
 	 * Replaces strings with old references with ones with updated references.
@@ -126,26 +57,6 @@ public class StringUtils {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Gets a MappedClass in renamemap from a class's description
-	 * 
-	 * @param renamemap
-	 * @param desc
-	 * @return
-	 */
-	public static MappedClass getMappedFromDesc(Map<String, MappedClass> renamemap, String desc) {
-		if (desc.length() <= 3) {
-			return null;
-		}
-		int beginIndex = desc.indexOf("L");
-		int endIndex = desc.indexOf(";");
-		if (beginIndex == -1 || endIndex == -1) {
-			return null;
-		}
-		String owner = desc.substring(beginIndex + 1, endIndex);
-		return renamemap.get(owner);
 	}
 
 	/**

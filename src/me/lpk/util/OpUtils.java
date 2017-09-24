@@ -9,7 +9,6 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.IincInsnNode;
-import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -18,8 +17,6 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
-import me.lpk.log.Logger;
 
 public class OpUtils implements org.objectweb.asm.Opcodes {
   private static Map<Integer, String> opcodes = new HashMap<Integer, String>(getCodes());
@@ -583,12 +580,6 @@ public class OpUtils implements org.objectweb.asm.Opcodes {
       return s + " " + getIndex(ln);
     }
     return s;
-  }
-
-  public static void print(InsnList instructions) {
-    for (AbstractInsnNode ain : instructions.toArray()) {
-      Logger.logLow(toString(ain));
-    }
   }
 
   public static HashMap<AbstractInsnNode, Integer> labelCache = new HashMap<>();
