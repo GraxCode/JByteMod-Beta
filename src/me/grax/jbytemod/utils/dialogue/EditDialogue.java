@@ -81,7 +81,7 @@ public class EditDialogue {
 		LinkedHashMap<String, String> fieldNames = new LinkedHashMap<>();
 		if (ain.getOpcode() != -1) {
 			fieldNames.put("opcode", "");
-			labels.add(new JLabel("Insert Opcode: "));
+			labels.add(new JLabel("Opcode: "));
 			String[] arr = opc.get(ain.getClass().getSimpleName());
 			if (arr == null) {
 				error(ain.getClass().getSimpleName() + "s aren\'t supported yet");
@@ -94,12 +94,12 @@ public class EditDialogue {
 		for (Field f : ain.getClass().getDeclaredFields()) {
 			if (f.getGenericType().getTypeName().equals("java.lang.String")) {
 				fieldNames.put(f.getName(), "String");
-				labels.add(new JLabel("Insert " + toUp(f.getName()) + ": "));
+				labels.add(new JLabel(toUp(f.getName()) + ": "));
 				final JTextField value = new JTextField((String) f.get(ain));
 				input.add(value);
 			} else if (f.getGenericType().getTypeName().equals("int")) {
 				fieldNames.put(f.getName(), "int");
-				labels.add(new JLabel("Insert " + toUp(f.getName()) + ": "));
+				labels.add(new JLabel(toUp(f.getName()) + ": "));
 				NumberFormat format = NumberFormat.getInstance();
 				format.setGroupingUsed(false);
 				NumberFormatter formatter = new NumberFormatter(format);
@@ -120,7 +120,7 @@ public class EditDialogue {
 					}
 				}
 				fieldNames.put(f.getName(), "label");
-				labels.add(new JLabel("Insert " + toUp(f.getName()) + ": "));
+				labels.add(new JLabel(toUp(f.getName()) + ": "));
 				JComboBox<LabelNode> jcb = new JComboBox<>(ln.toArray(new LabelNode[0]));
 				jcb.setSelectedItem(f.get(ain));
 				input.add(jcb);
@@ -131,7 +131,7 @@ public class EditDialogue {
 			if (ain.getClass().getSimpleName().equals(LdcInsnNode.class.getSimpleName())) {
 				LdcInsnNode ldc = (LdcInsnNode) ain;
 				fieldNames.put("ldctype", "");
-				labels.add(new JLabel("Insert Ldc Type: "));
+				labels.add(new JLabel("Ldc Type: "));
 				JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long" });
 				System.out.println("LDC: " + ldc.cst.getClass().getName());
 				if (ldc.cst instanceof String) {
@@ -149,7 +149,7 @@ public class EditDialogue {
 				}
 				input.add(ldctype);
 				fieldNames.put("ldcvalue", "");
-				labels.add(new JLabel("Insert Ldc Value: "));
+				labels.add(new JLabel("Ldc Value: "));
 				input.add(new JTextField(ldc.cst.toString()));
 			}
 		}

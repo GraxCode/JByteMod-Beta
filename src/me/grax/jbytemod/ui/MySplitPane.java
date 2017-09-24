@@ -23,7 +23,6 @@ public class MySplitPane extends JSplitPane {
     leftSide.setLayout(new BorderLayout(0, 0));
     leftSide.add(new JLabel(" Java Archive"), BorderLayout.NORTH);
     leftSide.add(new JScrollPane(dexTree), BorderLayout.CENTER);
-    setupTabs();
     JPanel border = new JPanel();
     border.setBorder(new LineBorder(Color.GRAY));
     border.setLayout(new GridLayout());
@@ -31,9 +30,5 @@ public class MySplitPane extends JSplitPane {
     this.setRightComponent(rightSide);
     this.setDividerLocation(150);
     this.setContinuousLayout(true);
-  }
-
-  private void setupTabs() {
-    
   }
 }

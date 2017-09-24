@@ -12,8 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.fife.ui.rtextarea.RTextScrollPane;
+import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.decompiler.DecompileThread;
@@ -22,6 +25,7 @@ import me.grax.jbytemod.ui.lists.TCBList;
 
 public class MyTabbedPane extends JTabbedPane {
   private JByteMod jbm;
+  private DecompilerPanel dp;
 
   public MyTabbedPane(JByteMod jam) {
     this.jbm = jam;
@@ -33,14 +37,32 @@ public class MyTabbedPane extends JTabbedPane {
     jam.setTCBList(tcb);
     this.addTab("TCB", this.withBorder(editor, tcb));
     DecompilerPanel dp = new DecompilerPanel();
+    this.dp = dp;
     jam.setDP(dp);
     this.addTab("Decompiler", this.withBorder(new JPanel(), new JLabel("Procyon Decompiler"), dp));
     SearchList searchList = new SearchList(jam);
     jam.setSearchlist(searchList);
     JLabel search = new JLabel("Search Results");
     this.addTab("Search", this.withBorder(search, searchList));
+    ChangeListener changeListener = new ChangeListener() {
+      public void stateChanged(ChangeEvent changeEvent) {
+        JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
+        if(sourceTabbedPane.getTitleAt(index).equals("Decompiler")) {
+          new DecompileThread(jam, jam.getCurrentNode(), dp).start();
+        }
+      }
+    };
+    this.addChangeListener(changeListener);
+    jam.setTabbedPane(this);
   }
 
+  public void selectClass(ClassNode cn) {
+    int index = this.getSelectedIndex();
+    if(this.getTitleAt(index).equals("Decompiler")) {
+      new DecompileThread(jbm, cn, dp).start();
+    }
+  }
   private JPanel withBorder(JLabel label, Component c) {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout(0, 0));

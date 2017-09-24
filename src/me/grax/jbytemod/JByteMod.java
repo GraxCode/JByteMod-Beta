@@ -27,6 +27,7 @@ import me.grax.jbytemod.ui.ClassTree;
 import me.grax.jbytemod.ui.DecompilerPanel;
 import me.grax.jbytemod.ui.MyMenuBar;
 import me.grax.jbytemod.ui.MySplitPane;
+import me.grax.jbytemod.ui.MyTabbedPane;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
@@ -57,6 +58,10 @@ public class JByteMod extends JFrame {
   private DecompilerPanel dp;
 
   private TCBList tcblist;
+
+  private ClassNode currentNode;
+
+  private MyTabbedPane tabbedPane;
 
   public static JByteMod instance;
 
@@ -146,19 +151,20 @@ public class JByteMod extends JFrame {
   }
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
+    this.currentNode = cn;
     OpUtils.clearLabelCache();
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);
     }
     tcblist.addNodes(cn, mn);
-    if (ops.getBool("decompile")) {
-      //run async thread
-      new DecompileThread(this, cn, dp).start();
-    } else {
-      dp.setText("");
-    }
+    dp.setText("");
+    tabbedPane.selectClass(cn);
   }
-
+  public void selectClass(ClassNode cn) {
+    this.currentNode = cn;
+    clist.loadFields(cn);
+    tabbedPane.selectClass(cn);
+  }
   public void treeSelection(ClassNode cn, MethodNode mn) {
     if (ops.getBool("tree_search_sel")) {
       //selection may take some time
@@ -184,8 +190,8 @@ public class JByteMod extends JFrame {
     }
   }
 
-  public void selectClass(ClassNode cn) {
-    clist.loadFields(cn);
+  public ClassNode getCurrentNode() {
+    return currentNode;
   }
 
   public JarFile getFile() {
@@ -230,5 +236,9 @@ public class JByteMod extends JFrame {
 
   public void setTCBList(TCBList tcb) {
     this.tcblist = tcb;
+  }
+
+  public void setTabbedPane(MyTabbedPane tp) {
+    this.tabbedPane = tp;
   }
 }

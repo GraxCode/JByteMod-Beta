@@ -29,7 +29,10 @@ public class AdressList extends JList<String> {
     DefaultListModel<String> lm = new DefaultListModel<String>();
     DefaultListModel<InstrEntry> clm = (DefaultListModel<InstrEntry>) cl.getModel();
     for (int i = 0; i < clm.getSize(); i++) {
-      String hex = Integer.toHexString(i);
+//      if(i > 0xffff) {
+//        i = 0xffff;
+//      }
+      String hex = String.valueOf(i);
       lm.addElement("0000".substring(hex.length()) + hex);
     }
     this.setModel(lm);

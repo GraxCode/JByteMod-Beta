@@ -203,6 +203,7 @@ public class SearchList extends JList<SearchEntry> {
 
     @Override
     protected void done() {
+      jpb.setValue(100);
       System.out.println("Search finished!");
     }
   }
