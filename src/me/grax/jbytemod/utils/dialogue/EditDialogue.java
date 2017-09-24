@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -27,6 +28,7 @@ import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -65,7 +67,7 @@ public class EditDialogue {
 		opc.put(IntInsnNode.class.getSimpleName(), new String[] { "bipush", "sipush", "newarray" });
 		opc.put(InvokeDynamicInsnNode.class.getSimpleName(), new String[] { "invokedynamic" });
 		opc.put(TableSwitchInsnNode.class.getSimpleName(), new String[] { "tableswitch" });
-
+		opc.put(LookupSwitchInsnNode.class.getSimpleName(), new String[] { "lookupswitch" });
 	}
 
 	/**

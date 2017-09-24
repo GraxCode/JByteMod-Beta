@@ -9,3 +9,5 @@ Libraries Used:
 - Apache Commons IO
 - Objectweb ASM
 - RSyntaxTextArea
+- SkidSuite
+- Procyon Decompiler

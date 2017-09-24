@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
@@ -42,92 +43,121 @@ public class MyCodeList extends JList<InstrEntry> {
         InstrEntry entry = (InstrEntry) MyCodeList.this.getSelectedValue();
         if (entry == null)
           return;
+        List<InstrEntry> selected = MyCodeList.this.getSelectedValuesList();
         MethodNode mn = entry.getMethod();
         if (SwingUtilities.isRightMouseButton(e)) {
           AbstractInsnNode ain = entry.getInstr();
           if (mn != null) {
-            JPopupMenu menu = new JPopupMenu();
-            JMenuItem insert = new JMenuItem("Insert after");
-            insert.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                try {
-                  EditDialogue.createInsertInsnDialog(mn, ain);
-                } catch (Exception e1) {
-                  e1.printStackTrace();
-                }
-              }
-            });
-            menu.add(insert);
-            JMenuItem edit = new JMenuItem("Edit");
-            edit.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                try {
-                  EditDialogue.createEditInsnDialog(mn, ain);
-                } catch (Exception e1) {
-                  e1.printStackTrace();
-                }
-              }
-            });
-            menu.add(edit);
-            JMenuItem duplicate = new JMenuItem("Duplicate");
-            duplicate.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                try {
-                  if (ain instanceof LabelNode) {
-                    mn.instructions.insert(ain, new LabelNode());
-                  } else {
-                    mn.instructions.insert(ain, ain.clone(new HashMap<>()));
+            if (selected.size() > 1) {
+              JPopupMenu menu = new JPopupMenu();
+              JMenuItem remove = new JMenuItem("Remove All");
+              remove.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  for (InstrEntry sel : selected) {
+                    mn.instructions.remove(sel.getInstr());
                   }
                   MyCodeList.this.loadInstructions(mn);
-
-                } catch (Exception e1) {
-                  new ErrorDisplay(e1);
                 }
-              }
-            });
-            menu.add(duplicate);
-            JMenuItem up = new JMenuItem("Move up");
-            up.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                AbstractInsnNode node = ain.getPrevious();
-                mn.instructions.remove(node);
-                mn.instructions.insert(ain, node);
-                MyCodeList.this.loadInstructions(mn);
-              }
-            });
-            menu.add(up);
-            JMenuItem down = new JMenuItem("Move down");
-            down.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                AbstractInsnNode node = ain.getNext();
-                mn.instructions.remove(node);
-                mn.instructions.insertBefore(ain, node);
-                MyCodeList.this.loadInstructions(mn);
-              }
-            });
-            menu.add(down);
-            JMenuItem remove = new JMenuItem("Remove");
-            remove.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                mn.instructions.remove(ain);
-                MyCodeList.this.loadInstructions(mn);
-              }
-            });
-            menu.add(remove);
-            menu.addPopupMenuListener(new PopupMenuListener() {
-              public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
-                MyCodeList.this.setFocusable(true);
-              }
+              });
+              menu.add(remove);
+              menu.addPopupMenuListener(new PopupMenuListener() {
+                public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+                  MyCodeList.this.setFocusable(true);
+                }
 
-              public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
-                MyCodeList.this.setFocusable(true);
-              }
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+                  MyCodeList.this.setFocusable(true);
+                }
 
-              public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
-                MyCodeList.this.setFocusable(false);
-              }
-            });
-            menu.show(jam, (int) jam.getMousePosition().getX(), (int) jam.getMousePosition().getY());
+                public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+                  MyCodeList.this.setFocusable(false);
+                }
+              });
+              menu.show(jam, (int) jam.getMousePosition().getX(), (int) jam.getMousePosition().getY());
+            } else {
+              JPopupMenu menu = new JPopupMenu();
+              JMenuItem insert = new JMenuItem("Insert after");
+              insert.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  try {
+                    EditDialogue.createInsertInsnDialog(mn, ain);
+                  } catch (Exception e1) {
+                    e1.printStackTrace();
+                  }
+                }
+              });
+              menu.add(insert);
+              JMenuItem edit = new JMenuItem("Edit");
+              edit.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  try {
+                    EditDialogue.createEditInsnDialog(mn, ain);
+                  } catch (Exception e1) {
+                    e1.printStackTrace();
+                  }
+                }
+              });
+              menu.add(edit);
+              JMenuItem duplicate = new JMenuItem("Duplicate");
+              duplicate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  try {
+                    if (ain instanceof LabelNode) {
+                      mn.instructions.insert(ain, new LabelNode());
+                    } else {
+                      mn.instructions.insert(ain, ain.clone(new HashMap<>()));
+                    }
+                    MyCodeList.this.loadInstructions(mn);
+
+                  } catch (Exception e1) {
+                    new ErrorDisplay(e1);
+                  }
+                }
+              });
+              menu.add(duplicate);
+              JMenuItem up = new JMenuItem("Move up");
+              up.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  AbstractInsnNode node = ain.getPrevious();
+                  mn.instructions.remove(node);
+                  mn.instructions.insert(ain, node);
+                  MyCodeList.this.loadInstructions(mn);
+                }
+              });
+              menu.add(up);
+              JMenuItem down = new JMenuItem("Move down");
+              down.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  AbstractInsnNode node = ain.getNext();
+                  mn.instructions.remove(node);
+                  mn.instructions.insertBefore(ain, node);
+                  MyCodeList.this.loadInstructions(mn);
+                }
+              });
+              menu.add(down);
+              JMenuItem remove = new JMenuItem("Remove");
+              remove.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  mn.instructions.remove(ain);
+                  MyCodeList.this.loadInstructions(mn);
+                }
+              });
+              menu.add(remove);
+              menu.addPopupMenuListener(new PopupMenuListener() {
+                public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+                  MyCodeList.this.setFocusable(true);
+                }
+
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+                  MyCodeList.this.setFocusable(true);
+                }
+
+                public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+                  MyCodeList.this.setFocusable(false);
+                }
+              });
+              menu.show(jam, (int) jam.getMousePosition().getX(), (int) jam.getMousePosition().getY());
+            }
           } else {
             FieldEntry fle = (FieldEntry) entry;
             JPopupMenu menu = new JPopupMenu();
@@ -142,8 +172,7 @@ public class MyCodeList extends JList<InstrEntry> {
               }
             });
             menu.add(edit);
-            menu.show(jam, (int) jam.getMousePosition().getX(),
-                (int) jam.getMousePosition().getY());
+            menu.show(jam, (int) jam.getMousePosition().getX(), (int) jam.getMousePosition().getY());
           }
         }
       }
