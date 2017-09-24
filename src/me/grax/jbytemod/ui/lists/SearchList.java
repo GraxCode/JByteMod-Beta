@@ -190,6 +190,7 @@ public class SearchList extends JList<SearchEntry> {
         publish(Math.min((int) (i++ / size * 100d) + 1, 100));
       }
       SearchList.this.setModel(model);
+      publish(100);
       return null;
     }
 

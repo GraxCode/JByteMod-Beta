@@ -51,6 +51,9 @@ public class IincInsnNode extends AbstractInsnNode {
      */
     public int incr;
 
+    public IincInsnNode() {
+   	 this.opcode = Opcodes.IINC;
+    }
     /**
      * Constructs a new {@link IincInsnNode}.
      * 

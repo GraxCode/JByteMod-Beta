@@ -38,7 +38,7 @@ import org.objectweb.asm.MethodVisitor;
  * A doubly linked list of {@link AbstractInsnNode} objects. <i>This
  * implementation is not thread safe</i>.
  */
-public class InsnList implements Iterable<AbstractInsnNode> {
+public class InsnList implements Iterable<AbstractInsnNode>{
 
     /**
      * The number of instructions in this list.

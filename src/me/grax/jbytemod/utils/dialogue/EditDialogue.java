@@ -330,7 +330,7 @@ public class EditDialogue {
 				AbstractInsnNode newnode = (AbstractInsnNode) node.getConstructor().newInstance();
 				if (createEditInsnDialog(mn, newnode)) {
 					mn.instructions.insert(ain, newnode);
-		      JByteMod.instance.refreshTree();
+		      JByteMod.instance.getCodeList().loadInstructions(mn);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -32,6 +32,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A node that represents a local variable instruction. A local variable
@@ -64,6 +65,9 @@ public class VarInsnNode extends AbstractInsnNode {
         this.var = var;
     }
 
+ 	public VarInsnNode() {
+		this.opcode = Opcodes.ALOAD;
+	}
     /**
      * Sets the opcode of this instruction.
      * 

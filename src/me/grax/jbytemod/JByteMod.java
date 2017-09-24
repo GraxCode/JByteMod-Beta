@@ -30,6 +30,7 @@ import me.grax.jbytemod.ui.MySplitPane;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
+import me.grax.jbytemod.ui.lists.TCBList;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
@@ -54,6 +55,8 @@ public class JByteMod extends JFrame {
   private SearchList slist;
 
   private DecompilerPanel dp;
+
+  private TCBList tcblist;
 
   public static JByteMod instance;
 
@@ -147,11 +150,37 @@ public class JByteMod extends JFrame {
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);
     }
+    tcblist.addNodes(cn, mn);
     if (ops.getBool("decompile")) {
       //run async thread
       new DecompileThread(this, cn, dp).start();
     } else {
       dp.setText("");
+    }
+  }
+
+  public void treeSelection(ClassNode cn, MethodNode mn) {
+    if (ops.getBool("tree_search_sel")) {
+      //selection may take some time
+      new Thread(() -> {
+        DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
+        this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
+      }).start();
+    }
+  }
+
+  private void selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
+    for (int i = 0; i < tm.getChildCount(node); i++) {
+      SortedTreeNode child = (SortedTreeNode) tm.getChild(node, i);
+      if (child.getMn() != null && child.getMn().equals(mn)) {
+        TreePath tp = new TreePath(tm.getPathToRoot(child));
+        jarTree.setSelectionPath(tp);
+        jarTree.scrollPathToVisible(tp);
+        break;
+      }
+      if (!child.isLeaf()) {
+        selectEntry(mn, tm, child);
+      }
     }
   }
 
@@ -199,29 +228,7 @@ public class JByteMod extends JFrame {
     this.dp = dp;
   }
 
-  public void treeSelection(ClassNode cn, MethodNode mn) {
-    if (ops.getBool("tree_search_sel")) {
-      //selection may take some time
-      new Thread(() -> {
-        DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
-        this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
-      }).start();
-    }
+  public void setTCBList(TCBList tcb) {
+    this.tcblist = tcb;
   }
-
-  private void selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
-    for (int i = 0; i < tm.getChildCount(node); i++) {
-      SortedTreeNode child = (SortedTreeNode) tm.getChild(node, i);
-      if (child.getMn() != null && child.getMn().equals(mn)) {
-        TreePath tp = new TreePath(tm.getPathToRoot(child));
-        jarTree.setSelectionPath(tp);
-        jarTree.scrollPathToVisible(tp);
-        break;
-      }
-      if (!child.isLeaf()) {
-        selectEntry(mn, tm, child);
-      }
-    }
-  }
-
 }

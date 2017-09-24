@@ -185,6 +185,11 @@ public class ClassNode extends ClassVisitor {
 
 	public byte[] preLoad;
 
+	/**
+	 * JarEntry extra attribute (used for stringer obfuscation)
+	 */
+	public byte[] extraBytes;
+
     /**
      * Constructs a new {@link ClassNode}. <i>Subclasses must not use this
      * constructor</i>. Instead, they must use the {@link #ClassNode(int)}

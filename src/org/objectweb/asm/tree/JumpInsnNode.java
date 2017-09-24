@@ -32,6 +32,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A node that represents a jump instruction. A jump instruction is an
@@ -65,6 +66,10 @@ public class JumpInsnNode extends AbstractInsnNode {
         this.label = label;
     }
 
+    public JumpInsnNode() {
+   	 this.opcode = Opcodes.GOTO;
+    }
+    
     /**
      * Sets the opcode of this instruction.
      * 

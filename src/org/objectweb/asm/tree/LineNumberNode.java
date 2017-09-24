@@ -32,6 +32,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A node that represents a line number declaration. These nodes are pseudo
@@ -67,6 +68,8 @@ public class LineNumberNode extends AbstractInsnNode {
         this.start = start;
     }
 
+ 	public LineNumberNode() {
+	}
     @Override
     public int getType() {
         return LINE;

@@ -32,6 +32,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A node that represents a type instruction. A type instruction is an
@@ -62,6 +63,9 @@ public class TypeInsnNode extends AbstractInsnNode {
         this.desc = desc;
     }
 
+ 	public TypeInsnNode() {
+		this.opcode = Opcodes.NEW;
+	}
     /**
      * Sets the opcode of this instruction.
      * 

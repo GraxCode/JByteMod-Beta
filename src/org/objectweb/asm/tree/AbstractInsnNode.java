@@ -124,11 +124,18 @@ public abstract class AbstractInsnNode {
     public static final int LINE = 15;
 
     /**
-     * The opcode of this instruction.
+     * The  of this instruction.
      */
     protected int opcode;
 
-    /**
+    public void setOpcode(int opcode) {
+		this.opcode = opcode;
+	}
+
+    public AbstractInsnNode() {
+   	 this.opcode = -1;
+    }
+	/**
      * The runtime visible type annotations of this instruction. This field is
      * only used for real instructions (i.e. not for labels, frames, or line
      * number nodes). This list is a list of {@link TypeAnnotationNode} objects.
@@ -322,9 +329,5 @@ public abstract class AbstractInsnNode {
             }
         }
         return this;
-    }
-
-    public void setOpcode(int opcodeIndex) {
-      this.opcode = opcodeIndex;
     }
 }

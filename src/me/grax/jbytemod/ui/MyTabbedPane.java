@@ -18,6 +18,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.decompiler.DecompileThread;
 import me.grax.jbytemod.ui.lists.SearchList;
+import me.grax.jbytemod.ui.lists.TCBList;
 
 public class MyTabbedPane extends JTabbedPane {
   private JByteMod jbm;
@@ -28,13 +29,16 @@ public class MyTabbedPane extends JTabbedPane {
     MyCodeEditor list = new MyCodeEditor(jam, editor);
     jam.setCodeList(list.getEditor());
     this.addTab("Code", this.withBorder(editor, list));
+    TCBList tcb = new TCBList();
+    jam.setTCBList(tcb);
+    this.addTab("TCB", this.withBorder(editor, tcb));
+    DecompilerPanel dp = new DecompilerPanel();
+    jam.setDP(dp);
+    this.addTab("Decompiler", this.withBorder(new JPanel(), new JLabel("Procyon Decompiler"), dp));
     SearchList searchList = new SearchList(jam);
     jam.setSearchlist(searchList);
     JLabel search = new JLabel("Search Results");
     this.addTab("Search", this.withBorder(search, searchList));
-    DecompilerPanel dp = new DecompilerPanel();
-    jam.setDP(dp);
-    this.addTab("Decompiler", this.withBorder(new JPanel(), new JLabel("Procyon Decompiler"), dp));
   }
 
   private JPanel withBorder(JLabel label, Component c) {

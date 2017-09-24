@@ -32,6 +32,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A node that represents an instruction with a single int operand.
@@ -59,6 +60,9 @@ public class IntInsnNode extends AbstractInsnNode {
         this.operand = operand;
     }
 
+    public IntInsnNode() {
+   	 this.opcode = Opcodes.BIPUSH;
+    }
     /**
      * Sets the opcode of this instruction.
      * 

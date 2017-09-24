@@ -91,6 +91,9 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
         }
     }
 
+ 	public TableSwitchInsnNode() {
+		this.opcode = Opcodes.TABLESWITCH;
+	}
     @Override
     public int getType() {
         return TABLESWITCH_INSN;

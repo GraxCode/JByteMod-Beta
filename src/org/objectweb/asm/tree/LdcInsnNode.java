@@ -61,6 +61,10 @@ public class LdcInsnNode extends AbstractInsnNode {
         this.cst = cst;
     }
 
+ 	public LdcInsnNode() {
+		this.opcode = Opcodes.LDC;
+		this.cst = "";
+	}
     @Override
     public int getType() {
         return LDC_INSN;

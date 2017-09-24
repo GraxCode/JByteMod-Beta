@@ -85,6 +85,9 @@ public class MethodInsnNode extends AbstractInsnNode {
         this(opcode, owner, name, desc, opcode == Opcodes.INVOKEINTERFACE);
     }
 
+ 	public MethodInsnNode() {
+		this.opcode = Opcodes.INVOKESTATIC;
+	}
     /**
      * Constructs a new {@link MethodInsnNode}.
      * 

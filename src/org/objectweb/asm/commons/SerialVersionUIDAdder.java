@@ -241,6 +241,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
                             | Opcodes.ACC_PROTECTED | Opcodes.ACC_STATIC
                             | Opcodes.ACC_FINAL | Opcodes.ACC_SYNCHRONIZED
                             | Opcodes.ACC_NATIVE | Opcodes.ACC_ABSTRACT | Opcodes.ACC_STRICT);
+
             // all non private methods
             if ((access & Opcodes.ACC_PRIVATE) == 0) {
                 if ("<init>".equals(name)) {

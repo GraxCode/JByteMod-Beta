@@ -32,6 +32,7 @@ package org.objectweb.asm.tree;
 import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * A node that represents a field instruction. A field instruction is an
@@ -80,6 +81,9 @@ public class FieldInsnNode extends AbstractInsnNode {
         this.desc = desc;
     }
 
+    public FieldInsnNode() {
+   	 this.opcode = Opcodes.GETSTATIC;
+    }
     /**
      * Sets the opcode of this instruction.
      * 

@@ -33,6 +33,9 @@ import java.util.Map;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+
+import me.lpk.util.OpUtils;
 
 /**
  * An {@link AbstractInsnNode} that encapsulates a {@link Label}.
@@ -75,4 +78,9 @@ public class LabelNode extends AbstractInsnNode {
     public void resetLabel() {
         label = null;
     }
+    
+    @Override
+   public String toString() {
+   	return "Label " + OpUtils.getLabelIndex(this);
+   }
 }
