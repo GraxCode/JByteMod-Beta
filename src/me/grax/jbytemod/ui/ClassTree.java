@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -24,8 +25,10 @@ import me.grax.jbytemod.utils.MethodUtils;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.gui.CellRenderer;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
+import me.lpk.util.drop.IDropUser;
+import me.lpk.util.drop.JarDropHandler;
 
-public class ClassTree extends JTree {
+public class ClassTree extends JTree implements IDropUser {
 
   private JByteMod jbm;
 
@@ -57,7 +60,7 @@ public class ClassTree extends JTree {
       }
     });
     this.setModel(new DefaultTreeModel(new SortedTreeNode("", null, null)));
-    //TODO Transfer Handler
+    this.setTransferHandler(new JarDropHandler(this, 0));
   }
 
   public void refreshTree(JarFile jar) {
@@ -169,5 +172,15 @@ public class ClassTree extends JTree {
         sort(model, child, sm);
       }
     }
+  }
+
+  @Override
+  public void preLoadJars(int id) {
+    
+  }
+
+  @Override
+  public void onJarLoad(int id, File input) {
+    jbm.loadFile(input);
   }
 }
