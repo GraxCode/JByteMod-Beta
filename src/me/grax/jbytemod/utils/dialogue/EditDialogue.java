@@ -304,7 +304,7 @@ public class EditDialogue {
 		input.add(maxL);
 		labels.add(new JLabel("Method MaxStack:"));
 		JFormattedTextField maxS = new JFormattedTextField(formatter);
-		maxS.setValue(mn.maxLocals);
+		maxS.setValue(mn.maxStack);
 		input.add(maxS);
 		if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit Method " + mn.name, 2) == JOptionPane.OK_OPTION) {
 			mn.name = name.getText();

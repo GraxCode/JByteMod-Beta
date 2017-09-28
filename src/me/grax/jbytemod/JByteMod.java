@@ -29,6 +29,8 @@ import me.grax.jbytemod.ui.MyMenuBar;
 import me.grax.jbytemod.ui.MySplitPane;
 import me.grax.jbytemod.ui.MyTabbedPane;
 import me.grax.jbytemod.ui.PageEndPanel;
+import me.grax.jbytemod.ui.SettingsPanel;
+import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
@@ -62,6 +64,10 @@ public class JByteMod extends JFrame {
   private ClassNode currentNode;
 
   private MyTabbedPane tabbedPane;
+
+  private SettingsPanel sp;
+
+  private LVPList lvplist;
 
   public static JByteMod instance;
 
@@ -106,7 +112,8 @@ public class JByteMod extends JFrame {
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
     this.setContentPane(contentPane);
-
+    this.setTCBList(new TCBList());
+    this.setLVPList(new LVPList());
     JPanel border = new JPanel();
     border.setBorder(new LineBorder(Color.GRAY));
     border.setLayout(new GridLayout());
@@ -153,15 +160,18 @@ public class JByteMod extends JFrame {
   public void selectMethod(ClassNode cn, MethodNode mn) {
     this.currentNode = cn;
     OpUtils.clearLabelCache();
+    sp.selectMethod(cn, mn);
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);
     }
     tcblist.addNodes(cn, mn);
+    lvplist.addNodes(cn, mn);
     dp.setText("");
     tabbedPane.selectClass(cn);
   }
   public void selectClass(ClassNode cn) {
     this.currentNode = cn;
+    sp.selectClass(cn);
     clist.loadFields(cn);
     tabbedPane.selectClass(cn);
   }
@@ -238,7 +248,23 @@ public class JByteMod extends JFrame {
     this.tcblist = tcb;
   }
 
+  private void setLVPList(LVPList lvp) {
+    this.lvplist = lvp;
+  }
+
+  public LVPList getLVPList() {
+    return lvplist;
+  }
+
   public void setTabbedPane(MyTabbedPane tp) {
     this.tabbedPane = tp;
+  }
+
+  public TCBList getTCBList() {
+    return tcblist;
+  }
+
+  public void setSP(SettingsPanel sp) {
+    this.sp = sp;
   }
 }

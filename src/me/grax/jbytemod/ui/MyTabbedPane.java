@@ -33,9 +33,9 @@ public class MyTabbedPane extends JTabbedPane {
     MyCodeEditor list = new MyCodeEditor(jam, editor);
     jam.setCodeList(list.getEditor());
     this.addTab("Code", this.withBorder(editor, list));
-    TCBList tcb = new TCBList();
-    jam.setTCBList(tcb);
-    this.addTab("TCB", this.withBorder(editor, tcb));
+    SettingsPanel sp = new SettingsPanel(jam);
+    jam.setSP(sp);
+    this.addTab("Settings", this.withBorder(new JLabel("Settings"), sp));
     DecompilerPanel dp = new DecompilerPanel();
     this.dp = dp;
     jam.setDP(dp);
