@@ -105,7 +105,7 @@ public class JByteMod extends JFrame {
       }
     });
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.1.0");
+    this.setTitle("JByteMod pre-1.2.0");
     this.setJMenuBar(new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
