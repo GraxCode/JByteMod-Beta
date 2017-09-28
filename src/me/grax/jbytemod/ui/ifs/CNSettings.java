@@ -2,7 +2,6 @@ package me.grax.jbytemod.ui.ifs;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,9 +10,7 @@ import java.text.NumberFormat;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
@@ -21,8 +18,6 @@ import javax.swing.text.NumberFormatter;
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.ui.NoBorderSP;
-import me.grax.jbytemod.ui.lists.LVPList;
 
 public class CNSettings extends MyInternalFrame {
   /**
@@ -61,14 +56,6 @@ public class CNSettings extends MyInternalFrame {
     JFormattedTextField access = new JFormattedTextField(formatter);
     access.setValue(cn.access);
     input.add(access);
-
-    //    
-    //    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit Class " + cname, 2) == JOptionPane.OK_OPTION) {
-    //      cn.name = name.getText();
-    //      cn.sourceFile = sf.getText();
-    //      cn.access = (int) access.getValue();
-    //      JByteMod.instance.refreshTree();
-    //    }
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {

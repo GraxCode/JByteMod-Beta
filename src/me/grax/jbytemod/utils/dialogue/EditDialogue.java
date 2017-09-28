@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -73,7 +72,8 @@ public class EditDialogue {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public static boolean createEditInsnDialog(MethodNode mn, AbstractInsnNode ain) throws Exception {
+	@SuppressWarnings("unchecked")
+  public static boolean createEditInsnDialog(MethodNode mn, AbstractInsnNode ain) throws Exception {
 		final JPanel panel = new JPanel(new BorderLayout(5, 5));
 		final JPanel input = new JPanel(new GridLayout(0, 1));
 		final JPanel labels = new JPanel(new GridLayout(0, 1));
@@ -316,7 +316,8 @@ public class EditDialogue {
 		}
 	}
 
-	public static void createInsertInsnDialog(MethodNode mn, AbstractInsnNode ain) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+  public static void createInsertInsnDialog(MethodNode mn, AbstractInsnNode ain) {
 		final JPanel panel = new JPanel(new BorderLayout(5, 5));
 		final JPanel input = new JPanel(new GridLayout(0, 1));
 		final JPanel labels = new JPanel(new GridLayout(0, 1));

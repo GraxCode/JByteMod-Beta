@@ -1,15 +1,11 @@
 package me.grax.jbytemod.utils.list;
 
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.LocalVariableNode;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.utils.InstrUtils;
 import me.grax.jbytemod.utils.TextUtils;
-import me.lpk.util.OpUtils;
 
 public class LVPEntry {
   private ClassNode cn;
@@ -40,5 +36,9 @@ public class LVPEntry {
   @Override
   public String toString() {
     return text;
+  }
+
+  public LocalVariableNode getLvn() {
+    return lvn;
   }
 }

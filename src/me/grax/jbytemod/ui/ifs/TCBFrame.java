@@ -1,6 +1,5 @@
 package me.grax.jbytemod.ui.ifs;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import me.grax.jbytemod.ui.NoBorderSP;

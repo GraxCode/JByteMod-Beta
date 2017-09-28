@@ -1,8 +1,6 @@
 package me.grax.jbytemod.utils.list;
 
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
@@ -37,5 +35,9 @@ public class TCBEntry {
   @Override
   public String toString() {
     return text;
+  }
+
+  public TryCatchBlockNode getTcbn() {
+    return tcbn;
   }
 }

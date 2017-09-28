@@ -21,7 +21,6 @@ import org.objectweb.asm.tree.ClassNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.decompiler.DecompileThread;
 import me.grax.jbytemod.ui.lists.SearchList;
-import me.grax.jbytemod.ui.lists.TCBList;
 
 public class MyTabbedPane extends JTabbedPane {
   private JByteMod jbm;
@@ -33,9 +32,9 @@ public class MyTabbedPane extends JTabbedPane {
     MyCodeEditor list = new MyCodeEditor(jam, editor);
     jam.setCodeList(list.getEditor());
     this.addTab("Code", this.withBorder(editor, list));
-    SettingsPanel sp = new SettingsPanel(jam);
+    InfoPanel sp = new InfoPanel(jam);
     jam.setSP(sp);
-    this.addTab("Settings", this.withBorder(new JLabel("Settings"), sp));
+    this.addTab("Info", this.withBorder(new JLabel("Settings"), sp));
     DecompilerPanel dp = new DecompilerPanel();
     this.dp = dp;
     jam.setDP(dp);

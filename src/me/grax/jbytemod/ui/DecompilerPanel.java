@@ -3,11 +3,8 @@ package me.grax.jbytemod.ui;
 import java.awt.Font;
 import java.io.IOException;
 
-import javax.swing.JPanel;
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 import me.grax.jbytemod.utils.ErrorDisplay;
 

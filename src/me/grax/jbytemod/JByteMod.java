@@ -20,16 +20,15 @@ import javax.swing.tree.TreePath;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import me.grax.jbytemod.decompiler.DecompileThread;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.ClassTree;
 import me.grax.jbytemod.ui.DecompilerPanel;
+import me.grax.jbytemod.ui.InfoPanel;
 import me.grax.jbytemod.ui.MyMenuBar;
 import me.grax.jbytemod.ui.MySplitPane;
 import me.grax.jbytemod.ui.MyTabbedPane;
 import me.grax.jbytemod.ui.PageEndPanel;
-import me.grax.jbytemod.ui.SettingsPanel;
 import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
@@ -65,7 +64,7 @@ public class JByteMod extends JFrame {
 
   private MyTabbedPane tabbedPane;
 
-  private SettingsPanel sp;
+  private InfoPanel sp;
 
   private LVPList lvplist;
 
@@ -105,7 +104,7 @@ public class JByteMod extends JFrame {
       }
     });
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod pre-1.2.0");
+    this.setTitle("JByteMod 1.2.0");
     this.setJMenuBar(new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -264,7 +263,7 @@ public class JByteMod extends JFrame {
     return tcblist;
   }
 
-  public void setSP(SettingsPanel sp) {
+  public void setSP(InfoPanel sp) {
     this.sp = sp;
   }
 }

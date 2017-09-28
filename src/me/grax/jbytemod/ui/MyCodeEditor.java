@@ -6,9 +6,7 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.lists.AdressList;

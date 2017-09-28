@@ -12,7 +12,6 @@ import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -24,12 +23,12 @@ import me.grax.jbytemod.ui.ifs.MNSettings;
 import me.grax.jbytemod.ui.ifs.MyInternalFrame;
 import me.grax.jbytemod.ui.ifs.TCBFrame;
 
-public class SettingsPanel extends JPanel {
+public class InfoPanel extends JPanel {
 
   private JDesktopPane deskPane;
   private JByteMod jbm;
 
-  public SettingsPanel(JByteMod jbm) {
+  public InfoPanel(JByteMod jbm) {
     this.jbm = jbm;
     this.setLayout(new BorderLayout());
     deskPane = new JDesktopPane() {
@@ -48,7 +47,6 @@ public class SettingsPanel extends JPanel {
     this.add(deskPane, BorderLayout.CENTER);
   }
 
-  @SuppressWarnings("deprecation")
   public void selectMethod(ClassNode cn, MethodNode mn) {
     for(Component c : deskPane.getComponents()) {
       if(c instanceof MyInternalFrame) {

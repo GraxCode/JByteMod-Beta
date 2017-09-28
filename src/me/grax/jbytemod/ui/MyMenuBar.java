@@ -21,8 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.IOUtils;
@@ -30,7 +28,6 @@ import org.apache.commons.io.IOUtils;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
-import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
 public class MyMenuBar extends JMenuBar {
@@ -130,6 +127,20 @@ public class MyMenuBar extends JMenuBar {
     tree.add(rltree);
     this.add(getSettings());
     JMenu help = new JMenu("Help");
+    JMenuItem about = new JMenuItem("About");
+    about.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          new JAboutFrame(jam).setVisible(true);
+        } catch (Exception ex) {
+          new ErrorDisplay(ex);
+        }
+      }
+    });
+
+    help.add(about);
     JMenuItem licenses = new JMenuItem("Licenses");
     licenses.addActionListener(new ActionListener() {
 

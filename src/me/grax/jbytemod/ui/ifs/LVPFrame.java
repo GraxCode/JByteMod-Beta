@@ -1,9 +1,6 @@
 package me.grax.jbytemod.ui.ifs;
 
-import java.awt.Point;
 import java.awt.Rectangle;
-
-import javax.swing.JScrollPane;
 
 import me.grax.jbytemod.ui.NoBorderSP;
 import me.grax.jbytemod.ui.lists.LVPList;

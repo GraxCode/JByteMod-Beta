@@ -14,8 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
-import me.grax.jbytemod.ui.MyMenuBar;
-
 public class ErrorDisplay extends JFrame {
   private static final String suffix = "\n\nPlease report exceptions on github.";
 
