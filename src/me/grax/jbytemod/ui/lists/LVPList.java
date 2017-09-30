@@ -15,8 +15,12 @@ import javax.swing.SwingUtilities;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
+import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
 import me.grax.jbytemod.utils.list.LVPEntry;
+import me.grax.jbytemod.utils.list.TCBEntry;
 
 public class LVPList extends JList<LVPEntry> {
 
@@ -31,18 +35,48 @@ public class LVPList extends JList<LVPEntry> {
     this.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
+          LVPEntry selected = LVPList.this.getSelectedValue();
           JPopupMenu menu = new JPopupMenu();
-          JMenuItem remove = new JMenuItem("Remove");
-          remove.addActionListener(new ActionListener() {
+          if (selected != null) {
+            JMenuItem remove = new JMenuItem("Remove");
+            remove.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                ClassNode cn = selected.getCn();
+                MethodNode mn = selected.getMn();
+                mn.localVariables.remove(selected.getLvn());
+                LVPList.this.addNodes(cn, mn);
+              }
+            });
+            menu.add(remove);
+            JMenuItem edit = new JMenuItem("Edit");
+            edit.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                try {
+                  EditDialogueSpec.createEditDialogue(mn, selected.getLvn());
+                } catch (Exception ex) {
+                  new ErrorDisplay(ex);
+                }
+                LVPList.this.addNodes(cn, mn);
+              }
+            });
+            menu.add(edit);
+          }
+          JMenuItem insert = new JMenuItem("Insert");
+          insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-              LVPEntry selected = LVPList.this.getSelectedValue();
-              ClassNode cn = selected.getCn();
-              MethodNode mn = selected.getMn();
-              mn.tryCatchBlocks.remove(selected.getLvn());
+              try {
+                LocalVariableNode lvn = new LocalVariableNode("", "", "", null, null, mn.localVariables.size());
+                if (EditDialogueSpec.createEditDialogue(mn, lvn))
+                  if (lvn.start != null && lvn.end != null) {
+                    mn.localVariables.add(lvn);
+                  }
+              } catch (Exception ex) {
+                new ErrorDisplay(ex);
+              }
               LVPList.this.addNodes(cn, mn);
             }
           });
-          menu.add(remove);
+          menu.add(insert);
           menu.show(LVPList.this, e.getX(), e.getY());
         }
       }
