@@ -362,4 +362,8 @@ public class EditDialogue {
 
     }
   }
+
+  public static boolean canEdit(AbstractInsnNode ain) {
+    return opc.keySet().contains(ain.getClass().getSimpleName());
+  }
 }

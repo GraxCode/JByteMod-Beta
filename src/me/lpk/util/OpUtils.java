@@ -589,9 +589,10 @@ public class OpUtils implements org.objectweb.asm.Opcodes {
       return labelCache.get(ain);
     }
     int index = 0;
-    while (ain.getPrevious() != null) {
-      ain = ain.getPrevious();
-      if (ain instanceof LabelNode) {
+    AbstractInsnNode node = ain;
+    while (node.getPrevious() != null) {
+      node = node.getPrevious();
+      if (node instanceof LabelNode) {
         index += 1;
       }
     }

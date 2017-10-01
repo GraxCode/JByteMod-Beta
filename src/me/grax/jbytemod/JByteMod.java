@@ -162,7 +162,6 @@ public class JByteMod extends JFrame {
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
     this.currentNode = cn;
-    OpUtils.clearLabelCache();
     sp.selectMethod(cn, mn);
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);

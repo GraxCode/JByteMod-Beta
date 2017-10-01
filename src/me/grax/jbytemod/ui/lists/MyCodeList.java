@@ -30,6 +30,7 @@ import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
 import me.grax.jbytemod.utils.list.FieldEntry;
 import me.grax.jbytemod.utils.list.InstrEntry;
+import me.lpk.util.OpUtils;
 
 public class MyCodeList extends JList<InstrEntry> {
   private JLabel editor;
@@ -125,6 +126,7 @@ public class MyCodeList extends JList<InstrEntry> {
                 }
               });
               menu.add(insert);
+              if(EditDialogue.canEdit(ain)) {
               JMenuItem edit = new JMenuItem("Edit");
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -136,6 +138,7 @@ public class MyCodeList extends JList<InstrEntry> {
                 }
               });
               menu.add(edit);
+              }
               JMenuItem duplicate = new JMenuItem("Duplicate");
               duplicate.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -246,6 +249,7 @@ public class MyCodeList extends JList<InstrEntry> {
   }
 
   public boolean loadInstructions(MethodNode m) {
+    OpUtils.clearLabelCache();
     this.currentMethod = m;
     this.currentClass = null;
     DefaultListModel<InstrEntry> lm = new DefaultListModel<InstrEntry>();
