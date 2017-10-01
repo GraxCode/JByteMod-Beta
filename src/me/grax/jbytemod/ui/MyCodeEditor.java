@@ -21,7 +21,7 @@ public class MyCodeEditor extends JPanel {
     this.add(cl, BorderLayout.CENTER);
     JPanel p = new JPanel();
     p.setLayout(new GridLayout());
-    p.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY));
+    p.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, JByteMod.border));
     p.add(new AdressList(cl));
     this.add(p, BorderLayout.WEST);
   }

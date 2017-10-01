@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultTreeModel;
@@ -33,6 +34,7 @@ import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
+import me.grax.jbytemod.utils.ThemeChanges;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
@@ -69,7 +71,7 @@ public class JByteMod extends JFrame {
   private LVPList lvplist;
 
   public static JByteMod instance;
-
+  public static Color border;
   /**
    * Launch the application.
    */
@@ -79,6 +81,7 @@ public class JByteMod extends JFrame {
       public void run() {
         try {
           LookUtils.setLAF();
+          ThemeChanges.setDefaults();
           JByteMod frame = new JByteMod();
           frame.setVisible(true);
           instance = frame;
@@ -103,6 +106,7 @@ public class JByteMod extends JFrame {
         }
       }
     });
+    border = UIManager.getColor("nimbusBorder");
     this.setBounds(100, 100, 1280, 720);
     this.setTitle("JByteMod 1.2.0");
     this.setJMenuBar(new MyMenuBar(this));
@@ -114,7 +118,7 @@ public class JByteMod extends JFrame {
     this.setTCBList(new TCBList());
     this.setLVPList(new LVPList());
     JPanel border = new JPanel();
-    border.setBorder(new LineBorder(Color.GRAY));
+    border.setBorder(new LineBorder(JByteMod.border));
     border.setLayout(new GridLayout());
     JSplitPane splitPane = new MySplitPane(this, jarTree);
     JPanel b2 = new JPanel();

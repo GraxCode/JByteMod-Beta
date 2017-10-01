@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,7 +25,7 @@ public class MySplitPane extends JSplitPane {
     leftSide.add(new JLabel(" Java Archive"), BorderLayout.NORTH);
     leftSide.add(new JScrollPane(dexTree), BorderLayout.CENTER);
     JPanel border = new JPanel();
-    border.setBorder(new LineBorder(Color.GRAY));
+    border.setBorder(new LineBorder(JByteMod.border));
     border.setLayout(new GridLayout());
     this.setLeftComponent(leftSide);
     this.setRightComponent(rightSide);

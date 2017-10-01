@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -32,7 +33,7 @@ public class InfoPanel extends JPanel {
     this.jbm = jbm;
     this.setLayout(new BorderLayout());
     deskPane = new JDesktopPane() {
-      Color bg = new Color(0xd6d9df);
+      Color bg = UIManager.getLookAndFeelDefaults().getColor("nimbusLightBackground");
 
       @Override
       protected void paintComponent(Graphics g) {
@@ -41,8 +42,6 @@ public class InfoPanel extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
       }
     };
-//    JInternalFrame inFrame1 = new MyInternalFrame("ts");
-//    deskPane.add(inFrame1);
     deskPane.setDesktopManager(new DeskMan());
     this.add(deskPane, BorderLayout.CENTER);
   }
