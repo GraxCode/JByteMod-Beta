@@ -95,6 +95,7 @@ public class MyCodeList extends JList<InstrEntry> {
                   for (InstrEntry sel : selected) {
                     mn.instructions.remove(sel.getInstr());
                   }
+                  OpUtils.clearLabelCache();
                   MyCodeList.this.loadInstructions(mn);
                 }
               });
@@ -120,6 +121,7 @@ public class MyCodeList extends JList<InstrEntry> {
                 public void actionPerformed(ActionEvent e) {
                   try {
                     EditDialogue.createInsertInsnDialog(mn, ain);
+                    OpUtils.clearLabelCache();
                   } catch (Exception e1) {
                     new ErrorDisplay(e1);
                   }
@@ -145,6 +147,7 @@ public class MyCodeList extends JList<InstrEntry> {
                   try {
                     if (ain instanceof LabelNode) {
                       mn.instructions.insert(ain, new LabelNode());
+                      OpUtils.clearLabelCache();
                     } else {
                       mn.instructions.insert(ain, ain.clone(new HashMap<>()));
                     }
@@ -162,6 +165,7 @@ public class MyCodeList extends JList<InstrEntry> {
                   AbstractInsnNode node = ain.getPrevious();
                   mn.instructions.remove(node);
                   mn.instructions.insert(ain, node);
+                  OpUtils.clearLabelCache();
                   MyCodeList.this.loadInstructions(mn);
                 }
               });
@@ -172,6 +176,7 @@ public class MyCodeList extends JList<InstrEntry> {
                   AbstractInsnNode node = ain.getNext();
                   mn.instructions.remove(node);
                   mn.instructions.insertBefore(ain, node);
+                  OpUtils.clearLabelCache();
                   MyCodeList.this.loadInstructions(mn);
                 }
               });
@@ -180,6 +185,7 @@ public class MyCodeList extends JList<InstrEntry> {
               remove.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   mn.instructions.remove(ain);
+                  OpUtils.clearLabelCache();
                   MyCodeList.this.loadInstructions(mn);
                 }
               });
@@ -249,7 +255,6 @@ public class MyCodeList extends JList<InstrEntry> {
   }
 
   public boolean loadInstructions(MethodNode m) {
-    OpUtils.clearLabelCache();
     this.currentMethod = m;
     this.currentClass = null;
     DefaultListModel<InstrEntry> lm = new DefaultListModel<InstrEntry>();
