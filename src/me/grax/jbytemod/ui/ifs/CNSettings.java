@@ -18,12 +18,13 @@ import javax.swing.text.NumberFormatter;
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.utils.dialogue.EditDialogue;
 
 public class CNSettings extends MyInternalFrame {
   /**
    * Save position
    */
-  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 4);
+  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 30);
 
   public CNSettings(ClassNode cn) {
     super("Class Settings");
@@ -44,18 +45,19 @@ public class CNSettings extends MyInternalFrame {
     JTextField sf = new JTextField(cn.sourceFile);
     input.add(sf);
     labels.add(new JLabel("Class Access:"));
-    NumberFormat format = NumberFormat.getInstance();
-    format.setGroupingUsed(false);
-    NumberFormatter formatter = new NumberFormatter(format);
-    formatter.setValueClass(Integer.class);
-    formatter.setMinimum(0);
-    formatter.setMaximum(Integer.MAX_VALUE);
-    formatter.setAllowsInvalid(false);
-    formatter.setCommitsOnValidEdit(true);
-    formatter.setOverwriteMode(true);
-    JFormattedTextField access = new JFormattedTextField(formatter);
+    JFormattedTextField access = EditDialogue.createNumberField();
     access.setValue(cn.access);
     input.add(access);
+    labels.add(new JLabel("Class Version:"));
+    JFormattedTextField version = EditDialogue.createNumberField();
+    version.setValue(cn.version);
+    input.add(version);
+    labels.add(new JLabel("Class Signature:"));
+    JTextField signature = new JTextField(cn.signature);
+    input.add(signature);
+    labels.add(new JLabel("Class Parent:"));
+    JTextField parent = new JTextField(cn.superName);
+    input.add(parent);
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {
@@ -63,13 +65,26 @@ public class CNSettings extends MyInternalFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         boolean refresh = false;
-        if(!cn.name.equals(name.getText())) {
+        if (!cn.name.equals(name.getText())) {
           refresh = true;
           cn.name = name.getText();
         }
         cn.sourceFile = sf.getText();
         cn.access = (int) access.getValue();
-        if(refresh) {
+        cn.version = (int) version.getValue();
+        String sig = signature.getText();
+        if (sig.isEmpty()) {
+          cn.signature = null;
+        } else {
+          cn.signature = sig;
+        }
+        String par = parent.getText();
+        if (par.isEmpty()) {
+          cn.superName = null;
+        } else {
+          cn.superName = par;
+        }
+        if (refresh) {
           JByteMod.instance.refreshTree();
         }
       }
