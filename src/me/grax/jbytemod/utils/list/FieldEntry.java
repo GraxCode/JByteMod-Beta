@@ -16,7 +16,7 @@ public class FieldEntry extends InstrEntry {
     super(null, null);
     this.cn = cn;
     this.fn = fn;
-    this.text = TextUtils.toHtml(InstrUtils.getDisplayAccess(fn.access) + " " + InstrUtils.getDisplayType(fn.desc) + " "
+    this.text = TextUtils.toHtml(InstrUtils.getDisplayAccess(fn.access) + " " + InstrUtils.getDisplayType(fn.desc, true) + " "
         + InstrUtils.getDisplayClassRed(fn.name) + " = " + TextUtils.toBold(String.valueOf(fn.value)));
   }
 

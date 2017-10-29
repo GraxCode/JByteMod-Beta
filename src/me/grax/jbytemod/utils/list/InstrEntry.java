@@ -35,4 +35,8 @@ public class InstrEntry {
   public String toString() {
     return TextUtils.toHtml(InstrUtils.toString(i));
   }
+  
+  public String toEasyString() {
+    return InstrUtils.toEasyString(i);
+  }
 }

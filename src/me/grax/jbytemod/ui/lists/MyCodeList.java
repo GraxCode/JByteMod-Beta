@@ -3,17 +3,23 @@ package me.grax.jbytemod.ui.lists;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.DefaultListModel;
+import javax.swing.InputMap;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -25,6 +31,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JSearch;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
@@ -128,18 +135,18 @@ public class MyCodeList extends JList<InstrEntry> {
                 }
               });
               menu.add(insert);
-              if(EditDialogue.canEdit(ain)) {
-              JMenuItem edit = new JMenuItem("Edit");
-              edit.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                  try {
-                    EditDialogue.createEditInsnDialog(mn, ain);
-                  } catch (Exception e1) {
-                    new ErrorDisplay(e1);
+              if (EditDialogue.canEdit(ain)) {
+                JMenuItem edit = new JMenuItem("Edit");
+                edit.addActionListener(new ActionListener() {
+                  public void actionPerformed(ActionEvent e) {
+                    try {
+                      EditDialogue.createEditInsnDialog(mn, ain);
+                    } catch (Exception e1) {
+                      new ErrorDisplay(e1);
+                    }
                   }
-                }
-              });
-              menu.add(edit);
+                });
+                menu.add(edit);
               }
               JMenuItem duplicate = new JMenuItem("Duplicate");
               duplicate.addActionListener(new ActionListener() {
@@ -250,6 +257,18 @@ public class MyCodeList extends JList<InstrEntry> {
             menu.show(jam, (int) jam.getMousePosition().getX(), (int) jam.getMousePosition().getY());
           }
         }
+      }
+    });
+
+    InputMap im = getInputMap(WHEN_FOCUSED);
+    ActionMap am = getActionMap();
+
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK), "search");
+    
+    am.put("search", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        new JSearch(MyCodeList.this).setVisible(true);
       }
     });
   }

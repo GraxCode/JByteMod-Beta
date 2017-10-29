@@ -28,11 +28,11 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.FIELD_INSN:
       FieldInsnNode fin = (FieldInsnNode) ain;
-      opc += getDisplayType(TextUtils.escape(fin.desc)) + " " + getDisplayClassRed(TextUtils.escape(fin.owner)) + "." + fin.name;
+      opc += getDisplayType(TextUtils.escape(fin.desc), true) + " " + getDisplayClassRed(TextUtils.escape(fin.owner)) + "." + fin.name;
       break;
     case AbstractInsnNode.METHOD_INSN:
       MethodInsnNode min = (MethodInsnNode) ain;
-      opc += getDisplayType(min.desc.split("\\)")[1]) + " " + getDisplayClassRed(TextUtils.escape(min.owner)) + "." + TextUtils.escape(min.name) + "("
+      opc += getDisplayType(min.desc.split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(min.owner)) + "." + TextUtils.escape(min.name) + "("
           + getDisplayArgs(TextUtils.escape(min.desc)) + ")";
       break;
     case AbstractInsnNode.VAR_INSN:
@@ -111,10 +111,10 @@ public class InstrUtils {
   }
 
   public static String getDisplayArgs(String rawType) {
-    return getDisplayType(rawType.split("\\)")[0].substring(1));
+    return getDisplayType(rawType.split("\\)")[0].substring(1), true);
   }
 
-  public static String getDisplayType(String rawType) {
+  public static String getDisplayType(String rawType, boolean tag) {
     String result = "";
     String tmpArg = "";
     String argSuffix = "";
@@ -172,7 +172,9 @@ public class InstrUtils {
     if (result.length() >= 2) {
       result = result.substring(0, result.length() - 2);
     }
-    return TextUtils.addTag(result, "font color=#557799");
+    if (tag)
+      return TextUtils.addTag(result, "font color=#557799");
+    return result;
   }
 
   public final static String getDisplayAccess(int var1) {
@@ -207,4 +209,97 @@ public class InstrUtils {
     return var2;
   }
 
+  public static String toEasyString(AbstractInsnNode ain) {
+    String opc = OpUtils.getOpcodeText(ain.getOpcode()).toLowerCase() + " ";
+    switch (ain.getType()) {
+    case AbstractInsnNode.LABEL:
+      opc = "label " + OpUtils.getLabelIndex((LabelNode) ain);
+      break;
+    case AbstractInsnNode.LINE:
+      opc = "line " + ((LineNumberNode) ain).line;
+      break;
+    case AbstractInsnNode.FIELD_INSN:
+      FieldInsnNode fin = (FieldInsnNode) ain;
+      opc += getDisplayType(fin.desc, false) + " " + getDisplayClassRedEasy(fin.owner) + "." + fin.name;
+      break;
+    case AbstractInsnNode.METHOD_INSN:
+      MethodInsnNode min = (MethodInsnNode) ain;
+      opc += getDisplayType(min.desc.split("\\)")[1], false) + " " + getDisplayClassRedEasy(min.owner) + "." + min.name + "(" + getDisplayArgsEasy(min.desc) + ")";
+      break;
+    case AbstractInsnNode.VAR_INSN:
+      VarInsnNode vin = (VarInsnNode) ain;
+      opc += vin.var;
+      break;
+    case AbstractInsnNode.TYPE_INSN:
+      TypeInsnNode tin = (TypeInsnNode) ain;
+      String esc = tin.desc;
+      if (esc.endsWith(";") && esc.startsWith("L")) {
+        opc += esc;
+      } else {
+        opc += getDisplayClassEasy(esc);
+      }
+      break;
+    case AbstractInsnNode.JUMP_INSN:
+      JumpInsnNode jin = (JumpInsnNode) ain;
+      opc += OpUtils.getLabelIndex(jin.label);
+      break;
+    case AbstractInsnNode.LDC_INSN:
+      LdcInsnNode ldc = (LdcInsnNode) ain;
+      opc += ldc.cst.getClass().getSimpleName() + " ";
+      if (ldc.cst instanceof String)
+        opc += "\"" + ldc.cst.toString() + "\"";
+      else {
+        opc += ldc.cst.toString();
+      }
+      break;
+    case AbstractInsnNode.INT_INSN:
+      opc += OpUtils.getIntValue(ain);
+      break;
+    case AbstractInsnNode.IINC_INSN:
+      IincInsnNode iinc = (IincInsnNode) ain;
+      opc += iinc.var + " " + iinc.incr;
+      break;
+    case AbstractInsnNode.FRAME:
+      FrameNode fn = (FrameNode) ain;
+      opc = OpUtils.getOpcodeText(fn.type).toLowerCase() + " " + fn.local.size() + " " + fn.stack.size();
+      break;
+    case AbstractInsnNode.TABLESWITCH_INSN:
+      TableSwitchInsnNode tsin = (TableSwitchInsnNode) ain;
+      if (tsin.dflt != null) {
+        opc += "L" + OpUtils.getLabelIndex(tsin.dflt);
+      }
+      if (tsin.labels.size() < 20) {
+        for (LabelNode l : tsin.labels) {
+          opc += " " + "L" + OpUtils.getLabelIndex(l);
+        }
+      } else {
+        opc += " " + tsin.labels.size() + " cases";
+      }
+      break;
+    case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
+      InvokeDynamicInsnNode idin = (InvokeDynamicInsnNode) ain;
+      opc += idin.name + " " + idin.desc;
+      break;
+    }
+    return opc;
+  }
+  public static String getDisplayClassEasy(String str) {
+    String[] spl = str.split("/");
+    if (spl.length > 1) {
+      return spl[spl.length - 1];
+    }
+    return str;
+  }
+
+  public static String getDisplayClassRedEasy(String str) {
+    String[] spl = str.split("/");
+    if (spl.length > 1) {
+      return spl[spl.length - 1];
+    }
+    return str;
+  }
+
+  public static String getDisplayArgsEasy(String rawType) {
+    return getDisplayType(rawType.split("\\)")[0].substring(1), false);
+  }
 }

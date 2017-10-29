@@ -27,7 +27,7 @@ public class LVPEntry {
     this.lvn = lvn;
     this.text = TextUtils.toHtml(TextUtils.toBold("#" + lvn.index) + " ");
     if(lvn.desc != null && !lvn.desc.isEmpty()) {
-      this.text += InstrUtils.getDisplayType(lvn.desc) + " ";
+      this.text += InstrUtils.getDisplayType(lvn.desc, true) + " ";
     }
     this.text += TextUtils.addTag(TextUtils.escape(lvn.name), "font color=#995555");
   }
