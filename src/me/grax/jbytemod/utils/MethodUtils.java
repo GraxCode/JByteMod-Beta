@@ -18,53 +18,51 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class MethodUtils {
-	public static void clear(MethodNode mn) {
-		mn.instructions.clear();
-		mn.instructions.add(generateReturn(mn.desc));
-		mn.tryCatchBlocks.clear();
-		mn.localVariables.clear();
-		mn.exceptions.clear();
-	}
-	public static InsnList generateReturn(String desc) {
-		InsnList a = new InsnList();
-		String after = desc.split("\\)")[1];
-		a.add(new LabelNode());
-		if (after.startsWith("[")) {
-			a.add(new InsnNode(ACONST_NULL));
-			a.add(new InsnNode(ARETURN));
-		} else {
-			switch (desc.toCharArray()[desc.length() - 1]) {
-			case 'V':
-				a.add(new InsnNode(RETURN));
-				break;
-			case ';':
-				a.add(new InsnNode(ACONST_NULL));
-				a.add(new InsnNode(ARETURN));
-				break;
-			case 'D':
-				a.add(new InsnNode(DCONST_0));
-				a.add(new InsnNode(DRETURN));
-				break;
-			case 'F':
-				a.add(new InsnNode(FCONST_0));
-				a.add(new InsnNode(FRETURN));
-				break;
-			case 'J':
-				a.add(new InsnNode(LCONST_0));
-				a.add(new InsnNode(LRETURN));
-				break;
-			default:
-				a.add(new InsnNode(ICONST_0));
-				a.add(new InsnNode(IRETURN));
-				break;
-			}
-		}
-		if (desc.endsWith("V")) {
-			a.size = 2;
-		} else {
-			a.size = 3;
-		}
-		return a;
-	}
+  public static void clear(MethodNode mn) {
+    mn.instructions.clear();
+    mn.instructions.add(generateReturn(mn.desc));
+    mn.tryCatchBlocks.clear();
+    mn.localVariables.clear();
+    mn.exceptions.clear();
+    mn.maxStack = 1;
+    mn.maxLocals = 1;
+  }
 
+  public static InsnList generateReturn(String desc) {
+    InsnList a = new InsnList();
+    String after = desc.split("\\)")[1];
+    a.add(new LabelNode());
+    if (after.startsWith("[") || after.endsWith(";")) {
+      a.add(new InsnNode(ACONST_NULL));
+      a.add(new InsnNode(ARETURN));
+    } else {
+      switch (desc.toCharArray()[desc.length() - 1]) {
+      case 'V':
+        a.add(new InsnNode(RETURN));
+        break;
+      case 'D':
+        a.add(new InsnNode(DCONST_0));
+        a.add(new InsnNode(DRETURN));
+        break;
+      case 'F':
+        a.add(new InsnNode(FCONST_0));
+        a.add(new InsnNode(FRETURN));
+        break;
+      case 'J':
+        a.add(new InsnNode(LCONST_0));
+        a.add(new InsnNode(LRETURN));
+        break;
+      default:
+        a.add(new InsnNode(ICONST_0));
+        a.add(new InsnNode(IRETURN));
+        break;
+      }
+    }
+    if (desc.endsWith("V")) {
+      a.size = 2;
+    } else {
+      a.size = 3;
+    }
+    return a;
+  }
 }
