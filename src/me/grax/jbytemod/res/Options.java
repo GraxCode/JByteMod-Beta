@@ -14,7 +14,7 @@ public class Options {
   private Properties props;
   private static final File propFile = new File("jbytemod.cfg");
 
-  public static final List<String> bools = Arrays.asList("sort_methods", "tree_search_sel");
+  public static final List<String> bools = Arrays.asList("sort_methods", "tree_search_sel", "load_rt_startup");
   public Options() {
     props = new Properties();
     if (propFile.exists()) {

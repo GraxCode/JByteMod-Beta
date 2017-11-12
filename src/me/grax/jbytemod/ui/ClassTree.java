@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -22,6 +23,7 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarFile;
 import me.grax.jbytemod.utils.MethodUtils;
+import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.gui.CellRenderer;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
@@ -124,6 +126,7 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               menu.add(edit);
+              JMenu tools = new JMenu("Tools");
               JMenuItem clear = new JMenuItem("Clear");
               clear.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -134,7 +137,20 @@ public class ClassTree extends JTree implements IDropUser {
                   }
                 }
               });
-              menu.add(clear);
+              tools.add(clear);
+              
+              JMenuItem lines = new JMenuItem("Remove Lines");
+              lines.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, "Are you sure you want to remove all LineNumberNodes?", "Confirm",
+                      JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    MethodUtils.removeLines(mn);
+                    jbm.selectMethod(cn, mn);
+                  }
+                }
+              });
+              tools.add(lines);
+              menu.add(tools);
               menu.show(ClassTree.this, me.getX(), me.getY());
             } else if (cn != null) {
               JPopupMenu menu = new JPopupMenu();
@@ -144,7 +160,17 @@ public class ClassTree extends JTree implements IDropUser {
                   EditDialogue.createClassDialogue(cn);
                 }
               });
+              JMenu tools = new JMenu("Tools");
               menu.add(edit);
+              JMenuItem frames = new JMenuItem("Regenerate Frames");
+              frames.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  FrameGen.regenerateFrames(cn);
+                  JByteMod.instance.refreshTree();
+                }
+              });
+              tools.add(frames);
+              menu.add(tools);
               menu.show(ClassTree.this, me.getX(), me.getY());
             }
           }

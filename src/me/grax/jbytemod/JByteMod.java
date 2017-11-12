@@ -35,6 +35,7 @@ import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
 import me.grax.jbytemod.utils.ThemeChanges;
+import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
@@ -72,6 +73,7 @@ public class JByteMod extends JFrame {
 
   public static JByteMod instance;
   public static Color border;
+
   /**
    * Launch the application.
    */
@@ -96,6 +98,9 @@ public class JByteMod extends JFrame {
    * Create the frame.
    */
   public JByteMod() {
+    if (ops.getBool("load_rt_startup")) {
+      new FrameGen().start();
+    }
     this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     this.addWindowListener(new WindowAdapter() {
       @Override
@@ -108,7 +113,7 @@ public class JByteMod extends JFrame {
     });
     border = UIManager.getColor("nimbusBorder");
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.2.2");
+    this.setTitle("JByteMod 1.3.0");
     this.setJMenuBar(new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -172,12 +177,14 @@ public class JByteMod extends JFrame {
     dp.setText("");
     tabbedPane.selectClass(cn);
   }
+
   public void selectClass(ClassNode cn) {
     this.currentNode = cn;
     sp.selectClass(cn);
     clist.loadFields(cn);
     tabbedPane.selectClass(cn);
   }
+
   public void treeSelection(ClassNode cn, MethodNode mn) {
     if (ops.getBool("tree_search_sel")) {
       //selection may take some time

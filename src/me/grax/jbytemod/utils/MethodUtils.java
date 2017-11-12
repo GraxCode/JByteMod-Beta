@@ -12,9 +12,11 @@ import static org.objectweb.asm.Opcodes.LCONST_0;
 import static org.objectweb.asm.Opcodes.LRETURN;
 import static org.objectweb.asm.Opcodes.RETURN;
 
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
 public class MethodUtils {
@@ -64,5 +66,16 @@ public class MethodUtils {
       a.size = 3;
     }
     return a;
+  }
+
+  public static void removeLines(MethodNode mn) {
+    int i = 0;
+    for(AbstractInsnNode ain : mn.instructions.toArray()) {
+      if(ain instanceof LineNumberNode) {
+        mn.instructions.remove(ain);
+        i++;
+      }
+    }
+    System.out.println("Removed " + i + " nodes!");
   }
 }

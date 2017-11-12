@@ -6,4 +6,5 @@
     <string name="sort_methods">Sort Methods</string>
     <string name="decompile">Decompile Classes</string>
     <string name="tree_search_sel">Select Tree Entries</string>
+    <string name="load_rt_startup">Load rt.jar at Startup</string>
 </resources>
