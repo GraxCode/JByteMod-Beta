@@ -1,4 +1,4 @@
- package me.grax.jbytemod.utils.dialogue;
+package me.grax.jbytemod.utils.dialogue;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -41,7 +41,11 @@ import me.lpk.util.OpUtils;
  * Completely taken from JByteMod Alpha
  */
 public class EditDialogue {
-  private static final HashMap<String, String[]> opc = new HashMap<>();
+  
+  /**
+   * All opcodes for the corresponding classes, ordered
+   */
+  private static final HashMap<String, String[]> opc = new LinkedHashMap<>();
 
   static {
     opc.put(InsnNode.class.getSimpleName(),
@@ -66,6 +70,7 @@ public class EditDialogue {
     opc.put(InvokeDynamicInsnNode.class.getSimpleName(), new String[] { "invokedynamic" });
     opc.put(TableSwitchInsnNode.class.getSimpleName(), new String[] { "tableswitch" });
     opc.put(LookupSwitchInsnNode.class.getSimpleName(), new String[] { "lookupswitch" });
+    opc.put(LabelNode.class.getSimpleName(), null);
   }
 
   /**
@@ -207,6 +212,9 @@ public class EditDialogue {
     return false;
   }
 
+  /**
+   * Uppercase the first letter of a string
+   */
   public static String toUp(String name) {
     if (name.isEmpty()) {
       return name;
@@ -303,7 +311,7 @@ public class EditDialogue {
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public static void createInsertInsnDialog(MethodNode mn, AbstractInsnNode ain) {
+  public static void createInsertInsnDialog(MethodNode mn, AbstractInsnNode ain, boolean after) {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));
     final JPanel input = new JPanel(new GridLayout(0, 1));
     final JPanel labels = new JPanel(new GridLayout(0, 1));
@@ -312,14 +320,19 @@ public class EditDialogue {
     labels.add(new JLabel("Type"));
     JComboBox<String> clazz = new JComboBox<String>(new ArrayList<String>(opc.keySet()).toArray(new String[0]));
     input.add(clazz);
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Insert after", 2) == JOptionPane.OK_OPTION) {
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Insert " + (after ? "after" : "before"), 2) == JOptionPane.OK_OPTION) {
       try {
+      //only works because i created constructors for those nodes
         Class node = Class.forName("org.objectweb.asm.tree" + "." + clazz.getSelectedItem().toString());
-        System.out.println(node.getName());
         AbstractInsnNode newnode = (AbstractInsnNode) node.getConstructor().newInstance();
-        if (createEditInsnDialog(mn, newnode)) {
+        //we need no edit for LabelNode
+        if (opc.get(clazz.getSelectedItem().toString()) == null || createEditInsnDialog(mn, newnode)) {
           if (ain != null) {
-            mn.instructions.insert(ain, newnode);
+            if (after) {
+              mn.instructions.insert(ain, newnode);
+            } else {
+              mn.instructions.insertBefore(ain, newnode);
+            }
           } else {
             mn.instructions.add(newnode);
           }
@@ -364,6 +377,7 @@ public class EditDialogue {
   }
 
   public static boolean canEdit(AbstractInsnNode ain) {
-    return opc.keySet().contains(ain.getClass().getSimpleName());
+    String sn = ain.getClass().getSimpleName();
+    return opc.keySet().contains(sn) && opc.get(sn) != null;
   }
 }

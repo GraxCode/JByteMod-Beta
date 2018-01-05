@@ -60,7 +60,7 @@ public class MyCodeList extends JList<InstrEntry> {
             add.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
-                  EditDialogue.createInsertInsnDialog(currentMethod, null);
+                  EditDialogue.createInsertInsnDialog(currentMethod, null, true);
                 } catch (Exception e1) {
                   new ErrorDisplay(e1);
                 }
@@ -123,11 +123,23 @@ public class MyCodeList extends JList<InstrEntry> {
               menu.show(jam, (int) jam.getMousePosition().getX(), (int) jam.getMousePosition().getY());
             } else {
               JPopupMenu menu = new JPopupMenu();
+              JMenuItem insertBefore = new JMenuItem("Insert before");
+              insertBefore.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  try {
+                    EditDialogue.createInsertInsnDialog(mn, ain, false);
+                    OpUtils.clearLabelCache();
+                  } catch (Exception e1) {
+                    new ErrorDisplay(e1);
+                  }
+                }
+              });
+              menu.add(insertBefore);
               JMenuItem insert = new JMenuItem("Insert after");
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   try {
-                    EditDialogue.createInsertInsnDialog(mn, ain);
+                    EditDialogue.createInsertInsnDialog(mn, ain, true);
                     OpUtils.clearLabelCache();
                   } catch (Exception e1) {
                     new ErrorDisplay(e1);
@@ -135,6 +147,7 @@ public class MyCodeList extends JList<InstrEntry> {
                 }
               });
               menu.add(insert);
+              
               if (EditDialogue.canEdit(ain)) {
                 JMenuItem edit = new JMenuItem("Edit");
                 edit.addActionListener(new ActionListener() {

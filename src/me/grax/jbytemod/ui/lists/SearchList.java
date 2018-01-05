@@ -1,6 +1,8 @@
 package me.grax.jbytemod.ui.lists;
 
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -48,6 +50,14 @@ public class SearchList extends JList<SearchEntry> {
             }
           });
           menu.add(decl);
+          JMenuItem copy = new JMenuItem("Copy text");
+          copy.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              StringSelection selection = new StringSelection(SearchList.this.getSelectedValue().getFound());
+              Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
+            }
+          });
+          menu.add(copy);
           menu.show(SearchList.this, e.getX(), e.getY());
         }
       }
