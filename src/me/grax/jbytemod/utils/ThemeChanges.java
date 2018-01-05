@@ -2,8 +2,6 @@ package me.grax.jbytemod.utils;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import java.util.Map.Entry;
 
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -13,7 +11,7 @@ public class ThemeChanges {
   public static void setDefaults() {
     UIDefaults defaults = UIManager.getLookAndFeelDefaults();
     defaults.put("nimbusOrange", new Color(0xFF01D328));
-    //changeDefaultFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12)); //change font size
+//    changeDefaultFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14)); //change font size
   }
 
   public static void changeDefaultFont(Font f) {

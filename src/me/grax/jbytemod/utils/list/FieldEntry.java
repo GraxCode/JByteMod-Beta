@@ -11,6 +11,7 @@ public class FieldEntry extends InstrEntry {
   private ClassNode cn;
   private FieldNode fn;
   private String text;
+  private String easyText;
 
   public FieldEntry(ClassNode cn, FieldNode fn) {
     super(null, null);
@@ -18,6 +19,8 @@ public class FieldEntry extends InstrEntry {
     this.fn = fn;
     this.text = TextUtils.toHtml(InstrUtils.getDisplayAccess(fn.access) + " " + InstrUtils.getDisplayType(fn.desc, true) + " "
         + InstrUtils.getDisplayClassRed(fn.name) + " = " + TextUtils.toBold(String.valueOf(fn.value)));
+    this.easyText = InstrUtils.getDisplayAccess(fn.access) + " " + InstrUtils.getDisplayType(fn.desc, false) + " "
+        + InstrUtils.getDisplayClassEasy(fn.name) + " = " + String.valueOf(fn.value);
   }
 
   @Override
@@ -40,5 +43,7 @@ public class FieldEntry extends InstrEntry {
   public void setFn(FieldNode fn) {
     this.fn = fn;
   }
-  
+  public String toEasyString() {
+    return easyText;
+  }
 }

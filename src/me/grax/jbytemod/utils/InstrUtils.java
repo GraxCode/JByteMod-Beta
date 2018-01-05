@@ -220,11 +220,11 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.FIELD_INSN:
       FieldInsnNode fin = (FieldInsnNode) ain;
-      opc += getDisplayType(fin.desc, false) + " " + getDisplayClassRedEasy(fin.owner) + "." + fin.name;
+      opc += getDisplayType(fin.desc, false) + " " + getDisplayClassEasy(fin.owner) + "." + fin.name;
       break;
     case AbstractInsnNode.METHOD_INSN:
       MethodInsnNode min = (MethodInsnNode) ain;
-      opc += getDisplayType(min.desc.split("\\)")[1], false) + " " + getDisplayClassRedEasy(min.owner) + "." + min.name + "(" + getDisplayArgsEasy(min.desc) + ")";
+      opc += getDisplayType(min.desc.split("\\)")[1], false) + " " + getDisplayClassEasy(min.owner) + "." + min.name + "(" + getDisplayArgsEasy(min.desc) + ")";
       break;
     case AbstractInsnNode.VAR_INSN:
       VarInsnNode vin = (VarInsnNode) ain;
@@ -291,13 +291,6 @@ public class InstrUtils {
     return str;
   }
 
-  public static String getDisplayClassRedEasy(String str) {
-    String[] spl = str.split("/");
-    if (spl.length > 1) {
-      return spl[spl.length - 1];
-    }
-    return str;
-  }
 
   public static String getDisplayArgsEasy(String rawType) {
     return getDisplayType(rawType.split("\\)")[0].substring(1), false);

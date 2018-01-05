@@ -28,8 +28,8 @@ public class JSearch extends JFrame implements ActionListener {
 
   public JSearch(MyCodeList list) {
     this.list = list;
-    this.setTitle("Find");
-    this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    this.setTitle("Code List Search");
+    this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     this.setLocationRelativeTo(null);
     this.setBounds(100, 100, 300, 220);
     this.setResizable(false);
@@ -49,7 +49,7 @@ public class JSearch extends JFrame implements ActionListener {
     boxes.add(ww = new JCheckBox("Whole Word"));
     cp.add(border, BorderLayout.NORTH);
     JPanel bottom = new JPanel(new GridLayout(1, 0, 10, 10));
-    JButton findBtn = new JButton("Find");
+    JButton findBtn = new JButton("Find next");
     findBtn.addActionListener(this);
     bottom.add(findBtn);
     JButton closeBtn = new JButton("Close");
@@ -72,6 +72,7 @@ public class JSearch extends JFrame implements ActionListener {
     boolean mcase = mc.isSelected();
     String key = tf.getText().trim();
     if (ww.isSelected()) {
+      //TODO words at beginning or surrounded by quote
       key = " " + key + " ";
     }
     if (!mcase) {
@@ -79,19 +80,26 @@ public class JSearch extends JFrame implements ActionListener {
     }
     if (!key.isEmpty()) {
       DefaultListModel<InstrEntry> model = (DefaultListModel<InstrEntry>) list.getModel();
-      for (int i = 0; i < model.getSize(); i++) {
-        InstrEntry entry = model.getElementAt(i);
-        String easy = entry.toEasyString();
-        if (!mcase) {
-          easy = easy.toLowerCase();
-        }
-        if (easy.contains(key)) {
-          list.setSelectedIndex(i);
-          list.scrollRectToVisible(list.getCellBounds(list.getMinSelectionIndex(), list.getMaxSelectionIndex()));
-          break;
-        }
+      if(!searchNextFrom(list.getSelectedIndex() + 1, mcase, key, model)) {
+        searchNextFrom(0, mcase, key, model);
       }
     }
+  }
+
+  private boolean searchNextFrom(int index, boolean mcase, String key, DefaultListModel<InstrEntry> model) {
+    for (int i = index; i < model.getSize(); i++) {
+      InstrEntry entry = model.getElementAt(i);
+      String easy = entry.toEasyString();
+      if (!mcase) {
+        easy = easy.toLowerCase();
+      }
+      if (easy.contains(key)) {
+        list.setSelectedIndex(i);
+        list.scrollRectToVisible(list.getCellBounds(list.getMinSelectionIndex(), list.getMaxSelectionIndex()));
+        return true;
+      }
+    }    
+    return false;
   }
 
 }
