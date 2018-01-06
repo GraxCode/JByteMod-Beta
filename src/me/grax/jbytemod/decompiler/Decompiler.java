@@ -46,11 +46,9 @@ public abstract class Decompiler extends Thread {
   protected String decompile(ClassNode cn) {
     if (last != null && cn.equals(last)) {
       //same node, same output
-      System.out.println("cache");
       return lastOutput;
     }
     last = cn;
-    System.out.println("load");
     //do not regenerate anything here
     ClassWriter cw = new ClassWriter(0);
     cn.accept(cw);

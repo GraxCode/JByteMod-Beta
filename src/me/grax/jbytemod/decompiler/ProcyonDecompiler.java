@@ -1,5 +1,6 @@
 package me.grax.jbytemod.decompiler;
 
+import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import com.strobel.assembler.InputTypeLoader;
@@ -53,7 +54,11 @@ public class ProcyonDecompiler extends Decompiler {
       String decompiledSource = stringwriter.toString();
       return decompiledSource;
     } catch (Exception e) {
-      return e.toString();
+      e.printStackTrace();
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      e.printStackTrace(pw);
+      return sw.toString();
     }
   }
 }

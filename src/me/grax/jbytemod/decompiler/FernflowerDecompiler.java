@@ -2,6 +2,8 @@ package me.grax.jbytemod.decompiler;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.jar.Manifest;
 
@@ -46,7 +48,10 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
       return returned;
     } catch (Exception e) {
       e.printStackTrace();
-      return e.toString();
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      e.printStackTrace(pw);
+      return sw.toString();
     }
   }
 
