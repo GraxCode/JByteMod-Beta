@@ -2,9 +2,6 @@ package me.grax.jbytemod.decompiler;
 
 import java.io.StringWriter;
 
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.tree.ClassNode;
-
 import com.strobel.assembler.InputTypeLoader;
 import com.strobel.assembler.metadata.Buffer;
 import com.strobel.assembler.metadata.ITypeLoader;
@@ -19,34 +16,14 @@ import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.DecompilerPanel;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
-public class DecompileThread extends Thread {
+public class ProcyonDecompiler extends Decompiler {
 
-  private JByteMod jbm;
-  private ClassNode cn;
-  private DecompilerPanel dp;
-  public static ClassNode last;
-  private static String lastOutput;
-
-  public DecompileThread(JByteMod jbm, ClassNode cn, DecompilerPanel dp) {
-    this.jbm = jbm;
-    this.cn = cn;
-    this.dp = dp;
+  public ProcyonDecompiler(JByteMod jbm, DecompilerPanel dp) {
+    super(jbm, dp);
   }
 
-  @Override
-  public void run() {
-    dp.setText("Loading...");
-    dp.setText(this.decompile(cn));
-  }
-
-  public String decompile(ClassNode cn) {
+  public String decompile(byte[] b) {
     try {
-      if (cn == last) {
-        return lastOutput;
-      }
-      ClassWriter cw = new ClassWriter(0);
-      cn.accept(cw);
-      final byte[] b = cw.toByteArray();
       DecompilerSettings settings = new DecompilerSettings();
       MetadataSystem metadataSystem = new MetadataSystem(new ITypeLoader() {
         private InputTypeLoader backLoader = new InputTypeLoader();
@@ -74,8 +51,6 @@ public class DecompileThread extends Thread {
       StringWriter stringwriter = new StringWriter();
       settings.getLanguage().decompileType(resolvedType, new PlainTextOutput(stringwriter), decompilationOptions);
       String decompiledSource = stringwriter.toString();
-      last = cn;
-      lastOutput = decompiledSource;
       return decompiledSource;
     } catch (Exception e) {
       return e.toString();

@@ -113,7 +113,7 @@ public class JByteMod extends JFrame {
     });
     border = UIManager.getColor("nimbusBorder");
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.3.0");
+    this.setTitle("JByteMod 1.3.1");
     this.setJMenuBar(new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
