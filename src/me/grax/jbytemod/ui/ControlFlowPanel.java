@@ -66,7 +66,7 @@ public class ControlFlowPanel extends JPanel {
 
   private void generateList() {
     cf.clear();
-    if(node.instructions.size() == 0) {
+    if (node.instructions.size() == 0) {
       graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
       return;
     }
@@ -75,7 +75,7 @@ public class ControlFlowPanel extends JPanel {
     System.out.println("Blocks: " + cf.size());
     int i = 0;
     for (Block b : cf) {
-      System.out.println("block " + i++ + " nodes: " + b.getNodes().size() + " outputs: " + b.getOutput().size());
+      System.out.println("block " + i++ + " nodes: ?" + " outputs: " + b.getOutput().size());
     }
     Object parent = graph.getDefaultParent();
     graph.getModel().beginUpdate();
@@ -107,7 +107,7 @@ public class ControlFlowPanel extends JPanel {
       v1 = existing.get(b);
     } else {
 
-      v1 = graph.insertVertex(parent, null, "Block " + cf.indexOf(b) + "\n" + b.getNodes().size(), 150, 10, 80, 30);
+      v1 = graph.insertVertex(parent, null, "Block " + cf.indexOf(b), 150, 10, 80, 30);
       existing.put(b, v1);
     }
     if (v1 == null) {
@@ -115,7 +115,12 @@ public class ControlFlowPanel extends JPanel {
     }
     ArrayList<Block> next = b.getOutput();
     for (Block out : next) {
-      graph.insertEdge(parent, null, null, v1, addBlock(parent, out));
+      if (out == b) {
+        //while loop
+        graph.insertEdge(parent, null, null, v1, v1);
+      } else {
+        graph.insertEdge(parent, null, null, v1, addBlock(parent, out));
+      }
     }
     return v1;
   }

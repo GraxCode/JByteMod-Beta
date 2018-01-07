@@ -13,7 +13,7 @@ import org.objectweb.asm.tree.InsnNode;
  * @author Admin
  *
  */
-public class Block implements Iterable<AbstractInsnNode> {
+public class Block {
   private ArrayList<Block> output = new ArrayList<>();
 
   /**
@@ -21,16 +21,18 @@ public class Block implements Iterable<AbstractInsnNode> {
    **/
   private ArrayList<Block> input = new ArrayList<>();
 
-  private List<AbstractInsnNode> nodes;
+  private AbstractInsnNode endNode;
 
-  public Block(List<AbstractInsnNode> list, ArrayList<Block> output) {
+  public Block() {
     super();
-    this.output = output;
-    this.nodes = list;
   }
 
-  public List<AbstractInsnNode> getNodes() {
-    return nodes;
+  public AbstractInsnNode getEndNode() {
+    return endNode;
+  }
+
+  public void setEndNode(AbstractInsnNode endNode) {
+    this.endNode = endNode;
   }
 
   public ArrayList<Block> getOutput() {
@@ -47,11 +49,6 @@ public class Block implements Iterable<AbstractInsnNode> {
 
   public void setInput(ArrayList<Block> input) {
     this.input = input;
-  }
-
-  @Override
-  public Iterator<AbstractInsnNode> iterator() {
-    return nodes.iterator();
   }
 
 }

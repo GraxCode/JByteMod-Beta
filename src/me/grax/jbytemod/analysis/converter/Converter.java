@@ -29,87 +29,51 @@ public class Converter implements Opcodes {
 
   //FIXME: not really working, getBlock sometimes causes stackoverflow, or ifs don't have a label after them
   //at recoding we need no instructions
-  public Collection<Block> convert() {
-    HashMap<LabelNode, UnfinishedBlock> map = new LinkedHashMap<>();
-    LabelNode current = null;
-    //if it doesn't start with a labelnode, add one
-    if (!(nodes.get(0) instanceof LabelNode)) {
-      nodes.add(0, new LabelNode());
-    }
-    //TODO if jumps may not have a label after them, add one
-    ArrayList<AbstractInsnNode> currentBlock = null;
+  public ArrayList<Block> convert() {
+    ArrayList<Block> blocks = new ArrayList<>();
+    HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
+    Block block = null;
+    //detect block structure & last block insns
     for (AbstractInsnNode ain : nodes) {
-      if (ain instanceof LineNumberNode) {
-        continue;
+      if (block == null) {
+        block = new Block();
       }
-      if (current != null) {
-        if (ain instanceof LabelNode) {
-          ArrayList<LabelNode> output = new ArrayList<>();
-          output.add((LabelNode) ain);
-          map.put(current, new UnfinishedBlock(currentBlock, output));
-          current = (LabelNode) ain;
-          currentBlock = new ArrayList<>();
-          continue;
+      correspBlock.put(ain, block);
+      //end blocks
+      if (ain.getOpcode() >= IRETURN && ain.getOpcode() <= RETURN || ain instanceof JumpInsnNode || ain.getOpcode() == ATHROW) {
+        block.setEndNode(ain);
+        blocks.add(block);
+        block = null;
+      }
+    }
+    for (Block b : blocks) {
+      AbstractInsnNode end = b.getEndNode();
+      //only opc where it continues
+      if (end instanceof JumpInsnNode) {
+        JumpInsnNode jin = (JumpInsnNode) end;
+        ArrayList<Block> outputs = new ArrayList<>();
+        if (!correspBlock.containsKey(jin.label)) {
+          throw new RuntimeException("label not visited");
         }
-        currentBlock.add(ain);
-        if (ain instanceof JumpInsnNode) {
-          //block finished
-          JumpInsnNode jin = (JumpInsnNode) ain;
-          ArrayList<LabelNode> output = new ArrayList<>();
-          if (jin.getOpcode() == GOTO) {
-            output.add(jin.label);
-          } else {
-            output.add(jin.label);
-            output.add((LabelNode) ain.getNext());
+        Block blockAtLabel = correspBlock.get(jin.label);
+        //blockAtLabel can be the same block!
+        if (end.getOpcode() == GOTO) {
+          outputs.add(blockAtLabel);
+          b.setOutput(outputs);
+        } else {
+          //ifs have two outputs: either it jumps or not
+          outputs.add(blockAtLabel);
+          if (jin.getNext() == null) {
+            throw new RuntimeException("if has no next entry");
           }
-          map.put(current, new UnfinishedBlock(currentBlock, output));
-          current = null;
+          if (correspBlock.get(jin.getNext()) == b) {
+            throw new RuntimeException("next node is self?");
+          }
+          outputs.add(correspBlock.get(jin.getNext()));
+          b.setOutput(outputs);
         }
-      } else if (ain instanceof LabelNode) {
-        current = (LabelNode) ain;
-        currentBlock = new ArrayList<>();
       }
     }
-    //lastNode
-    map.put(current, new UnfinishedBlock(currentBlock, new ArrayList<>()));
-    
-    //TODO maybe here is a bug?
-    //we need to use a sorted hashmap here
-    HashMap<LabelNode, Block> finishedBlocks = new LinkedHashMap<>();
-    for (Entry<LabelNode, UnfinishedBlock> e : map.entrySet()) {
-      LabelNode l = e.getKey();
-      finishedBlocks.put(l, getBlock(map, finishedBlocks, l));
-    }
-    return finishedBlocks.values();
-  }
-
-  private Block getBlock(HashMap<LabelNode, UnfinishedBlock> unfinished, HashMap<LabelNode, Block> finished, LabelNode l) {
-    if (finished.containsKey(l)) {
-      return finished.get(l);
-    }
-    UnfinishedBlock ufb = unfinished.get(l);
-    assert (ufb != null);
-    Block b = new Block(ufb.list, null);
-    ArrayList<Block> output = new ArrayList<>();
-    for (LabelNode ol : ufb.output) {
-      Block ob = getBlock(unfinished, finished, ol);
-      ob.getInput().add(b);
-      output.add(ob);
-    }
-    b.setOutput(output);
-    finished.put(l, b);
-    return b;
-  }
-
-  class UnfinishedBlock {
-    ArrayList<AbstractInsnNode> list;
-    ArrayList<LabelNode> output;
-
-    public UnfinishedBlock(ArrayList<AbstractInsnNode> list, ArrayList<LabelNode> output) {
-      super();
-      this.list = list;
-      this.output = output;
-    }
-
+    return blocks;
   }
 }
