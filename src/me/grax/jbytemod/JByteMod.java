@@ -49,7 +49,7 @@ public class JByteMod extends JFrame {
   private final LanguageRes res = new LanguageRes();
   private final Options ops = new Options();
 
-  private JarFile file;
+  private JarArchive file;
 
   private ClassTree jarTree;
 
@@ -113,7 +113,7 @@ public class JByteMod extends JFrame {
     });
     border = UIManager.getColor("nimbusBorder");
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.3.1");
+    this.setTitle("JByteMod 1.3.2");
     this.setJMenuBar(new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -142,7 +142,7 @@ public class JByteMod extends JFrame {
     String ap = input.getAbsolutePath();
     if (ap.endsWith(".jar")) {
       try {
-        this.file = new JarFile(this, input);
+        this.file = new JarArchive(this, input);
       } catch (Throwable e) {
         new ErrorDisplay(e);
       }
@@ -214,7 +214,7 @@ public class JByteMod extends JFrame {
     return currentNode;
   }
 
-  public JarFile getFile() {
+  public JarArchive getFile() {
     return file;
   }
 

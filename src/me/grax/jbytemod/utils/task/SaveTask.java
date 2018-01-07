@@ -10,7 +10,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.JarFile;
+import me.grax.jbytemod.JarArchive;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.lpk.util.JarUtils;
 
@@ -19,9 +19,9 @@ public class SaveTask extends SwingWorker<Void, Integer> {
   private File output;
   private PageEndPanel jpb;
   private JByteMod jbm;
-  private JarFile file;
+  private JarArchive file;
 
-  public SaveTask(JByteMod jbm, File output, JarFile file) {
+  public SaveTask(JByteMod jbm, File output, JarArchive file) {
     this.output = output;
     this.jbm = jbm;
     this.file = file;

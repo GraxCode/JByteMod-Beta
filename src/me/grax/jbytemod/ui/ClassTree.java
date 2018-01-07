@@ -21,7 +21,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.JarFile;
+import me.grax.jbytemod.JarArchive;
 import me.grax.jbytemod.utils.MethodUtils;
 import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
@@ -65,7 +65,7 @@ public class ClassTree extends JTree implements IDropUser {
     this.setTransferHandler(new JarDropHandler(this, 0));
   }
 
-  public void refreshTree(JarFile jar) {
+  public void refreshTree(JarArchive jar) {
     
     DefaultTreeModel tm = (DefaultTreeModel) this.getModel();
     SortedTreeNode root = (SortedTreeNode) tm.getRoot();

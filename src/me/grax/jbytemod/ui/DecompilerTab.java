@@ -30,7 +30,7 @@ public class DecompilerTab extends JPanel {
   public DecompilerTab(JByteMod jbm) {
     this.jbm = jbm;
     this.dp = new DecompilerPanel();
-    this.label = new JLabel("Decompiler");
+    this.label = new JLabel(decompiler + " Decompiler");
     jbm.setDP(dp);
     this.setLayout(new BorderLayout(0, 0));
     JPanel lpad = new JPanel();
@@ -46,6 +46,7 @@ public class DecompilerTab extends JPanel {
 
       public void actionPerformed(ActionEvent e) {
         DecompilerTab.this.decompiler = (Decompilers) decompilerCombo.getSelectedItem();
+        label.setText(decompiler + " Decompiler");
         decompile(Decompiler.last, true);
       }
     });
