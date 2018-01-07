@@ -20,6 +20,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
@@ -27,6 +28,7 @@ import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -41,7 +43,7 @@ import me.lpk.util.OpUtils;
  * Completely taken from JByteMod Alpha
  */
 public class EditDialogue {
-  
+
   /**
    * All opcodes for the corresponding classes, ordered
    */
@@ -71,6 +73,8 @@ public class EditDialogue {
     opc.put(TableSwitchInsnNode.class.getSimpleName(), new String[] { "tableswitch" });
     opc.put(LookupSwitchInsnNode.class.getSimpleName(), new String[] { "lookupswitch" });
     opc.put(LabelNode.class.getSimpleName(), null);
+    opc.put(LineNumberNode.class.getSimpleName(), null);
+    //opc.put(FrameNode.class.getSimpleName(), null);
   }
 
   /**
@@ -120,7 +124,12 @@ public class EditDialogue {
         fieldNames.put(f.getName(), "label");
         labels.add(new JLabel(toUp(f.getName()) + ": "));
         JComboBox<LabelNode> jcb = new JComboBox<>(ln.toArray(new LabelNode[0]));
-        jcb.setSelectedItem(f.get(ain));
+        Object v = f.get(ain);
+        if (v != null) {
+          jcb.setSelectedItem(v);
+        } else if (!ln.isEmpty()) {
+          jcb.setSelectedIndex(0);
+        }
         input.add(jcb);
       } else {
         System.out.println("Unallowed edit:" + f.getName() + " " + f.getGenericType().getTypeName());
@@ -322,11 +331,11 @@ public class EditDialogue {
     input.add(clazz);
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Insert " + (after ? "after" : "before"), 2) == JOptionPane.OK_OPTION) {
       try {
-      //only works because i created constructors for those nodes
+        //only works because i created constructors for those nodes
         Class node = Class.forName("org.objectweb.asm.tree" + "." + clazz.getSelectedItem().toString());
         AbstractInsnNode newnode = (AbstractInsnNode) node.getConstructor().newInstance();
         //we need no edit for LabelNode
-        if (opc.get(clazz.getSelectedItem().toString()) == null || createEditInsnDialog(mn, newnode)) {
+        if (!hasSettings(newnode) || createEditInsnDialog(mn, newnode)) {
           if (ain != null) {
             if (after) {
               mn.instructions.insert(ain, newnode);
@@ -378,6 +387,10 @@ public class EditDialogue {
 
   public static boolean canEdit(AbstractInsnNode ain) {
     String sn = ain.getClass().getSimpleName();
-    return opc.keySet().contains(sn) && opc.get(sn) != null;
+    return opc.keySet().contains(sn) && hasSettings(ain);
+  }
+
+  private static boolean hasSettings(AbstractInsnNode ain) {
+    return !(ain instanceof LabelNode);
   }
 }
