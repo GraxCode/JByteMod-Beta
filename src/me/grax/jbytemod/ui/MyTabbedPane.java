@@ -56,6 +56,9 @@ public class MyTabbedPane extends JTabbedPane {
 
     };
     this.addChangeListener(changeListener);
+    ControlFlowPanel cfp = new ControlFlowPanel();
+    this.addTab("Analysis", this.withBorder(new JLabel("Control flow visualisation"), cfp)); 
+    jbm.setCFP(cfp);
     jbm.setTabbedPane(this);
   }
 

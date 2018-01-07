@@ -69,10 +69,8 @@ public class DecompilerTab extends JPanel {
 
   public void decompile(ClassNode cn, boolean deleteCache) {
     if(cn == null) {
-      System.out.println("classnode null");
       return;
     }
-    //    new ProcyonDecompileThread(jbm, dp).setNode(cn).start();
     Decompiler d = null;
     switch (decompiler) {
     case Procyon:

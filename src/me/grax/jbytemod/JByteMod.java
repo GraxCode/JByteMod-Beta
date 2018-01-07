@@ -24,6 +24,7 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.ClassTree;
+import me.grax.jbytemod.ui.ControlFlowPanel;
 import me.grax.jbytemod.ui.DecompilerPanel;
 import me.grax.jbytemod.ui.InfoPanel;
 import me.grax.jbytemod.ui.MyMenuBar;
@@ -70,6 +71,8 @@ public class JByteMod extends JFrame {
   private InfoPanel sp;
 
   private LVPList lvplist;
+
+  private ControlFlowPanel cfp;
 
   public static JByteMod instance;
   public static Color border;
@@ -176,6 +179,7 @@ public class JByteMod extends JFrame {
     lvplist.addNodes(cn, mn);
     dp.setText("");
     tabbedPane.selectClass(cn);
+    cfp.setNode(mn);
   }
 
   public void selectClass(ClassNode cn) {
@@ -276,5 +280,9 @@ public class JByteMod extends JFrame {
 
   public void setSP(InfoPanel sp) {
     this.sp = sp;
+  }
+
+  public void setCFP(ControlFlowPanel cfp) {
+    this.cfp = cfp;
   }
 }
