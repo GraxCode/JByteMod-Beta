@@ -28,6 +28,7 @@ import me.grax.jbytemod.ui.lists.SearchList;
 public class MyTabbedPane extends JTabbedPane {
   private JByteMod jbm;
   private DecompilerTab dt;
+  private ControlFlowPanel cfp;
 
   public MyTabbedPane(JByteMod jbm) {
     this.jbm = jbm;
@@ -45,6 +46,10 @@ public class MyTabbedPane extends JTabbedPane {
     jbm.setSearchlist(searchList);
     JLabel search = new JLabel("Search Results");
     this.addTab("Search", this.withBorder(search, searchList));
+    this.cfp = new ControlFlowPanel();
+    this.addTab("Analysis", this.withBorder(new JLabel("Control flow visualisation"), cfp)); 
+    jbm.setCFP(cfp);
+    jbm.setTabbedPane(this);
     ChangeListener changeListener = new ChangeListener() {
       public void stateChanged(ChangeEvent changeEvent) {
         JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
@@ -52,20 +57,22 @@ public class MyTabbedPane extends JTabbedPane {
         if (sourceTabbedPane.getTitleAt(index).equals(decompiler)) {
           dt.decompile(jbm.getCurrentNode(), false);
         }
+        if (sourceTabbedPane.getTitleAt(index).equals("Analysis")) {
+          cfp.generateList();
+        }
       }
 
     };
     this.addChangeListener(changeListener);
-    ControlFlowPanel cfp = new ControlFlowPanel();
-    this.addTab("Analysis", this.withBorder(new JLabel("Control flow visualisation"), cfp)); 
-    jbm.setCFP(cfp);
-    jbm.setTabbedPane(this);
   }
 
   public void selectClass(ClassNode cn) {
     int index = this.getSelectedIndex();
     if (this.getTitleAt(index).equals("Decompiler")) {
-      dt.decompile(jbm.getCurrentNode(), false);
+      dt.decompile(cn, false);
+    }
+    if (this.getTitleAt(index).equals("Analysis")) {
+      cfp.generateList();
     }
   }
 

@@ -46,44 +46,42 @@ public class ControlFlowPanel extends JPanel {
 
   public void setNode(MethodNode node) {
     this.node = node;
-    this.generateList();
-    this.repaint();
   }
 
-  private void generateList() {
-    cf.clear();
-    if (node.instructions.size() == 0) {
+  public void generateList() {
+      cf.clear();
+      if (node.instructions.size() == 0) {
+        graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
+        return;
+      }
+      Converter c = new Converter(node);
+      try {
+        cf.addAll(c.convert());
+      } catch (Exception e) {
+        e.printStackTrace();
+        new ErrorDisplay(e);
+        graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
+        return;
+      }
+      Object parent = graph.getDefaultParent();
+      graph.getModel().beginUpdate();
       graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
-      return;
-    }
-    Converter c = new Converter(node);
-    try {
-      cf.addAll(c.convert());
-    } catch (Exception e) {
-      e.printStackTrace();
-      new ErrorDisplay(e);
-      graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
-      return;
-    }
-    Object parent = graph.getDefaultParent();
-    graph.getModel().beginUpdate();
-    graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
-    try {
-      existing.clear();
-      if (!cf.isEmpty()) {
-        for (Block b : cf) {
-          if (b.getInput().isEmpty()) { //there could be more than 1 (dead code) FIXME: multiple startpoints overlap
-            addBlock(parent, b);
-            break; //TODO
+      try {
+        existing.clear();
+        if (!cf.isEmpty()) {
+          for (Block b : cf) {
+            if (b.getInput().isEmpty()) { //there could be more than 1 (dead code) FIXME: multiple startpoints overlap
+              addBlock(parent, b);
+              break; //TODO
+            }
           }
         }
+      } finally {
+        graph.getModel().endUpdate();
       }
-    } finally {
-      graph.getModel().endUpdate();
-    }
-    new mxHierarchicalLayout(graph).execute(graph.getDefaultParent());
-    //    new mxFastOrganicLayout(graph).execute(graph.getDefaultParent());
-
+      new mxHierarchicalLayout(graph).execute(graph.getDefaultParent());
+      //new mxFastOrganicLayout(graph).execute(graph.getDefaultParent());
+    this.repaint();
   }
 
   private HashMap<Block, Object> existing = new HashMap<>();
