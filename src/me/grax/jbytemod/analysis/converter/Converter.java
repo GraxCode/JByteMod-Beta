@@ -2,16 +2,12 @@ package me.grax.jbytemod.analysis.converter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.analysis.block.Block;
@@ -27,8 +23,6 @@ public class Converter implements Opcodes {
     this.mn = mn;
   }
 
-  //FIXME: not really working, getBlock sometimes causes stackoverflow, or ifs don't have a label after them
-  //at recoding we need no instructions
   public ArrayList<Block> convert() {
     ArrayList<Block> blocks = new ArrayList<>();
     HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
@@ -44,6 +38,15 @@ public class Converter implements Opcodes {
         block.setEndNode(ain);
         blocks.add(block);
         block = null;
+        continue;
+      }
+      //next because the label should have a new block
+      //blocks that end without a jump
+      if (ain.getNext() != null && (ain.getNext() instanceof LabelNode)) {
+        block.setEndNode(ain.getNext());
+        blocks.add(block);
+        block = null;
+        continue;
       }
     }
     for (Block b : blocks) {
@@ -60,6 +63,7 @@ public class Converter implements Opcodes {
         if (end.getOpcode() == GOTO) {
           outputs.add(blockAtLabel);
           b.setOutput(outputs);
+          blockAtLabel.getInput().add(b);
         } else {
           //ifs have two outputs: either it jumps or not
           outputs.add(blockAtLabel);
@@ -69,9 +73,22 @@ public class Converter implements Opcodes {
           if (correspBlock.get(jin.getNext()) == b) {
             throw new RuntimeException("next node is self?");
           }
-          outputs.add(correspBlock.get(jin.getNext()));
+          Block blockAfter = correspBlock.get(jin.getNext());
+          outputs.add(blockAfter);
           b.setOutput(outputs);
+          blockAtLabel.getInput().add(b);
+          blockAfter.getInput().add(b);
         }
+      }
+      if (end instanceof LabelNode) {
+        if (!correspBlock.containsKey(end)) {
+          throw new RuntimeException("label not visited");
+        }
+        ArrayList<Block> outputs = new ArrayList<>();
+        Block blockAtNext = correspBlock.get(end);
+        outputs.add(blockAtNext);
+        b.setOutput(outputs);
+        blockAtNext.getInput().add(b);
       }
     }
     return blocks;

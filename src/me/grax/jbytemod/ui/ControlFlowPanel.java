@@ -84,8 +84,9 @@ public class ControlFlowPanel extends JPanel {
       existing.clear();
       if (!cf.isEmpty()) {
         for (Block b : cf) {
-          if (b.getInput().isEmpty()) { //there could be more than 1 (dead code)
+          if (b.getInput().isEmpty()) { //there could be more than 1 (dead code) FIXME: multiple startpoints overlap
             addBlock(parent, b);
+            break; //TODO
           }
         }
       }
@@ -104,9 +105,8 @@ public class ControlFlowPanel extends JPanel {
   private Object addBlock(Object parent, Block b) {
     Object v1 = null;
     if (existing.containsKey(b)) {
-      v1 = existing.get(b);
+      return existing.get(b);
     } else {
-
       v1 = graph.insertVertex(parent, null, "Block " + cf.indexOf(b), 150, 10, 80, 30);
       existing.put(b, v1);
     }
@@ -115,10 +115,14 @@ public class ControlFlowPanel extends JPanel {
     }
     ArrayList<Block> next = b.getOutput();
     for (Block out : next) {
-      if (out == b) {
-        //while loop
-        graph.insertEdge(parent, null, null, v1, v1);
+      if (out.equals(b)) {
+        System.out.println("return to same");
       } else {
+        if (b == out) {
+          System.out.println("loop?");
+          return v1;
+        }
+        assert (out.getInput().contains(b));
         graph.insertEdge(parent, null, null, v1, addBlock(parent, out));
       }
     }
