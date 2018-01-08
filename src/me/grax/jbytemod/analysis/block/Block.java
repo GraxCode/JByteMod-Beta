@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 
 /**
  * Separated by labels (jumps)
@@ -22,6 +24,7 @@ public class Block {
   private ArrayList<Block> input = new ArrayList<>();
 
   private AbstractInsnNode endNode;
+  private LabelNode label;
 
   public Block() {
     super();
@@ -49,6 +52,18 @@ public class Block {
 
   public void setInput(ArrayList<Block> input) {
     this.input = input;
+  }
+
+  public LabelNode getLabel() {
+    return label;
+  }
+
+  public void setLabel(LabelNode label) {
+    this.label = label;
+  }
+
+  public boolean endsWithJump() {
+    return endNode instanceof JumpInsnNode;
   }
 
 }

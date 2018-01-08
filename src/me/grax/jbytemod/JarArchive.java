@@ -1,7 +1,6 @@
 package me.grax.jbytemod;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -11,9 +10,6 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import javax.swing.SwingWorker;
 
@@ -24,7 +20,6 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.lpk.util.ASMUtils;
-import me.lpk.util.JarUtils;
 
 public class JarArchive {
   private Map<String, ClassNode> classes;
@@ -95,7 +90,7 @@ public class JarArchive {
     public void loadFiles(JarFile jar) throws IOException {
       Map<String, ClassNode> classes = new HashMap<String, ClassNode>();
       Map<String, byte[]> otherFiles = new HashMap<String, byte[]>();
-
+      
       Stream<JarEntry> str = jar.stream();
       str.forEach(z -> readJar(jar, z, classes, otherFiles));
       jar.close();

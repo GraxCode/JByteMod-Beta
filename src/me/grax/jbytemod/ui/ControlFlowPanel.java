@@ -8,49 +8,35 @@ import javax.swing.JPanel;
 
 import org.objectweb.asm.tree.MethodNode;
 
-import com.mxgraph.layout.mxCompactTreeLayout;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import me.grax.jbytemod.analysis.block.Block;
 import me.grax.jbytemod.analysis.converter.Converter;
+import me.grax.jbytemod.utils.ErrorDisplay;
+import me.lpk.util.OpUtils;
 
 public class ControlFlowPanel extends JPanel {
 
   private MethodNode node;
   private ArrayList<Block> cf = new ArrayList<>();
   private mxGraph graph;
+  private static final String vertexColor = "#4FC3F7";
+  private static final String singleVertexColor = "#03A9F4";
+
+  private static final String edgeColor = "#111111";
+  private static final String jumpColor = "#555555";
 
   public ControlFlowPanel() {
     this.setLayout(new BorderLayout(0, 0));
 
-    graph = new mxGraph() {
-      //      @Override
-      //      public boolean isCellSelectable(Object cell) {
-      //        if (cell != null) {
-      //          if (cell instanceof mxCell) {
-      //            mxCell myCell = (mxCell) cell;
-      //            if (myCell.isEdge())
-      //              return false;
-      //          }
-      //        }
-      //        return super.isCellSelectable(cell);
-      //      }
-      //
-      //      @Override
-      //      public boolean isCellEditable(Object arg0) {
-      //        return false;
-      //      }
-      //
-      //      @Override
-      //      public boolean isCellResizable(Object arg0) {
-      //        return false;
-      //      }
-    };
+    graph = new mxGraph();
     graph.setAutoOrigin(true);
     graph.setAutoSizeCells(true);
     mxGraphComponent graphComponent = new mxGraphComponent(graph);
-    //    graphComponent.setEnabled(false); //TODO
+    graphComponent.setEnabled(false); //TODO
     this.add(graphComponent);
   }
 
@@ -71,11 +57,13 @@ public class ControlFlowPanel extends JPanel {
       return;
     }
     Converter c = new Converter(node);
-    cf.addAll(c.convert());
-    System.out.println("Blocks: " + cf.size());
-    int i = 0;
-    for (Block b : cf) {
-      System.out.println("block " + i++ + " nodes: ?" + " outputs: " + b.getOutput().size());
+    try {
+      cf.addAll(c.convert());
+    } catch (Exception e) {
+      e.printStackTrace();
+      new ErrorDisplay(e);
+      graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
+      return;
     }
     Object parent = graph.getDefaultParent();
     graph.getModel().beginUpdate();
@@ -93,11 +81,9 @@ public class ControlFlowPanel extends JPanel {
     } finally {
       graph.getModel().endUpdate();
     }
-    mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
-    //    layout.setFineTuning(false);
-    layout.execute(graph.getDefaultParent());
-    //    new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
-    //    new mxEdgeLabelLayout(graph).execute(graph.getDefaultParent());
+    new mxHierarchicalLayout(graph).execute(graph.getDefaultParent());
+    //    new mxFastOrganicLayout(graph).execute(graph.getDefaultParent());
+
   }
 
   private HashMap<Block, Object> existing = new HashMap<>();
@@ -107,7 +93,9 @@ public class ControlFlowPanel extends JPanel {
     if (existing.containsKey(b)) {
       return existing.get(b);
     } else {
-      v1 = graph.insertVertex(parent, null, "Block " + cf.indexOf(b), 150, 10, 80, 30);
+      boolean isNormal = b.getLabel() != null;
+      v1 = graph.insertVertex(parent, null, "Block " + cf.indexOf(b) + (isNormal ? "\n" + "Label " + OpUtils.getLabelIndex(b.getLabel()) : ""), 150,
+          10, 80, 40, "fillColor=" + (isNormal ? vertexColor : singleVertexColor) + ";fontColor=#111111;");
       existing.put(b, v1);
     }
     if (v1 == null) {
@@ -117,13 +105,10 @@ public class ControlFlowPanel extends JPanel {
     for (Block out : next) {
       if (out.equals(b)) {
         System.out.println("return to same");
+        graph.insertEdge(parent, null, null, v1, v1);
       } else {
-        if (b == out) {
-          System.out.println("loop?");
-          return v1;
-        }
         assert (out.getInput().contains(b));
-        graph.insertEdge(parent, null, null, v1, addBlock(parent, out));
+        graph.insertEdge(parent, null, null, v1, addBlock(parent, out), "strokeColor=" + (b.endsWithJump() ? jumpColor : edgeColor) + ";");
       }
     }
     return v1;
