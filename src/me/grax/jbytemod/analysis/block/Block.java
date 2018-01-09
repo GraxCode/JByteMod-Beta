@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 public class Block {
   private ArrayList<Block> output = new ArrayList<>();
@@ -67,4 +69,7 @@ public class Block {
     return endNode instanceof JumpInsnNode;
   }
 
+  public boolean endsWithSwitch() {
+    return endNode instanceof TableSwitchInsnNode || endNode instanceof LookupSwitchInsnNode;
+  }
 }

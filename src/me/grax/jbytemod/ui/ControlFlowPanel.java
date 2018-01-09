@@ -33,7 +33,9 @@ public class ControlFlowPanel extends JPanel {
 
   private static final String jumpColorGreen = "#388a47";
   private static final String jumpColorRed = "#8a3e38";
-
+  private static final String jumpColorPurple = "#71388a";
+  private static final String jumpColorPink = "#8a386d";
+  
   public ControlFlowPanel() {
     this.setLayout(new BorderLayout(0, 0));
 
@@ -137,6 +139,12 @@ public class ControlFlowPanel extends JPanel {
         return jumpColorRed;
       }
       return jumpColor;
+    }
+    if(b.endsWithSwitch()) {
+      if(i == 0) {
+        return jumpColorPink;
+      }
+      return jumpColorPurple;
     }
     return edgeColor;
   }

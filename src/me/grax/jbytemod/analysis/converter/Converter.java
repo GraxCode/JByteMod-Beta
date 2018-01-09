@@ -8,7 +8,9 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 import me.grax.jbytemod.analysis.block.Block;
 
@@ -38,7 +40,8 @@ public class Converter implements Opcodes {
       block.getNodes().add(ain);
       correspBlock.put(ain, block);
       //end blocks
-      if (ain.getOpcode() >= IRETURN && ain.getOpcode() <= RETURN || ain instanceof JumpInsnNode || ain.getOpcode() == ATHROW) {
+      int op = ain.getOpcode();
+      if (op >= IRETURN && op <= RETURN || ain instanceof JumpInsnNode || op == ATHROW || op == LOOKUPSWITCH || op == TABLESWITCH) {
         block.setEndNode(ain);
         blocks.add(block);
         block = null;
@@ -83,8 +86,35 @@ public class Converter implements Opcodes {
           blockAtLabel.getInput().add(b);
           blockAfter.getInput().add(b);
         }
-      }
-      if (end instanceof LabelNode) {
+      } else if (end instanceof TableSwitchInsnNode) {
+        ArrayList<Block> outputs = new ArrayList<>();
+        TableSwitchInsnNode tsin = (TableSwitchInsnNode) end;
+        if (tsin.dflt != null) {
+          Block blockAtDefault = correspBlock.get(tsin.dflt);
+          blockAtDefault.getInput().add(b);
+          outputs.add(blockAtDefault);
+        }
+        for (LabelNode l : tsin.labels) {
+          Block blockAtCase = correspBlock.get(l);
+          blockAtCase.getInput().add(b);
+          outputs.add(blockAtCase);
+        }
+        b.setOutput(outputs);
+      } else if (end instanceof LookupSwitchInsnNode) {
+        ArrayList<Block> outputs = new ArrayList<>();
+        LookupSwitchInsnNode lsin = (LookupSwitchInsnNode) end;
+        if (lsin.dflt != null) {
+          Block blockAtDefault = correspBlock.get(lsin.dflt);
+          blockAtDefault.getInput().add(b);
+          outputs.add(blockAtDefault);
+        }
+        for (LabelNode l : lsin.labels) {
+          Block blockAtCase = correspBlock.get(l);
+          blockAtCase.getInput().add(b);
+          outputs.add(blockAtCase);
+        }
+        b.setOutput(outputs);
+      } else if (end instanceof LabelNode) {
         if (!correspBlock.containsKey(end)) {
           throw new RuntimeException("label not visited");
         }
