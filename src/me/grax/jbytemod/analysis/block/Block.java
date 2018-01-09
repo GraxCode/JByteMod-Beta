@@ -1,20 +1,11 @@
 package me.grax.jbytemod.analysis.block;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 
-/**
- * Separated by labels (jumps)
- * 
- * @author Admin
- *
- */
 public class Block {
   private ArrayList<Block> output = new ArrayList<>();
 
@@ -24,6 +15,8 @@ public class Block {
   private ArrayList<Block> input = new ArrayList<>();
 
   private AbstractInsnNode endNode;
+  private ArrayList<AbstractInsnNode> nodes = new ArrayList<>();
+
   private LabelNode label;
 
   public Block() {
@@ -60,6 +53,14 @@ public class Block {
 
   public void setLabel(LabelNode label) {
     this.label = label;
+  }
+
+  public ArrayList<AbstractInsnNode> getNodes() {
+    return nodes;
+  }
+
+  public void setNodes(ArrayList<AbstractInsnNode> nodes) {
+    this.nodes = nodes;
   }
 
   public boolean endsWithJump() {

@@ -72,6 +72,7 @@ public class MyTabbedPane extends JTabbedPane {
       dt.decompile(cn, false);
     }
     if (this.getTitleAt(index).equals("Analysis")) {
+      System.out.println("regener");
       cfp.generateList();
     }
   }

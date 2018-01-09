@@ -177,9 +177,9 @@ public class JByteMod extends JFrame {
     }
     tcblist.addNodes(cn, mn);
     lvplist.addNodes(cn, mn);
+    cfp.setNode(mn);
     dp.setText("");
     tabbedPane.selectClass(cn);
-    cfp.setNode(mn);
   }
 
   public void selectClass(ClassNode cn) {

@@ -35,6 +35,7 @@ public class Converter implements Opcodes {
       if (ain instanceof LabelNode) {
         block.setLabel((LabelNode) ain);
       }
+      block.getNodes().add(ain);
       correspBlock.put(ain, block);
       //end blocks
       if (ain.getOpcode() >= IRETURN && ain.getOpcode() <= RETURN || ain instanceof JumpInsnNode || ain.getOpcode() == ATHROW) {
