@@ -33,13 +33,13 @@ public class MyTabbedPane extends JTabbedPane {
     this.addTab("Info", this.withBorder(new JLabel("Settings"), sp));
     String decompiler = "Decompiler";
     this.dt = new DecompilerTab(jbm);
-    this.addTab(decompiler, dt); 
+    this.addTab(decompiler, dt);
     SearchList searchList = new SearchList(jbm);
     jbm.setSearchlist(searchList);
     JLabel search = new JLabel("Search Results");
     this.addTab("Search", this.withBorder(search, searchList));
     this.cfp = new ControlFlowPanel();
-    this.addTab("Analysis", this.withBorder(new JLabel("Control flow visualisation"), cfp)); 
+    this.addTab("Analysis", this.withBorder(new JLabel("Control flow visualisation"), cfp));
     jbm.setCFP(cfp);
     jbm.setTabbedPane(this);
     ChangeListener changeListener = new ChangeListener() {

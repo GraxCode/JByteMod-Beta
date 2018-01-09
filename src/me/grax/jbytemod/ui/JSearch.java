@@ -80,7 +80,7 @@ public class JSearch extends JFrame implements ActionListener {
     }
     if (!key.isEmpty()) {
       DefaultListModel<InstrEntry> model = (DefaultListModel<InstrEntry>) list.getModel();
-      if(!searchNextFrom(list.getSelectedIndex() + 1, mcase, key, model)) {
+      if (!searchNextFrom(list.getSelectedIndex() + 1, mcase, key, model)) {
         searchNextFrom(0, mcase, key, model);
       }
     }
@@ -98,7 +98,7 @@ public class JSearch extends JFrame implements ActionListener {
         list.scrollRectToVisible(list.getCellBounds(list.getMinSelectionIndex(), list.getMaxSelectionIndex()));
         return true;
       }
-    }    
+    }
     return false;
   }
 

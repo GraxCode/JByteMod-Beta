@@ -1,4 +1,4 @@
-  package me.grax.jbytemod.utils.asm;
+package me.grax.jbytemod.utils.asm;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public class LibClassWriter extends ClassWriter {
     }
     return common.name;
   }
-  
+
   public ClassNode findCommonParent(ClassNode mc1, ClassNode mc2) {
     //are they the same?
     if (mc1.name.equals(mc2.name)) {

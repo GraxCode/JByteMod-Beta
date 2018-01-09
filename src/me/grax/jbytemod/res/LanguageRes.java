@@ -33,14 +33,14 @@ public class LanguageRes {
       doc.getDocumentElement().normalize();
       Element resources = doc.getDocumentElement();
       NodeList nodes = resources.getChildNodes();
-      for(int i =0; i < nodes.getLength(); i++) {
+      for (int i = 0; i < nodes.getLength(); i++) {
         Node e = (Node) nodes.item(i);
-        if(e.getNodeName().equals("string")) {
+        if (e.getNodeName().equals("string")) {
           Element el = (Element) e;
           map.put(el.getAttribute("name"), e.getTextContent());
         }
       }
-      System.out.println("Successfully loaded " +  map.size() + " resources");
+      System.out.println("Successfully loaded " + map.size() + " resources");
     } catch (Exception e) {
       new ErrorDisplay(e);
     }

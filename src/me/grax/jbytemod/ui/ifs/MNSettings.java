@@ -71,7 +71,7 @@ public class MNSettings extends MyInternalFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         boolean refresh = false;
-        if(!mn.name.equals(name.getText())) {
+        if (!mn.name.equals(name.getText())) {
           refresh = true;
           mn.name = name.getText();
         }
@@ -79,7 +79,7 @@ public class MNSettings extends MyInternalFrame {
         mn.access = (int) access.getValue();
         mn.maxLocals = (int) maxL.getValue();
         mn.maxStack = (int) maxS.getValue();
-        if(refresh) {
+        if (refresh) {
           JByteMod.instance.refreshTree();
         }
       }

@@ -47,8 +47,8 @@ public class InfoPanel extends JPanel {
   }
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
-    for(Component c : deskPane.getComponents()) {
-      if(c instanceof MyInternalFrame) {
+    for (Component c : deskPane.getComponents()) {
+      if (c instanceof MyInternalFrame) {
         c.setVisible(false);
       }
     }
@@ -56,13 +56,13 @@ public class InfoPanel extends JPanel {
     deskPane.add(new TCBFrame(jbm.getTCBList()));
     deskPane.add(new LVPFrame(jbm.getLVPList()));
     deskPane.add(new MNSettings(mn));
-    
+
     this.repaint();
   }
 
   public void selectClass(ClassNode cn) {
-    for(Component c : deskPane.getComponents()) {
-      if(c instanceof MyInternalFrame) {
+    for (Component c : deskPane.getComponents()) {
+      if (c instanceof MyInternalFrame) {
         c.setVisible(false);
       }
     }

@@ -43,6 +43,7 @@ public class FieldEntry extends InstrEntry {
   public void setFn(FieldNode fn) {
     this.fn = fn;
   }
+
   public String toEasyString() {
     return easyText;
   }

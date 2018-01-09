@@ -32,8 +32,8 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.METHOD_INSN:
       MethodInsnNode min = (MethodInsnNode) ain;
-      opc += getDisplayType(min.desc.split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(min.owner)) + "." + TextUtils.escape(min.name) + "("
-          + getDisplayArgs(TextUtils.escape(min.desc)) + ")";
+      opc += getDisplayType(min.desc.split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(min.owner)) + "." + TextUtils.escape(min.name)
+          + "(" + getDisplayArgs(TextUtils.escape(min.desc)) + ")";
       break;
     case AbstractInsnNode.VAR_INSN:
       VarInsnNode vin = (VarInsnNode) ain;
@@ -224,7 +224,8 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.METHOD_INSN:
       MethodInsnNode min = (MethodInsnNode) ain;
-      opc += getDisplayType(min.desc.split("\\)")[1], false) + " " + getDisplayClassEasy(min.owner) + "." + min.name + "(" + getDisplayArgsEasy(min.desc) + ")";
+      opc += getDisplayType(min.desc.split("\\)")[1], false) + " " + getDisplayClassEasy(min.owner) + "." + min.name + "("
+          + getDisplayArgsEasy(min.desc) + ")";
       break;
     case AbstractInsnNode.VAR_INSN:
       VarInsnNode vin = (VarInsnNode) ain;
@@ -283,6 +284,7 @@ public class InstrUtils {
     }
     return opc;
   }
+
   public static String getDisplayClassEasy(String str) {
     String[] spl = str.split("/");
     if (spl.length > 1) {
@@ -290,7 +292,6 @@ public class InstrUtils {
     }
     return str;
   }
-
 
   public static String getDisplayArgsEasy(String rawType) {
     return getDisplayType(rawType.split("\\)")[0].substring(1), false);

@@ -47,9 +47,9 @@ public class SearchEntry {
     this.cn = cn;
     this.mn = mn;
     this.found = owner + "." + name + desc;
-    this.text = TextUtils
-        .toHtml(InstrUtils.getDisplayClass(cn.name) + "." + TextUtils.escape(mn.name) + " - " + TextUtils.toBold(OpUtils.getOpcodeText(opcode).toLowerCase()) + " "
-            + InstrUtils.getDisplayClassRed(owner) + "." + TextUtils.escape(name) + "(" + InstrUtils.getDisplayArgs(TextUtils.escape(desc)) + ")");
+    this.text = TextUtils.toHtml(InstrUtils.getDisplayClass(cn.name) + "." + TextUtils.escape(mn.name) + " - "
+        + TextUtils.toBold(OpUtils.getOpcodeText(opcode).toLowerCase()) + " " + InstrUtils.getDisplayClassRed(owner) + "." + TextUtils.escape(name)
+        + "(" + InstrUtils.getDisplayArgs(TextUtils.escape(desc)) + ")");
   }
 
   @Override

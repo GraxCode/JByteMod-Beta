@@ -87,20 +87,19 @@ public class MethodUtils {
 
   public static void removeLines(MethodNode mn) {
     int i = 0;
-    for(AbstractInsnNode ain : mn.instructions.toArray()) {
-      if(ain instanceof LineNumberNode) {
+    for (AbstractInsnNode ain : mn.instructions.toArray()) {
+      if (ain instanceof LineNumberNode) {
         mn.instructions.remove(ain);
         i++;
       }
     }
     System.out.println("Removed " + i + " nodes!");
   }
-  
+
   public static InsnList clone(InsnList il, LabelNode end) { // TODO: invokedynamic
     HashMap<LabelNode, LabelNode> cloned = cloneLabels(il);
     InsnList list = new InsnList();
-    Loop:
-    for (AbstractInsnNode ain : il.toArray()) {
+    Loop: for (AbstractInsnNode ain : il.toArray()) {
       switch (ain.getType()) {
       case AbstractInsnNode.FIELD_INSN:
         FieldInsnNode fin = (FieldInsnNode) ain;
@@ -108,8 +107,7 @@ public class MethodUtils {
         break;
       case AbstractInsnNode.FRAME:
         FrameNode fn = (FrameNode) ain;
-        list.add(new FrameNode(fn.type, fn.local.size(), new ArrayList(fn.local).toArray(), fn.stack.size(),
-            new ArrayList(fn.stack).toArray()));
+        list.add(new FrameNode(fn.type, fn.local.size(), new ArrayList(fn.local).toArray(), fn.stack.size(), new ArrayList(fn.stack).toArray()));
         break;
       case AbstractInsnNode.IINC_INSN:
         IincInsnNode iinc = (IincInsnNode) ain;
@@ -128,12 +126,12 @@ public class MethodUtils {
         list.add(new JumpInsnNode(jin.getOpcode(), cloned.get(jin.label)));
         break;
       case AbstractInsnNode.LABEL:
-        if(ain == end) {
-          list.add(cloned.get((LabelNode)ain));
+        if (ain == end) {
+          list.add(cloned.get((LabelNode) ain));
           list.add(new InsnNode(Opcodes.RETURN));
           return list;
         }
-        list.add(cloned.get((LabelNode)ain));
+        list.add(cloned.get((LabelNode) ain));
         break;
       case AbstractInsnNode.LDC_INSN:
         LdcInsnNode ldc = (LdcInsnNode) ain;
@@ -145,8 +143,7 @@ public class MethodUtils {
         break;
       case AbstractInsnNode.LOOKUPSWITCH_INSN:
         LookupSwitchInsnNode lsin = (LookupSwitchInsnNode) ain;
-        list.add(new LookupSwitchInsnNode(cloned.get(lsin.dflt), toIntArray(lsin.keys),
-            mapLabels(lsin.labels, cloned).toArray(new LabelNode[0])));
+        list.add(new LookupSwitchInsnNode(cloned.get(lsin.dflt), toIntArray(lsin.keys), mapLabels(lsin.labels, cloned).toArray(new LabelNode[0])));
         break;
       case AbstractInsnNode.METHOD_INSN:
         MethodInsnNode min = (MethodInsnNode) ain;
@@ -158,8 +155,7 @@ public class MethodUtils {
         break;
       case AbstractInsnNode.TABLESWITCH_INSN:
         TableSwitchInsnNode tsin = (TableSwitchInsnNode) ain;
-        list.add(new TableSwitchInsnNode(tsin.min, tsin.max, cloned.get(tsin.dflt),
-            mapLabels(tsin.labels, cloned).toArray(new LabelNode[0])));
+        list.add(new TableSwitchInsnNode(tsin.min, tsin.max, cloned.get(tsin.dflt), mapLabels(tsin.labels, cloned).toArray(new LabelNode[0])));
         break;
       case AbstractInsnNode.TYPE_INSN:
         TypeInsnNode tin = (TypeInsnNode) ain;

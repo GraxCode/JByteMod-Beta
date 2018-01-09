@@ -62,10 +62,12 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
 
   //we can ignore most of those methods because we do not want to save the output as a file
   @Override
-  public void saveFolder(String path) {}
+  public void saveFolder(String path) {
+  }
 
   @Override
-  public void copyFile(String source, String path, String entryName) {}
+  public void copyFile(String source, String path, String entryName) {
+  }
 
   @Override
   public void saveClassFile(String path, String qualifiedName, String entryName, String content, int[] mapping) {
@@ -73,17 +75,22 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
   }
 
   @Override
-  public void createArchive(String path, String archiveName, Manifest manifest) {}
+  public void createArchive(String path, String archiveName, Manifest manifest) {
+  }
 
   @Override
-  public void saveDirEntry(String path, String archiveName, String entryName) {}
+  public void saveDirEntry(String path, String archiveName, String entryName) {
+  }
 
   @Override
-  public void copyEntry(String source, String path, String archiveName, String entry) {}
+  public void copyEntry(String source, String path, String archiveName, String entry) {
+  }
 
   @Override
-  public void saveClassEntry(String path, String archiveName, String qualifiedName, String entryName, String content) {}
+  public void saveClassEntry(String path, String archiveName, String qualifiedName, String entryName, String content) {
+  }
 
   @Override
-  public void closeArchive(String path, String archiveName) {}
+  public void closeArchive(String path, String archiveName) {
+  }
 }

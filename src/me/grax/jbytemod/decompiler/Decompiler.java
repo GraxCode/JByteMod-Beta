@@ -21,7 +21,6 @@ public abstract class Decompiler extends Thread {
     this.dp = dp;
   }
 
-
   public Decompiler setNode(ClassNode cn) {
     this.cn = cn;
     return this;
@@ -32,11 +31,10 @@ public abstract class Decompiler extends Thread {
     return this;
   }
 
-  
   @Override
   public final void run() {
     dp.setText("Loading...");
-    if(cn == null) {
+    if (cn == null) {
       dp.setText("ClassNode is null.");
       return;
     }

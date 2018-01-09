@@ -66,7 +66,7 @@ public class ClassTree extends JTree implements IDropUser {
   }
 
   public void refreshTree(JarArchive jar) {
-    
+
     DefaultTreeModel tm = (DefaultTreeModel) this.getModel();
     SortedTreeNode root = (SortedTreeNode) tm.getRoot();
     root.removeAllChildren();
@@ -105,7 +105,7 @@ public class ClassTree extends JTree implements IDropUser {
     boolean sort = jbm.getOps().getBool("sort_methods");
     sort(tm, root, sort);
     tm.reload();
-    
+
     this.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent me) {
         if (SwingUtilities.isRightMouseButton(me)) {
@@ -138,7 +138,7 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               tools.add(clear);
-              
+
               JMenuItem lines = new JMenuItem("Remove Lines");
               lines.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -202,7 +202,7 @@ public class ClassTree extends JTree implements IDropUser {
 
   @Override
   public void preLoadJars(int id) {
-    
+
   }
 
   @Override

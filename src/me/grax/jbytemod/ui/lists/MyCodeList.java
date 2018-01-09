@@ -147,7 +147,7 @@ public class MyCodeList extends JList<InstrEntry> {
                 }
               });
               menu.add(insert);
-              
+
               if (EditDialogue.canEdit(ain)) {
                 JMenuItem edit = new JMenuItem("Edit");
                 edit.addActionListener(new ActionListener() {
@@ -277,7 +277,7 @@ public class MyCodeList extends JList<InstrEntry> {
     ActionMap am = getActionMap();
 
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK), "search");
-    
+
     am.put("search", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {

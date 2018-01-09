@@ -26,11 +26,10 @@ public class TCBEntry {
     this.cn = cn;
     this.mn = mn;
     this.tcbn = tcbn;
-    this.text = TextUtils.toHtml(InstrUtils.getDisplayType(tcbn.type != null ? tcbn.type : "Lnull;", true) + ": label "
-        + OpUtils.getLabelIndex(tcbn.start) + " -> label " + OpUtils.getLabelIndex(tcbn.end) + " handler: label "
-        + (tcbn.handler == null ? "null" : OpUtils.getLabelIndex(tcbn.handler)));
+    this.text = TextUtils.toHtml(
+        InstrUtils.getDisplayType(tcbn.type != null ? tcbn.type : "Lnull;", true) + ": label " + OpUtils.getLabelIndex(tcbn.start) + " -> label "
+            + OpUtils.getLabelIndex(tcbn.end) + " handler: label " + (tcbn.handler == null ? "null" : OpUtils.getLabelIndex(tcbn.handler)));
   }
-
 
   @Override
   public String toString() {

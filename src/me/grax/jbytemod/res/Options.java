@@ -15,6 +15,7 @@ public class Options {
   private static final File propFile = new File("jbytemod.cfg");
 
   public static final List<String> bools = Arrays.asList("sort_methods", "tree_search_sel", "load_rt_startup");
+
   public Options() {
     props = new Properties();
     if (propFile.exists()) {
@@ -36,7 +37,7 @@ public class Options {
     props.setProperty(s, o);
     this.save();
   }
-  
+
   public Object getProperty(String s) {
     return props.getOrDefault(s, "false");
   }
@@ -44,6 +45,7 @@ public class Options {
   public boolean getBool(String s) {
     return Boolean.parseBoolean(getProperty(s).toString());
   }
+
   private void save() {
     new Thread(() -> {
       try {
@@ -53,5 +55,5 @@ public class Options {
       }
     }).start();
   }
-  
+
 }

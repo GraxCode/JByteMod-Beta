@@ -34,26 +34,26 @@ public class JAboutFrame extends JDialog {
       }
     });
     JPanel jp = new JPanel(new GridLayout(1, 4));
-    for(int i = 0; i < 3; i++)
-    jp.add(new JPanel());
-    
+    for (int i = 0; i < 3; i++)
+      jp.add(new JPanel());
+
     jp.add(close);
     cp.add(jp, BorderLayout.PAGE_END);
-    
+
     JTextPane title = new JTextPane();
     title.setContentType("text/html");
-    title.setText(TextUtils.toHtml(jbm.getTitle() + "<br/>Copyright © 2016-2018 noverify<br/><font color=\"#0000EE\"><u>https://github.com/GraxCode/JByteMod-Beta</u></font><br/>Donate LTC: <font color=\"#333333\">LhwXLVASzb6t4vHSssA9FQwq2X5gAg8EKX</font>"));
+    title.setText(TextUtils.toHtml(jbm.getTitle()
+        + "<br/>Copyright © 2016-2018 noverify<br/><font color=\"#0000EE\"><u>https://github.com/GraxCode/JByteMod-Beta</u></font><br/>Donate LTC: <font color=\"#333333\">LhwXLVASzb6t4vHSssA9FQwq2X5gAg8EKX</font>"));
     Color bgColor = new Color(0xd6d9df);
     UIDefaults defaults = new UIDefaults();
     defaults.put("TextPane[Enabled].backgroundPainter", bgColor);
     title.putClientProperty("Nimbus.Overrides", defaults);
     title.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
     title.setBackground(bgColor);
-    title.setEditable(false); 
+    title.setEditable(false);
     title.setBorder(null);
     cp.add(title, BorderLayout.CENTER);
-    
-    
+
     getContentPane().add(cp);
   }
 }

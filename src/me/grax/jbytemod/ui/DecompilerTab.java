@@ -68,7 +68,7 @@ public class DecompilerTab extends JPanel {
   }
 
   public void decompile(ClassNode cn, boolean deleteCache) {
-    if(cn == null) {
+    if (cn == null) {
       return;
     }
     Decompiler d = null;

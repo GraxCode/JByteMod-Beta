@@ -26,12 +26,11 @@ public class LVPEntry {
     this.mn = mn;
     this.lvn = lvn;
     this.text = TextUtils.toHtml(TextUtils.toBold("#" + lvn.index) + " ");
-    if(lvn.desc != null && !lvn.desc.isEmpty()) {
+    if (lvn.desc != null && !lvn.desc.isEmpty()) {
       this.text += InstrUtils.getDisplayType(lvn.desc, true) + " ";
     }
     this.text += TextUtils.addTag(TextUtils.escape(lvn.name), "font color=#995555");
   }
-
 
   @Override
   public String toString() {
