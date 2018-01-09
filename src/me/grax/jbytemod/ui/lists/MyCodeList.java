@@ -74,7 +74,7 @@ public class MyCodeList extends JList<InstrEntry> {
               public void actionPerformed(ActionEvent e) {
                 try {
                   FieldNode fn = new FieldNode(1, "", "", "", null);
-                  EditDialogueSpec.createEditDialogue(null, fn);
+                  EditDialogueSpec.createInsertDialogue(null, fn);
                   if (fn.signature.isEmpty()) {
                     fn.signature = null;
                   }
@@ -254,7 +254,7 @@ public class MyCodeList extends JList<InstrEntry> {
               public void actionPerformed(ActionEvent e) {
                 try {
                   FieldNode fn = new FieldNode(1, "", "", "", null);
-                  if (EditDialogueSpec.createEditDialogue(null, fn)) {
+                  if (EditDialogueSpec.createInsertDialogue(null, fn)) {
                     if (fn.signature.isEmpty()) {
                       fn.signature = null;
                     }

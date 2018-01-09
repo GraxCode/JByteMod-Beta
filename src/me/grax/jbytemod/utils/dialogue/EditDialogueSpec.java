@@ -23,7 +23,7 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 import me.grax.jbytemod.JByteMod;
 
 public class EditDialogueSpec {
-  public static boolean createEditDialogue(MethodNode mn, Object obj) throws Exception {
+  public static boolean createInsertDialogue(MethodNode mn, Object obj) throws Exception {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));
     final JPanel input = new JPanel(new GridLayout(0, 1));
     final JPanel labels = new JPanel(new GridLayout(0, 1));
@@ -58,7 +58,7 @@ public class EditDialogueSpec {
       }
     }
 
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit " + obj.getClass().getSimpleName(), 2) == JOptionPane.OK_OPTION) {
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Insert " + obj.getClass().getSimpleName(), 2) == JOptionPane.OK_OPTION) {
       int i = 0;
       for (String fn : fieldNames.keySet()) {
         String type = fieldNames.get(fn);

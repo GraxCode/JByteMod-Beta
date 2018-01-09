@@ -372,7 +372,7 @@ public class EditDialogue {
     access.setValue(fn.access);
     input.add(access);
 
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Insert after", 2) == JOptionPane.OK_OPTION) {
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit FieldNode", 2) == JOptionPane.OK_OPTION) {
       try {
         fn.name = name.getText();
         fn.desc = desc.getText();

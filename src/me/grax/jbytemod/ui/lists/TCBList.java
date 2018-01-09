@@ -51,7 +51,7 @@ public class TCBList extends JList<TCBEntry> {
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
-                  EditDialogueSpec.createEditDialogue(mn, selected.getTcbn());
+                  EditDialogueSpec.createInsertDialogue(mn, selected.getTcbn());
                 } catch (Exception ex) {
                   new ErrorDisplay(ex);
                 }
@@ -65,7 +65,7 @@ public class TCBList extends JList<TCBEntry> {
             public void actionPerformed(ActionEvent e) {
               try {
                 TryCatchBlockNode tcbn = new TryCatchBlockNode(null, null, null, "");
-                if (EditDialogueSpec.createEditDialogue(mn, tcbn))
+                if (EditDialogueSpec.createInsertDialogue(mn, tcbn))
                   if (tcbn.handler != null && tcbn.start != null && tcbn.end != null) {
                     mn.tryCatchBlocks.add(tcbn);
                   }

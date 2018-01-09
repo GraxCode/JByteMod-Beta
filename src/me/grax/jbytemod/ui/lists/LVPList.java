@@ -52,7 +52,7 @@ public class LVPList extends JList<LVPEntry> {
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
-                  EditDialogueSpec.createEditDialogue(mn, selected.getLvn());
+                  EditDialogueSpec.createInsertDialogue(mn, selected.getLvn());
                 } catch (Exception ex) {
                   new ErrorDisplay(ex);
                 }
@@ -66,7 +66,7 @@ public class LVPList extends JList<LVPEntry> {
             public void actionPerformed(ActionEvent e) {
               try {
                 LocalVariableNode lvn = new LocalVariableNode("", "", "", null, null, mn.localVariables.size());
-                if (EditDialogueSpec.createEditDialogue(mn, lvn))
+                if (EditDialogueSpec.createInsertDialogue(mn, lvn))
                   if (lvn.start != null && lvn.end != null) {
                     mn.localVariables.add(lvn);
                   }
