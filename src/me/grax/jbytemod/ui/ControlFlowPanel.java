@@ -30,7 +30,9 @@ public class ControlFlowPanel extends JPanel {
 
   private static final String edgeColor = "#111111";
   private static final String jumpColor = "#39698a";
-
+  
+  private static final String jumpColorGreen = "#388a47";
+  private static final String jumpColorRed = "#8a3e38";
   public ControlFlowPanel() {
     this.setLayout(new BorderLayout(0, 0));
 
@@ -75,7 +77,7 @@ public class ControlFlowPanel extends JPanel {
         for (Block b : cf) {
           if (b.getInput().isEmpty()) { //there could be more than 1 (dead code) FIXME: multiple startpoints overlap
             addBlock(parent, b);
-//            break; //TODO
+            //            break; //TODO
           }
         }
       }
@@ -112,15 +114,29 @@ public class ControlFlowPanel extends JPanel {
       throw new RuntimeException();
     }
     ArrayList<Block> next = b.getOutput();
-    for (Block out : next) {
+    for (int i = 0; i < next.size(); i++) {
+      Block out = next.get(i);
       if (out.equals(b)) {
-        graph.insertEdge(parent, null, null, v1, v1, "strokeColor=" + (b.endsWithJump() ? jumpColor : edgeColor) + ";");
+        graph.insertEdge(parent, null, null, v1, v1, "strokeColor=" + getEdgeColor(b, i) + ";");
       } else {
         assert (out.getInput().contains(b));
-        graph.insertEdge(parent, null, null, v1, addBlock(parent, out), "strokeColor=" + (b.endsWithJump() ? jumpColor : edgeColor) + ";");
+        graph.insertEdge(parent, null, null, v1, addBlock(parent, out), "strokeColor=" + getEdgeColor(b, i) + ";");
       }
     }
     return v1;
+  }
+
+  private String getEdgeColor(Block b, int i) {
+    if (b.endsWithJump()) {
+      if (b.getOutput().size() > 1) {
+        if(i == 0) {
+          return jumpColorGreen;
+        }
+        return jumpColorRed;
+      }
+      return jumpColor;
+    }
+    return edgeColor;
   }
 
 }
