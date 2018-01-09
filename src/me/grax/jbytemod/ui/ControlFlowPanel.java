@@ -30,9 +30,10 @@ public class ControlFlowPanel extends JPanel {
 
   private static final String edgeColor = "#111111";
   private static final String jumpColor = "#39698a";
-  
+
   private static final String jumpColorGreen = "#388a47";
   private static final String jumpColorRed = "#8a3e38";
+
   public ControlFlowPanel() {
     this.setLayout(new BorderLayout(0, 0));
 
@@ -54,6 +55,8 @@ public class ControlFlowPanel extends JPanel {
   }
 
   public void generateList() {
+    if (node == null)
+      return;
     cf.clear();
     if (node.instructions.size() == 0) {
       graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
@@ -75,9 +78,8 @@ public class ControlFlowPanel extends JPanel {
       existing.clear();
       if (!cf.isEmpty()) {
         for (Block b : cf) {
-          if (b.getInput().isEmpty()) { //there could be more than 1 (dead code) FIXME: multiple startpoints overlap
+          if (b.getInput().isEmpty()) {
             addBlock(parent, b);
-            //            break; //TODO
           }
         }
       }
@@ -129,7 +131,7 @@ public class ControlFlowPanel extends JPanel {
   private String getEdgeColor(Block b, int i) {
     if (b.endsWithJump()) {
       if (b.getOutput().size() > 1) {
-        if(i == 0) {
+        if (i == 0) {
           return jumpColorGreen;
         }
         return jumpColorRed;

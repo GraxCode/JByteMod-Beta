@@ -3,11 +3,7 @@ package me.grax.jbytemod.ui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,13 +12,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.decompiler.Decompiler;
-import me.grax.jbytemod.decompiler.Decompilers;
-import me.grax.jbytemod.decompiler.ProcyonDecompiler;
 import me.grax.jbytemod.ui.lists.SearchList;
 
 public class MyTabbedPane extends JTabbedPane {
@@ -72,7 +64,6 @@ public class MyTabbedPane extends JTabbedPane {
       dt.decompile(cn, false);
     }
     if (this.getTitleAt(index).equals("Analysis")) {
-      System.out.println("regener");
       cfp.generateList();
     }
   }
