@@ -280,7 +280,6 @@ public class EditDialogue {
       cn.name = name.getText();
       cn.sourceFile = sf.getText();
       cn.access = (int) access.getValue();
-      JByteMod.instance.refreshTree();
     }
   }
 

@@ -34,6 +34,6 @@ public class CellRenderer extends DefaultTreeCellRenderer {
   }
 
   public String getFileName(final DefaultMutableTreeNode node) {
-    return (String) node.getUserObject().toString();
+    return node.toString();
   }
 }

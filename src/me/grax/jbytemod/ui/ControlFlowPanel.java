@@ -61,7 +61,7 @@ public class ControlFlowPanel extends JPanel {
       return;
     cf.clear();
     if (node.instructions.size() == 0) {
-      graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
+      this.clear();
       return;
     }
     Converter c = new Converter(node);
@@ -70,7 +70,7 @@ public class ControlFlowPanel extends JPanel {
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorDisplay(e);
-      graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
+      this.clear();
       return;
     }
     Object parent = graph.getDefaultParent();
@@ -99,12 +99,6 @@ public class ControlFlowPanel extends JPanel {
     if (existing.containsKey(b)) {
       return existing.get(b);
     } else {
-
-      //old code for analysis without bytecode
-      //boolean isNormal = b.getLabel() != null;
-      //String text = "Block " + cf.indexOf(b) + (isNormal ? "\n" + "Label " + OpUtils.getLabelIndex(b.getLabel()) : "");
-      //fillColor is (isNormal ? vertexColor : singleVertexColor)
-
       String text = "";
       for (AbstractInsnNode ain : b.getNodes()) {
         text += InstrUtils.toString(ain) + "\n";
@@ -147,6 +141,12 @@ public class ControlFlowPanel extends JPanel {
       return jumpColorPurple;
     }
     return edgeColor;
+  }
+
+  public void clear() {
+    graph.getModel().beginUpdate();
+    graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
+    graph.getModel().endUpdate();
   }
 
 }

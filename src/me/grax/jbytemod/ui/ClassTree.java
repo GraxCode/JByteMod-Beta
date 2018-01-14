@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.HashMap;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -33,6 +34,7 @@ import me.lpk.util.drop.JarDropHandler;
 public class ClassTree extends JTree implements IDropUser {
 
   private JByteMod jbm;
+  private DefaultTreeModel model;
 
   public ClassTree(JByteMod jam) {
     this.jbm = jam;
@@ -61,51 +63,53 @@ public class ClassTree extends JTree implements IDropUser {
         }
       }
     });
-    this.setModel(new DefaultTreeModel(new SortedTreeNode("", null, null)));
+    this.model = new DefaultTreeModel(new SortedTreeNode(""));
+    this.setModel(model);
     this.setTransferHandler(new JarDropHandler(this, 0));
   }
 
   public void refreshTree(JarArchive jar) {
-
-    DefaultTreeModel tm = (DefaultTreeModel) this.getModel();
+    DefaultTreeModel tm = this.model;
     SortedTreeNode root = (SortedTreeNode) tm.getRoot();
     root.removeAllChildren();
     tm.reload();
 
+    HashMap<String, SortedTreeNode> map = new HashMap<>();
     for (ClassNode c : jar.getClasses().values()) {
-      for (MethodNode m : c.methods) {
-        String name = c.name + ".class/" + m.name;
-        if (name.isEmpty())
-          continue;
-        if (!name.contains("/")) {
-          root.add(new SortedTreeNode(name, c, m));
-        } else {
-          String[] names = name.split("/");
-          SortedTreeNode node = root;
-          int i = 1;
-          for (String n : names) {
-            SortedTreeNode newnode = new SortedTreeNode(n, i >= names.length - 1 ? c : null, null);
-            if (i == names.length) {
-              newnode.setMn(m);
-              node.add(newnode);
-              tm.getChildCount(node);
-            } else {
-              SortedTreeNode extnode = addUniqueNode(tm, node, newnode);
-              if (extnode != null) {
-                node = extnode;
-              } else {
-                node = newnode;
-              }
-            }
-            i++;
-          }
+      String name = c.name;
+      String[] path = name.split("/");
+      int i = 0;
+      int slashIndex = 0;
+      SortedTreeNode prev = root;
+      while (true) {
+        slashIndex = name.indexOf("/", slashIndex + 1);
+        if (slashIndex == -1) {
+          break;
         }
+        String p = name.substring(0, slashIndex);
+        if (map.containsKey(p)) {
+          prev = map.get(p);
+        } else {
+          SortedTreeNode stn = new SortedTreeNode(path[i]);
+          prev.add(stn);
+          prev = stn;
+          map.put(p, prev);
+        }
+        i++;
+      }
+      SortedTreeNode clazz = new SortedTreeNode(c);
+      prev.add(clazz);
+      for (MethodNode m : c.methods) {
+        clazz.add(new SortedTreeNode(c, m));
       }
     }
     boolean sort = jbm.getOps().getBool("sort_methods");
     sort(tm, root, sort);
     tm.reload();
+    addListener();
+  }
 
+  private void addListener() {
     this.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent me) {
         if (SwingUtilities.isRightMouseButton(me)) {
@@ -115,9 +119,11 @@ public class ClassTree extends JTree implements IDropUser {
             if (ClassTree.this.getLastSelectedPathComponent() == null) {
               return;
             }
-            MethodNode mn = ((SortedTreeNode) ClassTree.this.getLastSelectedPathComponent()).getMn();
-            ClassNode cn = ((SortedTreeNode) ClassTree.this.getLastSelectedPathComponent()).getCn();
+            SortedTreeNode stn = (SortedTreeNode) ClassTree.this.getLastSelectedPathComponent();
+            MethodNode mn = stn.getMn();
+            ClassNode cn = stn.getCn();
             if (mn != null) {
+              //method selected
               JPopupMenu menu = new JPopupMenu();
               JMenuItem edit = new JMenuItem("Edit");
               edit.addActionListener(new ActionListener() {
@@ -153,20 +159,28 @@ public class ClassTree extends JTree implements IDropUser {
               menu.add(tools);
               menu.show(ClassTree.this, me.getX(), me.getY());
             } else if (cn != null) {
+              //class selected
               JPopupMenu menu = new JPopupMenu();
+              JMenuItem insert = new JMenuItem("Insert");
+              insert.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                }
+              });
+              menu.add(insert);
               JMenuItem edit = new JMenuItem("Edit");
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   EditDialogue.createClassDialogue(cn);
+                  refreshTreeOpen(stn);
                 }
+
               });
-              JMenu tools = new JMenu("Tools");
               menu.add(edit);
+              JMenu tools = new JMenu("Tools");
               JMenuItem frames = new JMenuItem("Regenerate Frames");
               frames.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   FrameGen.regenerateFrames(cn);
-                  JByteMod.instance.refreshTree();
                 }
               });
               tools.add(frames);
@@ -179,19 +193,12 @@ public class ClassTree extends JTree implements IDropUser {
     });
   }
 
-  private SortedTreeNode addUniqueNode(DefaultTreeModel model, SortedTreeNode node, SortedTreeNode childNode) {
-    for (int i = 0; i < model.getChildCount(node); i++) {
-      Object compUserObj = ((SortedTreeNode) model.getChild(node, i)).getUserObject();
-      if (compUserObj.equals(childNode.getUserObject())) {
-        return (SortedTreeNode) model.getChild(node, i);
-      }
-    }
-    node.add(childNode);
-    return null;
+  public void refreshTreeOpen(SortedTreeNode stn) {
+    jbm.refreshTree();
   }
 
   private void sort(DefaultTreeModel model, SortedTreeNode node, boolean sm) {
-    if (!node.isLeaf() && (sm ? true : (!node.getUserObject().toString().endsWith(".class")))) {
+    if (!node.isLeaf() && (sm ? true : (!node.toString().endsWith(".class")))) {
       node.sort();
       for (int i = 0; i < model.getChildCount(node); i++) {
         SortedTreeNode child = ((SortedTreeNode) model.getChild(node, i));

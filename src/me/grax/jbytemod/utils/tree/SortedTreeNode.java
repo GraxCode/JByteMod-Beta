@@ -12,11 +12,28 @@ public class SortedTreeNode extends DefaultMutableTreeNode {
 
   private ClassNode c;
   private MethodNode m;
+  private String className;
 
-  public SortedTreeNode(Object userObject, ClassNode c, MethodNode m) {
-    super(userObject);
+  public SortedTreeNode(ClassNode c, MethodNode m) {
     this.c = c;
     this.m = m;
+    setClassName();
+  }
+
+  public SortedTreeNode(ClassNode c) {
+    this.c = c;
+    setClassName();
+  }
+
+  public SortedTreeNode(Object userObject) {
+    super(userObject);
+  }
+
+  private void setClassName() {
+    if (!c.name.contains("/"))
+      this.className = c.name + ".class";
+    String[] split = c.name.split("/");
+    this.className = split[split.length - 1] + ".class";
   }
 
   public ClassNode getCn() {
@@ -53,9 +70,20 @@ public class SortedTreeNode extends DefaultMutableTreeNode {
         if (!leaf1 && leaf2) {
           return -1;
         }
-        return o1.getUserObject().toString().compareTo(o2.getUserObject().toString());
+        return o1.toString().compareTo(o2.toString());
 
       }
     };
+  }
+
+  @Override
+  public String toString() {
+    if (m != null) {
+      return m.name;
+    }
+    if (c != null) {
+      return className;
+    }
+    return userObject.toString();
   }
 }

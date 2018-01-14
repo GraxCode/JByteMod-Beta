@@ -13,6 +13,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.lists.SearchList;
@@ -21,6 +22,7 @@ public class MyTabbedPane extends JTabbedPane {
   private JByteMod jbm;
   private DecompilerTab dt;
   private ControlFlowPanel cfp;
+  private boolean classSelected = false;
 
   public MyTabbedPane(JByteMod jbm) {
     this.jbm = jbm;
@@ -50,7 +52,11 @@ public class MyTabbedPane extends JTabbedPane {
           dt.decompile(jbm.getCurrentNode(), false);
         }
         if (sourceTabbedPane.getTitleAt(index).equals("Analysis")) {
-          cfp.generateList();
+          if (!classSelected) {
+            cfp.generateList();
+          } else {
+            cfp.clear();
+          }
         }
       }
 
@@ -64,8 +70,9 @@ public class MyTabbedPane extends JTabbedPane {
       dt.decompile(cn, false);
     }
     if (this.getTitleAt(index).equals("Analysis")) {
-      cfp.generateList();
+      cfp.clear();
     }
+    this.classSelected = true;
   }
 
   private JPanel withBorder(JLabel label, Component c) {
@@ -80,5 +87,13 @@ public class MyTabbedPane extends JTabbedPane {
     scp.getVerticalScrollBar().setUnitIncrement(16);
     panel.add(scp, BorderLayout.CENTER);
     return panel;
+  }
+
+  public void selectMethod(ClassNode cn, MethodNode mn) {
+    int index = this.getSelectedIndex();
+    if (this.getTitleAt(index).equals("Analysis")) {
+      cfp.generateList();
+    }
+    this.classSelected = false;
   }
 }
