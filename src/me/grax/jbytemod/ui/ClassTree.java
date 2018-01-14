@@ -282,4 +282,9 @@ public class ClassTree extends JTree implements IDropUser {
       }
     }
   }
+
+  public void collapseAll() {
+    expandedNodes.clear();
+    JByteMod.instance.refreshTree();
+  }
 }

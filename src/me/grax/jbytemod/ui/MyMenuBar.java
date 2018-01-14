@@ -125,6 +125,15 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     tree.add(rltree);
+    JMenuItem collapse = new JMenuItem("Collapse all");
+    collapse.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        jam.getJarTree().collapseAll();
+      }
+    });
+    tree.add(collapse);
     this.add(getSettings());
     JMenu help = new JMenu("Help");
     JMenuItem about = new JMenuItem("About");
