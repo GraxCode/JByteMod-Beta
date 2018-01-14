@@ -9,6 +9,7 @@ import java.io.StringWriter;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -57,5 +58,9 @@ public class ErrorDisplay extends JFrame {
     contentPane.add(new JScrollPane(new JTextArea(st)), BorderLayout.CENTER);
     this.add(contentPane);
     this.setVisible(true);
+  }
+  
+  public static void error(String error) {
+    JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
   }
 }

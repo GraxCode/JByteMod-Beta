@@ -314,7 +314,6 @@ public class EditDialogue {
       mn.access = (int) access.getValue();
       mn.maxLocals = (int) maxL.getValue();
       mn.maxStack = (int) maxS.getValue();
-      JByteMod.instance.refreshTree();
     }
   }
 

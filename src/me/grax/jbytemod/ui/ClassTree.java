@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.swing.JMenu;
@@ -16,6 +18,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.objectweb.asm.tree.ClassNode;
@@ -23,6 +26,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarArchive;
+import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.MethodUtils;
 import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
@@ -35,6 +39,7 @@ public class ClassTree extends JTree implements IDropUser {
 
   private JByteMod jbm;
   private DefaultTreeModel model;
+  private HashMap<String, SortedTreeNode> preloadMap;
 
   public ClassTree(JByteMod jam) {
     this.jbm = jam;
@@ -68,13 +73,15 @@ public class ClassTree extends JTree implements IDropUser {
     this.setTransferHandler(new JarDropHandler(this, 0));
   }
 
+  private ArrayList<Object> expandedNodes = new ArrayList<>();
+
   public void refreshTree(JarArchive jar) {
     DefaultTreeModel tm = this.model;
     SortedTreeNode root = (SortedTreeNode) tm.getRoot();
     root.removeAllChildren();
     tm.reload();
 
-    HashMap<String, SortedTreeNode> map = new HashMap<>();
+    preloadMap = new HashMap<>();
     for (ClassNode c : jar.getClasses().values()) {
       String name = c.name;
       String[] path = name.split("/");
@@ -87,13 +94,13 @@ public class ClassTree extends JTree implements IDropUser {
           break;
         }
         String p = name.substring(0, slashIndex);
-        if (map.containsKey(p)) {
-          prev = map.get(p);
+        if (preloadMap.containsKey(p)) {
+          prev = preloadMap.get(p);
         } else {
           SortedTreeNode stn = new SortedTreeNode(path[i]);
           prev.add(stn);
           prev = stn;
-          map.put(p, prev);
+          preloadMap.put(p, prev);
         }
         i++;
       }
@@ -107,6 +114,47 @@ public class ClassTree extends JTree implements IDropUser {
     sort(tm, root, sort);
     tm.reload();
     addListener();
+    if(!expandedNodes.isEmpty()) {
+      expandSaved(root);
+    }
+  }
+
+  public void expandSaved(SortedTreeNode node) {
+    TreePath tp = new TreePath(node.getPath());
+    if (node.getCn() != null && expandedNodes.contains(node.getCn())) {
+      super.expandPath(tp);
+    }
+    if (expandedNodes.contains(tp.toString())) {
+      super.expandPath(tp);
+    }
+    if (node.getChildCount() >= 0) {
+      for (Enumeration e = node.children(); e.hasMoreElements();) {
+        SortedTreeNode n = (SortedTreeNode) e.nextElement();
+        expandSaved(n);
+      }
+    }
+  }
+
+  @Override
+  public void expandPath(TreePath path) {
+    SortedTreeNode stn = (SortedTreeNode) path.getLastPathComponent();
+    if (stn.getCn() != null) {
+      expandedNodes.add(stn.getCn());
+    } else {
+      expandedNodes.add(path.toString());
+    }
+    super.expandPath(path);
+  }
+
+  @Override
+  public void collapsePath(TreePath path) {
+    SortedTreeNode stn = (SortedTreeNode) path.getLastPathComponent();
+    if (stn.getCn() != null) {
+      expandedNodes.remove(stn.getCn());
+    } else {
+      expandedNodes.remove(path.toString());
+    }
+    super.collapsePath(path);
   }
 
   private void addListener() {
@@ -129,6 +177,7 @@ public class ClassTree extends JTree implements IDropUser {
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   EditDialogue.createMethodDialogue(mn);
+                  changedChilds((TreeNode) model.getRoot());
                 }
               });
               menu.add(edit);
@@ -164,6 +213,14 @@ public class ClassTree extends JTree implements IDropUser {
               JMenuItem insert = new JMenuItem("Insert");
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                  MethodNode mn = new MethodNode(1, "", "()V", null, null);
+                  EditDialogue.createMethodDialogue(mn);
+                  if (mn.name.isEmpty() || mn.desc.isEmpty()) {
+                    ErrorDisplay.error("Method name / desc cannot be empty");
+                    return;
+                  }
+                  cn.methods.add(mn);
+                  model.insertNodeInto(new SortedTreeNode(cn, mn), stn, 0);
                 }
               });
               menu.add(insert);
@@ -171,9 +228,8 @@ public class ClassTree extends JTree implements IDropUser {
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   EditDialogue.createClassDialogue(cn);
-                  refreshTreeOpen(stn);
+                  JByteMod.instance.refreshTree();
                 }
-
               });
               menu.add(edit);
               JMenu tools = new JMenu("Tools");
@@ -191,10 +247,6 @@ public class ClassTree extends JTree implements IDropUser {
         }
       }
     });
-  }
-
-  public void refreshTreeOpen(SortedTreeNode stn) {
-    jbm.refreshTree();
   }
 
   private void sort(DefaultTreeModel model, SortedTreeNode node, boolean sm) {
@@ -215,5 +267,19 @@ public class ClassTree extends JTree implements IDropUser {
   @Override
   public void onJarLoad(int id, File input) {
     jbm.loadFile(input);
+  }
+
+  public void refreshMethod(ClassNode cn, MethodNode mn) {
+    changedChilds((TreeNode) model.getRoot());
+  }
+
+  public void changedChilds(TreeNode node) {
+    model.nodeChanged(node);
+    if (node.getChildCount() >= 0) {
+      for (Enumeration e = node.children(); e.hasMoreElements();) {
+        TreeNode n = (TreeNode) e.nextElement();
+        changedChilds(n);
+      }
+    }
   }
 }

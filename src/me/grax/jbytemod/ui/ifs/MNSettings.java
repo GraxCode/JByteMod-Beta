@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
@@ -25,7 +26,7 @@ public class MNSettings extends MyInternalFrame {
    */
   private static Rectangle bounds = new Rectangle(670, 10, 1280 / 4, 720 / 3);
 
-  public MNSettings(MethodNode mn) {
+  public MNSettings(ClassNode cn, MethodNode mn) {
     super("Method Settings");
     this.setBounds(bounds);
     this.setLayout(new BorderLayout(0, 0));
@@ -80,7 +81,7 @@ public class MNSettings extends MyInternalFrame {
         mn.maxLocals = (int) maxL.getValue();
         mn.maxStack = (int) maxS.getValue();
         if (refresh) {
-          JByteMod.instance.refreshTree();
+          JByteMod.instance.getJarTree().refreshMethod(cn, mn);
         }
       }
     });
