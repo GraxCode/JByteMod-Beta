@@ -254,7 +254,7 @@ public class EditDialogue {
     return new JFormattedTextField(formatter);
   }
 
-  public static void createClassDialogue(ClassNode cn) {
+  public static boolean createClassDialogue(ClassNode cn) {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));
     final JPanel input = new JPanel(new GridLayout(0, 1));
     final JPanel labels = new JPanel(new GridLayout(0, 1));
@@ -280,10 +280,12 @@ public class EditDialogue {
       cn.name = name.getText();
       cn.sourceFile = sf.getText();
       cn.access = (int) access.getValue();
+      return true;
     }
+    return false;
   }
 
-  public static void createMethodDialogue(MethodNode mn) {
+  public static boolean createMethodDialogue(MethodNode mn) {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));
     final JPanel input = new JPanel(new GridLayout(0, 1));
     final JPanel labels = new JPanel(new GridLayout(0, 1));
@@ -314,7 +316,9 @@ public class EditDialogue {
       mn.access = (int) access.getValue();
       mn.maxLocals = (int) maxL.getValue();
       mn.maxStack = (int) maxS.getValue();
+      return true;
     }
+    return false;
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })

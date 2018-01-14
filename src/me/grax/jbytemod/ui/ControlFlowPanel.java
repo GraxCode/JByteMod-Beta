@@ -23,11 +23,7 @@ public class ControlFlowPanel extends JPanel {
   private MethodNode node;
   private ArrayList<Block> cf = new ArrayList<>();
   private mxGraph graph;
-
-  //old code
-  //private static final String vertexColor = "#4FC3F7";
-  //private static final String singleVertexColor = "#EEEEEE";
-
+  
   private static final String edgeColor = "#111111";
   private static final String jumpColor = "#39698a";
 
@@ -44,7 +40,7 @@ public class ControlFlowPanel extends JPanel {
     graph.setAutoSizeCells(true);
     graph.setHtmlLabels(true);
     mxGraphComponent graphComponent = new mxGraphComponent(graph);
-    graphComponent.setEnabled(false); //TODO
+    graphComponent.setEnabled(false);
     this.add(graphComponent);
   }
 

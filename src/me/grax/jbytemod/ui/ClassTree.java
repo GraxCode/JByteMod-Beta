@@ -114,7 +114,7 @@ public class ClassTree extends JTree implements IDropUser {
     sort(tm, root, sort);
     tm.reload();
     addListener();
-    if(!expandedNodes.isEmpty()) {
+    if (!expandedNodes.isEmpty()) {
       expandSaved(root);
     }
   }
@@ -205,30 +205,43 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               tools.add(lines);
+              JMenuItem deadcode = new JMenuItem("Remove Dead Code");
+              deadcode.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, "Are you sure you want to remove unused code?", "Confirm",
+                      JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    MethodUtils.removeDeadCode(mn);
+                    jbm.selectMethod(cn, mn);
+                  }
+                }
+              });
+              tools.add(deadcode);
               menu.add(tools);
               menu.show(ClassTree.this, me.getX(), me.getY());
             } else if (cn != null) {
               //class selected
               JPopupMenu menu = new JPopupMenu();
-              JMenuItem insert = new JMenuItem("Insert");
+              JMenuItem insert = new JMenuItem("Add Method");
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   MethodNode mn = new MethodNode(1, "", "()V", null, null);
-                  EditDialogue.createMethodDialogue(mn);
-                  if (mn.name.isEmpty() || mn.desc.isEmpty()) {
-                    ErrorDisplay.error("Method name / desc cannot be empty");
-                    return;
+                  if (EditDialogue.createMethodDialogue(mn)) {
+                    if (mn.name.isEmpty() || mn.desc.isEmpty()) {
+                      ErrorDisplay.error("Method name / desc cannot be empty");
+                      return;
+                    }
+                    cn.methods.add(mn);
+                    model.insertNodeInto(new SortedTreeNode(cn, mn), stn, 0);
                   }
-                  cn.methods.add(mn);
-                  model.insertNodeInto(new SortedTreeNode(cn, mn), stn, 0);
                 }
               });
               menu.add(insert);
               JMenuItem edit = new JMenuItem("Edit");
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  EditDialogue.createClassDialogue(cn);
-                  JByteMod.instance.refreshTree();
+                  if (EditDialogue.createClassDialogue(cn)) {
+                    JByteMod.instance.refreshTree();
+                  }
                 }
               });
               menu.add(edit);
