@@ -97,7 +97,7 @@ public class SearchList extends JList<SearchEntry> {
       boolean exact = this.exact;
       for (ClassNode cn : values) {
         for (MethodNode mn : cn.methods) {
-          for (AbstractInsnNode ain : mn.instructions) {
+          for (AbstractInsnNode ain : mn.instructions.toArray()) {
             if (ain.getType() == AbstractInsnNode.LDC_INSN) {
               LdcInsnNode lin = (LdcInsnNode) ain;
               String cst = lin.cst.toString();
@@ -167,7 +167,7 @@ public class SearchList extends JList<SearchEntry> {
       boolean exact = this.exact;
       for (ClassNode cn : values) {
         for (MethodNode mn : cn.methods) {
-          for (AbstractInsnNode ain : mn.instructions) {
+          for (AbstractInsnNode ain : mn.instructions.toArray()) {
             if (field) {
               if (ain.getType() == AbstractInsnNode.FIELD_INSN) {
                 FieldInsnNode fin = (FieldInsnNode) ain;

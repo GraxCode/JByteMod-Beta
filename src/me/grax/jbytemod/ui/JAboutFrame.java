@@ -43,7 +43,7 @@ public class JAboutFrame extends JDialog {
     JTextPane title = new JTextPane();
     title.setContentType("text/html");
     title.setText(TextUtils.toHtml(jbm.getTitle()
-        + "<br/>Copyright © 2016-2018 noverify<br/><font color=\"#0000EE\"><u>https://github.com/GraxCode/JByteMod-Beta</u></font><br/>Donate LTC: <font color=\"#333333\">LhwXLVASzb6t4vHSssA9FQwq2X5gAg8EKX</font>"));
+        + "<br/>Copyright \u00A9 2016-2018 noverify<br/><font color=\"#0000EE\"><u>https://github.com/GraxCode/JByteMod-Beta</u></font><br/>Donate LTC: <font color=\"#333333\">LhwXLVASzb6t4vHSssA9FQwq2X5gAg8EKX</font>"));
     Color bgColor = new Color(0xd6d9df);
     UIDefaults defaults = new UIDefaults();
     defaults.put("TextPane[Enabled].backgroundPainter", bgColor);

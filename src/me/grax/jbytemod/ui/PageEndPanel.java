@@ -36,7 +36,7 @@ public class PageEndPanel extends JPanel {
     this.add(percent = new JLabel());
     percent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
     this.add(new JPanel());
-    label = new JLabel("© GraxCode 2016 - 2018");
+    label = new JLabel("\u00A9 GraxCode 2016 - 2018");
     label.setHorizontalAlignment(SwingConstants.RIGHT);
     label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
     this.add(label);
