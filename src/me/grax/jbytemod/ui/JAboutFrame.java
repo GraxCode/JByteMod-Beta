@@ -19,7 +19,7 @@ import me.grax.jbytemod.utils.TextUtils;
 public class JAboutFrame extends JDialog {
 
   public JAboutFrame(JByteMod jbm) {
-    this.setTitle(jbm.getRes().getResource("about") + " " + jbm.getTitle());
+    this.setTitle(JByteMod.res.getResource("about") + " " + jbm.getTitle());
     this.setModal(true);
     setBounds(100, 100, 400, 300);
     JPanel cp = new JPanel();

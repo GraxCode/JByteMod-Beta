@@ -110,7 +110,7 @@ public class ClassTree extends JTree implements IDropUser {
         clazz.add(new SortedTreeNode(c, m));
       }
     }
-    boolean sort = jbm.getOps().getBool("sort_methods");
+    boolean sort = JByteMod.ops.get("sort_methods").getBoolean();
     sort(tm, root, sort);
     tm.reload();
     addListener();
@@ -128,7 +128,7 @@ public class ClassTree extends JTree implements IDropUser {
       super.expandPath(tp);
     }
     if (node.getChildCount() >= 0) {
-      for (Enumeration e = node.children(); e.hasMoreElements();) {
+      for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
         SortedTreeNode n = (SortedTreeNode) e.nextElement();
         expandSaved(n);
       }

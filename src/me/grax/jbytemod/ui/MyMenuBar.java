@@ -5,7 +5,11 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
@@ -27,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.res.LanguageRes;
+import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
@@ -173,18 +178,48 @@ public class MyMenuBar extends JMenuBar {
 
   private JMenu getSettings() {
     JMenu settings = new JMenu("Settings");
-    Options o = jam.getOps();
-    LanguageRes lr = jam.getRes();
-    for (String s : Options.bools) {
-      JCheckBoxMenuItem jmi = new JCheckBoxMenuItem(lr.getResource(s), o.getBool(s));
-      jmi.addActionListener(new ActionListener() {
+    LanguageRes lr = JByteMod.res;
+    Options o = JByteMod.ops;
+    HashMap<String, JMenu> menus = new LinkedHashMap<>();
+    for (Option op : o.bools) {
+      String group = lr.getResource(op.getGroup());
+      JMenu menu = null;
+      if (menus.containsKey(group)) {
+        menu = menus.get(group);
+      } else {
+        menus.put(group, menu = new JMenu(group));
+      }
+      switch (op.getType()) {
+      case BOOLEAN:
+        JCheckBoxMenuItem jmi = new JCheckBoxMenuItem(lr.getResource(op.getName()), op.getBoolean());
+        jmi.addActionListener(new ActionListener() {
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          o.setProperty(s, String.valueOf(jmi.isSelected()));
-        }
-      });
-      settings.add(jmi);
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            op.setValue(jmi.isSelected());
+            o.save();
+          }
+        });
+        menu.add(jmi);
+        break;
+      case STRING:
+        JMenu jm = new JMenu(lr.getResource(op.getName()));
+        JTextField jtf = new JTextField(op.getString());
+        jm.add(jtf);
+        jtf.addFocusListener(new FocusAdapter() {
+          public void focusLost(FocusEvent e) {
+            op.setValue(jtf.getText());
+            o.save();
+          }
+        });
+        menu.add(jm);
+        break;
+      default:
+        break;
+      }
+    }
+    for (JMenu m : menus.values()) {
+      settings.add(m);
     }
     return settings;
   }

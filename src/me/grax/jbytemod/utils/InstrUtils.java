@@ -14,9 +14,15 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.res.Option;
 import me.lpk.util.OpUtils;
 
 public class InstrUtils {
+
+  private static Option primColor = JByteMod.ops.get("primary_color");
+  private static Option secColor = JByteMod.ops.get("secondary_color");
+
   public static String toString(AbstractInsnNode ain) {
     String opc = TextUtils.toBold(OpUtils.getOpcodeText(ain.getOpcode()).toLowerCase()) + " ";
     switch (ain.getType()) {
@@ -43,7 +49,7 @@ public class InstrUtils {
       TypeInsnNode tin = (TypeInsnNode) ain;
       String esc = TextUtils.escape(tin.desc);
       if (esc.endsWith(";") && esc.startsWith("L")) {
-        opc += TextUtils.addTag(esc, "font color=#557799");
+        opc += TextUtils.addTag(esc, "font color=" + primColor.getString());
       } else {
         opc += getDisplayClass(esc);
       }
@@ -54,7 +60,7 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.LDC_INSN:
       LdcInsnNode ldc = (LdcInsnNode) ain;
-      opc += TextUtils.addTag(ldc.cst.getClass().getSimpleName(), "font color=#557799") + " ";
+      opc += TextUtils.addTag(ldc.cst.getClass().getSimpleName(), "font color=" + primColor.getString()) + " ";
       if (ldc.cst instanceof String)
         opc += TextUtils.addTag("\"" + ldc.cst.toString() + "\"", "font color=#559955");
       else {
@@ -75,20 +81,20 @@ public class InstrUtils {
     case AbstractInsnNode.TABLESWITCH_INSN:
       TableSwitchInsnNode tsin = (TableSwitchInsnNode) ain;
       if (tsin.dflt != null) {
-        opc += TextUtils.addTag("L" + OpUtils.getLabelIndex(tsin.dflt), "font color=#995555");
+        opc += TextUtils.addTag("L" + OpUtils.getLabelIndex(tsin.dflt), "font color=" + secColor.getString());
       }
       if (tsin.labels.size() < 20) {
         for (LabelNode l : tsin.labels) {
-          opc += " " + TextUtils.addTag("L" + OpUtils.getLabelIndex(l), "font color=#557799");
+          opc += " " + TextUtils.addTag("L" + OpUtils.getLabelIndex(l), "font color=" + primColor.getString());
         }
       } else {
-        opc += " " + TextUtils.addTag(tsin.labels.size() + " cases", "font color=#557799");
+        opc += " " + TextUtils.addTag(tsin.labels.size() + " cases", "font color=" + primColor.getString());
       }
       break;
     case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
       InvokeDynamicInsnNode idin = (InvokeDynamicInsnNode) ain;
       System.out.println(idin.desc);
-      opc += TextUtils.addTag(TextUtils.escape(idin.name), "font color=#557799") + " " + TextUtils.escape(idin.desc);
+      opc += TextUtils.addTag(TextUtils.escape(idin.name), "font color=" + primColor.getString()) + " " + TextUtils.escape(idin.desc);
       break;
     }
     return opc;
@@ -97,17 +103,17 @@ public class InstrUtils {
   public static String getDisplayClass(String str) {
     String[] spl = str.split("/");
     if (spl.length > 1) {
-      return TextUtils.addTag(spl[spl.length - 1], "font color=#557799");
+      return TextUtils.addTag(spl[spl.length - 1], "font color=" + primColor.getString());
     }
-    return TextUtils.addTag(str, "font color=#557799");
+    return TextUtils.addTag(str, "font color=" + primColor.getString());
   }
 
   public static String getDisplayClassRed(String str) {
     String[] spl = str.split("/");
     if (spl.length > 1) {
-      return TextUtils.addTag(spl[spl.length - 1], "font color=#995555");
+      return TextUtils.addTag(spl[spl.length - 1], "font color=" + secColor.getString());
     }
-    return TextUtils.addTag(str, "font color=#995555");
+    return TextUtils.addTag(str, "font color=" + secColor.getString());
   }
 
   public static String getDisplayArgs(String rawType) {
@@ -173,7 +179,7 @@ public class InstrUtils {
       result = result.substring(0, result.length() - 2);
     }
     if (tag)
-      return TextUtils.addTag(result, "font color=#557799");
+      return TextUtils.addTag(result, "font color=" + primColor.getString());
     return result;
   }
 

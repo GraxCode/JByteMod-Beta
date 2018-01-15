@@ -17,12 +17,10 @@ import me.grax.jbytemod.analysis.block.Block;
 public class Converter implements Opcodes {
 
   private ArrayList<AbstractInsnNode> nodes;
-  private MethodNode mn;
 
   public Converter(MethodNode mn) {
     assert (mn.instructions != null && mn.instructions.size() > 0);
     this.nodes = new ArrayList<>(Arrays.asList(mn.instructions.toArray()));
-    this.mn = mn;
   }
 
   public ArrayList<Block> convert() {

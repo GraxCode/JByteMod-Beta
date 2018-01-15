@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
@@ -18,7 +17,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
 import me.grax.jbytemod.utils.list.TCBEntry;
 

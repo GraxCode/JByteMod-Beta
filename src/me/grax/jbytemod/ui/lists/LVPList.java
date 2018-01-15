@@ -15,12 +15,10 @@ import javax.swing.SwingUtilities;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
 import me.grax.jbytemod.utils.list.LVPEntry;
-import me.grax.jbytemod.utils.list.TCBEntry;
 
 public class LVPList extends JList<LVPEntry> {
 

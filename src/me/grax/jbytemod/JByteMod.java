@@ -47,8 +47,8 @@ public class JByteMod extends JFrame {
 
   private JPanel contentPane;
 
-  private final LanguageRes res = new LanguageRes();
-  private final Options ops = new Options();
+  public static final LanguageRes res = new LanguageRes();
+  public static final Options ops = new Options();
 
   private JarArchive file;
 
@@ -101,7 +101,7 @@ public class JByteMod extends JFrame {
    * Create the frame.
    */
   public JByteMod() {
-    if (ops.getBool("load_rt_startup")) {
+    if (ops.get("load_rt_startup").getBoolean()) {
       new FrameGen().start();
     }
     this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -190,7 +190,7 @@ public class JByteMod extends JFrame {
   }
 
   public void treeSelection(ClassNode cn, MethodNode mn) {
-    if (ops.getBool("tree_search_sel")) {
+    if (ops.get("tree_search_sel").getBoolean()) {
       //selection may take some time
       new Thread(() -> {
         DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
@@ -244,14 +244,6 @@ public class JByteMod extends JFrame {
 
   public ClassTree getJarTree() {
     return jarTree;
-  }
-
-  public Options getOps() {
-    return ops;
-  }
-
-  public LanguageRes getRes() {
-    return res;
   }
 
   public void setDP(DecompilerPanel dp) {

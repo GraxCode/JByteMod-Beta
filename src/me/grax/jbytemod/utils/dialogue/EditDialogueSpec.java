@@ -3,7 +3,6 @@ package me.grax.jbytemod.utils.dialogue;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.lang.reflect.Field;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -13,12 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.NumberFormatter;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.JByteMod;
 
