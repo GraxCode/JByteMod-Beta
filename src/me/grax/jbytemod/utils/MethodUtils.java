@@ -64,11 +64,6 @@ public class MethodUtils {
         break;
       }
     }
-    if (desc.endsWith("V")) {
-      a.size = 2;
-    } else {
-      a.size = 3;
-    }
     return a;
   }
 
