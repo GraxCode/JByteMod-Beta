@@ -1,8 +1,6 @@
 /bin/
 /src/org/apache
 /src/org/fife
-/src/org/objectweb
-
 /.settings/
 /.classpath
 /procyon-decompiler-0.5.30.jar

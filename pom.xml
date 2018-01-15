@@ -55,11 +55,14 @@
     		<artifactId>rsyntaxtextarea</artifactId>
     		<version>2.6.1</version>
 		</dependency>
+		<!--
+		ASM has some modified code therefore i cannot include it here
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-all</artifactId>
 			<version>5.2</version>
 		</dependency>
+		   -->
 		<dependency>
 			<groupId>org.bitbucket.mstrobel</groupId>
 			<artifactId>procyon-compilertools</artifactId>
