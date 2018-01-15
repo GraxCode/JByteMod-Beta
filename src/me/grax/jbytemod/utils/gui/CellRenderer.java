@@ -13,9 +13,9 @@ public class CellRenderer extends DefaultTreeCellRenderer {
   Icon pack, java, file;
 
   public CellRenderer() {
-    this.pack = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/package_obj.png")));
-    this.java = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/java.png")));
-    this.file = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/file.png")));
+    this.pack = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/package_obj.png")));
+    this.java = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/java.png")));
+    this.file = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/file.png")));
   }
 
   @Override

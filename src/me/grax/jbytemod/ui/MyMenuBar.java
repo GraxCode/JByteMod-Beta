@@ -296,7 +296,7 @@ public class MyMenuBar extends JMenuBar {
   protected void openSaveDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);
-    jfc.setFileFilter(new FileNameExtensionFilter("Java Package", "jar"));
+    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar)", "jar"));
     int result = jfc.showSaveDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
       File output = jfc.getSelectedFile();
@@ -309,7 +309,7 @@ public class MyMenuBar extends JMenuBar {
   protected void openLoadDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);
-    jfc.setFileFilter(new FileNameExtensionFilter("Java Package", "jar"));
+    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar)", "jar"));
     int result = jfc.showOpenDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
       File input = jfc.getSelectedFile();
