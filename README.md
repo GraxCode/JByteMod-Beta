@@ -16,3 +16,8 @@ Libraries Used:
 - Procyon Decompiler
 - Fernflower Decompiler
 - JGraphX
+
+# simple build HOWTO
+
+    mvn pakage
+    java -jar target/JByteMod-1.3.0.jar
