@@ -47,10 +47,10 @@ public class LanguageRes {
   }
 
   private InputStream getXML() {
-    InputStream is = LanguageRes.class.getResourceAsStream("locale/" + this.getLanguage() + ".xml");
+    InputStream is = LanguageRes.class.getResourceAsStream("/locale/" + this.getLanguage() + ".xml");
     if (is == null) {
       System.out.println("Using default en.xml");
-      is = LanguageRes.class.getResourceAsStream("locale/en.xml");
+      is = LanguageRes.class.getResourceAsStream("/locale/en.xml");
     }
     return is;
   }

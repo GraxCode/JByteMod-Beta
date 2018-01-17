@@ -92,7 +92,7 @@
             <version>0.5.32</version>
         </dependency>
         <dependency>
-            <!-- Warning: This version is outdated because i couldn't find any newer version, use 3.8.0 instead -->
+            <!-- Warning: This version is outdated and i couldn't find any newer version, use 3.8.0 instead -->
             <groupId>org.tinyjee.jgraphx</groupId>
             <artifactId>jgraphx</artifactId>
             <version>3.4.1.3</version>
