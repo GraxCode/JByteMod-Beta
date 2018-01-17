@@ -40,9 +40,9 @@ public class MyTabbedPane extends JTabbedPane {
     SearchList searchList = new SearchList(jbm);
     jbm.setSearchlist(searchList);
     JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
-    this.addTab("Search", this.withBorder(search, searchList));
+    this.addTab(JByteMod.res.getResource("search"), this.withBorder(search, searchList));
     this.cfp = new ControlFlowPanel();
-    this.addTab(analysis, this.withBorder(new JLabel(JByteMod.res.getResource("control_flow_visualisation")), cfp));
+    this.addTab(analysis, this.withBorder(new JLabel(JByteMod.res.getResource("ctrl_flow_vis")), cfp));
     jbm.setCFP(cfp);
     jbm.setTabbedPane(this);
     ChangeListener changeListener = new ChangeListener() {

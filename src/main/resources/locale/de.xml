@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+   <string name="exit_warn">Willst du JByteMod wirklich schließen? Alle Änderungen werden nicht gespeichert.</string>
+   <string name="is_sure">Bist du dir sicher?</string>
+   <string name="jar_warn">Im Moment sind nur .jar Dateien verwendbar. Bitte nutze ein .jar Archiv</string>
+   <string name="about">Über</string>
+   <string name="sort_methods">Methoden sortieren</string>
+   <string name="tree_search_sel">Tree Nodes auswählen</string>
+   <string name="load_rt_startup">Lade rt.jar beim Start</string>
+   <string name="primary_color">Primäre Farbe</string>
+   <string name="secondary_color">Sekundäre Farbe</string>
+   <string name="general_group">Allgemein</string>
+   <string name="color_group">Farbe</string>
+   <string name="big_jar_warn">Warnung: Dies könnte bei großen .jar Dateien\n etwas dauern!</string>
+   <string name="big_string_warn">Warnung: Dies könnte bei langen Zeichenketten\n etwas dauern!</string>
+   <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>
+   <string name="save">Speichern</string>
+   <string name="save_as">Speichern als..</string>
+   <string name="load">Öffnen</string>
+   <string name="tree_reload">Tree neuladen</string>
+   <string name="collapse_all">Alles zuklappen</string>
+   <string name="about">Über</string>
+   <string name="licenses">Lizenzen</string>
+   <string name="java_archive">Java Archiv</string>
+   <string name="settings">Einstellungen</string>
+   <string name="search">Suchen</string>
+   <string name="search_results">Suchergebnisse</string>
+   <string name="analysis">Analyse</string>
+   <string name="ctrl_flow_vis">Control Flow Visualisierung</string>
+   <string name="exact">Exakt</string>
+   <string name="case_sens">Groß und Kleinschreibung beachten</string>
+   <string name="string_cst">Stringkonstante:</string>
+   <string name="go_to_dec">Zur Deklaration</string>
+   <string name="copy_text">Text kopieren</string>
+   <string name="help">Hilfe</string>
+   <string name="utils">Werkzeug</string>
+   <string name="remove">Löschen</string>
+   <string name="remove_all">Alle löschen</string>
+   <string name="edit">Bearbeiten</string>
+   <string name="insert">Einfügen</string>
+   <string name="ins_before">Davor einfügen</string>
+   <string name="ins_after">Danach einfügen</string>
+   <string name="add">Hinzufügen</string>
+   <string name="move_up">Nach oben rücken</string>
+   <string name="move_down">Nach unten rücken</string>
+</resources>
+

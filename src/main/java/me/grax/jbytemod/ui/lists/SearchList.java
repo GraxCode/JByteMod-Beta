@@ -40,7 +40,7 @@ public class SearchList extends JList<SearchEntry> {
       public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
           JPopupMenu menu = new JPopupMenu();
-          JMenuItem decl = new JMenuItem("Go to declaration");
+          JMenuItem decl = new JMenuItem(JByteMod.res.getResource("go_to_dec"));
           decl.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               ClassNode cn = SearchList.this.getSelectedValue().getCn();
@@ -50,7 +50,7 @@ public class SearchList extends JList<SearchEntry> {
             }
           });
           menu.add(decl);
-          JMenuItem copy = new JMenuItem("Copy text");
+          JMenuItem copy = new JMenuItem(JByteMod.res.getResource("copy_text"));
           copy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               StringSelection selection = new StringSelection(SearchList.this.getSelectedValue().getFound());

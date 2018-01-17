@@ -108,7 +108,7 @@ public class MyMenuBar extends JMenuBar {
 
     search.add(method);
     this.add(search);
-    JMenu utils = new JMenu("Utils");
+    JMenu utils = new JMenu(JByteMod.res.getResource("utils"));
     JMenuItem accman = new JMenuItem("Access Helper");
     accman.addActionListener(new ActionListener() {
 
@@ -140,7 +140,7 @@ public class MyMenuBar extends JMenuBar {
     });
     tree.add(collapse);
     this.add(getSettings());
-    JMenu help = new JMenu("Help");
+    JMenu help = new JMenu(JByteMod.res.getResource("help"));
     JMenuItem about = new JMenuItem(JByteMod.res.getResource("about"));
     about.addActionListener(new ActionListener() {
 
@@ -164,7 +164,7 @@ public class MyMenuBar extends JMenuBar {
           JFrame jf = new JFrame();
           jf.setBounds(100, 100, 700, 800);
           jf.add(new JScrollPane(new JTextArea(IOUtils.toString(MyMenuBar.class.getResourceAsStream("/resources/LICENSES")))));
-          jf.setTitle("Licenses");
+          jf.setTitle(JByteMod.res.getResource("licenses"));
           jf.setVisible(true);
         } catch (Exception ex) {
           new ErrorDisplay(ex);
