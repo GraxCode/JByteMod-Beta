@@ -11,4 +11,23 @@
     <string name="secondary_color">Secondary Color</string>
     <string name="general_group">General</string>
     <string name="color_group">Color</string>
+    <string name="big_jar_warn">Warning: This could take some time\n on big jars!</string>
+    <string name="big_string_warn">Warning: This could take some time\n on short strings!</string>
+	<string name="ref_warn">Warning: References will not be updated!</string>
+	<string name="save">Save</string>
+	<string name="save_as">Save As..</string>
+	<string name="load">Load</string>
+	<string name="tree_reload">Reload Tree</string>
+	<string name="collapse_all">Collapse all</string>
+	<string name="about">About</string>
+	<string name="licenses">Licenses</string>
+	<string name="java_archive">Java Archive</string>
+	<string name="settings">Settings</string>
+	<string name="search">Search</string>
+	<string name="search_results">Search Results</string>
+	<string name="analysis">Analysis</string>
+	<string name="ctrl_flow_vis">Control flow visualization</string>
+	<string name="exact">Exact</string>
+	<string name="case_sens">Case sensitive</string>
+	<string name="string_cst">String Constant:</string>
 </resources>

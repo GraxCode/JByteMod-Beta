@@ -23,6 +23,7 @@ public class MyTabbedPane extends JTabbedPane {
   private DecompilerTab dt;
   private ControlFlowPanel cfp;
   private boolean classSelected = false;
+  private static String analysis = JByteMod.res.getResource("analysis");
 
   public MyTabbedPane(JByteMod jbm) {
     this.jbm = jbm;
@@ -32,16 +33,16 @@ public class MyTabbedPane extends JTabbedPane {
     this.addTab("Code", this.withBorder(editor, list));
     InfoPanel sp = new InfoPanel(jbm);
     jbm.setSP(sp);
-    this.addTab("Info", this.withBorder(new JLabel("Settings"), sp));
+    this.addTab("Info", this.withBorder(new JLabel(JByteMod.res.getResource("settings")), sp));
     String decompiler = "Decompiler";
     this.dt = new DecompilerTab(jbm);
     this.addTab(decompiler, dt);
     SearchList searchList = new SearchList(jbm);
     jbm.setSearchlist(searchList);
-    JLabel search = new JLabel("Search Results");
+    JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
     this.addTab("Search", this.withBorder(search, searchList));
     this.cfp = new ControlFlowPanel();
-    this.addTab("Analysis", this.withBorder(new JLabel("Control flow visualisation"), cfp));
+    this.addTab(analysis, this.withBorder(new JLabel(JByteMod.res.getResource("control_flow_visualisation")), cfp));
     jbm.setCFP(cfp);
     jbm.setTabbedPane(this);
     ChangeListener changeListener = new ChangeListener() {
@@ -51,7 +52,7 @@ public class MyTabbedPane extends JTabbedPane {
         if (sourceTabbedPane.getTitleAt(index).equals(decompiler)) {
           dt.decompile(jbm.getCurrentNode(), false);
         }
-        if (sourceTabbedPane.getTitleAt(index).equals("Analysis")) {
+        if (sourceTabbedPane.getTitleAt(index).equals(analysis)) {
           if (!classSelected) {
             cfp.generateList();
           } else {
@@ -69,7 +70,7 @@ public class MyTabbedPane extends JTabbedPane {
     if (this.getTitleAt(index).equals("Decompiler")) {
       dt.decompile(cn, false);
     }
-    if (this.getTitleAt(index).equals("Analysis")) {
+    if (this.getTitleAt(index).equals(analysis)) {
       cfp.clear();
     }
     this.classSelected = true;
@@ -91,7 +92,7 @@ public class MyTabbedPane extends JTabbedPane {
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
     int index = this.getSelectedIndex();
-    if (this.getTitleAt(index).equals("Analysis")) {
+    if (this.getTitleAt(index).equals(analysis)) {
       cfp.generateList();
     }
     this.classSelected = false;

@@ -37,7 +37,7 @@ public class MNSettings extends MyInternalFrame {
     final JPanel labels = new JPanel(new GridLayout(0, 1));
     panel.add(labels, "West");
     panel.add(input, "Center");
-    panel.add(new JLabel("Warning: References will not be updated!"), "South");
+    panel.add(new JLabel(JByteMod.res.getResource("ref_warn")), "South");
     labels.add(new JLabel("Method Name:"));
     JTextField name = new JTextField(mn.name);
     input.add(name);

@@ -47,9 +47,9 @@ public class MyMenuBar extends JMenuBar {
 
   private void initFileMenu() {
     JMenu file = new JMenu("File");
-    JMenuItem save = new JMenuItem("Save");
-    JMenuItem saveas = new JMenuItem("Save As..");
-    JMenuItem load = new JMenuItem("Load");
+    JMenuItem save = new JMenuItem(JByteMod.res.getResource("save"));
+    JMenuItem saveas = new JMenuItem(JByteMod.res.getResource("save_as"));
+    JMenuItem load = new JMenuItem(JByteMod.res.getResource("load"));
     load.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         openLoadDialogue();
@@ -76,7 +76,7 @@ public class MyMenuBar extends JMenuBar {
     file.add(load);
     this.add(file);
 
-    JMenu search = new JMenu("Search");
+    JMenu search = new JMenu(JByteMod.res.getResource("search"));
     JMenuItem ldc = new JMenuItem("Search LDC");
     ldc.addActionListener(new ActionListener() {
 
@@ -121,7 +121,7 @@ public class MyMenuBar extends JMenuBar {
     this.add(utils);
     JMenu tree = new JMenu("Tree");
     utils.add(tree);
-    JMenuItem rltree = new JMenuItem("Reload Tree");
+    JMenuItem rltree = new JMenuItem(JByteMod.res.getResource("tree_reload"));
     rltree.addActionListener(new ActionListener() {
 
       @Override
@@ -130,7 +130,7 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     tree.add(rltree);
-    JMenuItem collapse = new JMenuItem("Collapse all");
+    JMenuItem collapse = new JMenuItem(JByteMod.res.getResource("collapse_all"));
     collapse.addActionListener(new ActionListener() {
 
       @Override
@@ -141,7 +141,7 @@ public class MyMenuBar extends JMenuBar {
     tree.add(collapse);
     this.add(getSettings());
     JMenu help = new JMenu("Help");
-    JMenuItem about = new JMenuItem("About");
+    JMenuItem about = new JMenuItem(JByteMod.res.getResource("about"));
     about.addActionListener(new ActionListener() {
 
       @Override
@@ -155,7 +155,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     help.add(about);
-    JMenuItem licenses = new JMenuItem("Licenses");
+    JMenuItem licenses = new JMenuItem(JByteMod.res.getResource("licenses"));
     licenses.addActionListener(new ActionListener() {
 
       @Override
@@ -177,7 +177,7 @@ public class MyMenuBar extends JMenuBar {
   }
 
   private JMenu getSettings() {
-    JMenu settings = new JMenu("Settings");
+    JMenu settings = new JMenu(JByteMod.res.getResource("settings"));
     LanguageRes lr = JByteMod.res;
     Options o = JByteMod.ops;
     HashMap<String, JMenu> menus = new LinkedHashMap<>();
@@ -230,12 +230,12 @@ public class MyMenuBar extends JMenuBar {
     final JPanel labels = new JPanel(new GridLayout(0, 1));
     panel.add(labels, "West");
     panel.add(input, "Center");
-    panel.add(new JLabel("Warning: This could take some time\n on short strings!"), "South");
-    labels.add(new JLabel("String Constant:"));
+    panel.add(new JLabel(JByteMod.res.getResource("big_string_warn")), "South");
+    labels.add(new JLabel(JByteMod.res.getResource("string_cst")));
     JTextField cst = new JTextField();
     input.add(cst);
-    JCheckBox exact = new JCheckBox("Exact");
-    JCheckBox snstv = new JCheckBox("Case sensitive");
+    JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
+    JCheckBox snstv = new JCheckBox(JByteMod.res.getResource("case_sens"));
     labels.add(exact);
     input.add(snstv);
     if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", 2) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
@@ -249,7 +249,7 @@ public class MyMenuBar extends JMenuBar {
     final JPanel labels = new JPanel(new GridLayout(0, 1));
     panel.add(labels, "West");
     panel.add(input, "Center");
-    panel.add(new JLabel("Warning: This could take some time\n on big jars!"), "South");
+    panel.add(new JLabel(JByteMod.res.getResource("big_jar_warn")), "South");
     labels.add(new JLabel("Owner:"));
     JTextField owner = new JTextField();
     input.add(owner);
@@ -259,7 +259,7 @@ public class MyMenuBar extends JMenuBar {
     labels.add(new JLabel("Desc:"));
     JTextField desc = new JTextField();
     input.add(desc);
-    JCheckBox exact = new JCheckBox("Exact");
+    JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
     labels.add(exact);
     input.add(new JPanel());
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", 2) == JOptionPane.OK_OPTION
@@ -274,7 +274,7 @@ public class MyMenuBar extends JMenuBar {
     final JPanel labels = new JPanel(new GridLayout(0, 1));
     panel.add(labels, "West");
     panel.add(input, "Center");
-    panel.add(new JLabel("Warning: This could take some time\n on big jars!"), "South");
+    panel.add(new JLabel(JByteMod.res.getResource("big_jar_warn")), "South");
     labels.add(new JLabel("Owner:"));
     JTextField owner = new JTextField();
     input.add(owner);
@@ -284,7 +284,7 @@ public class MyMenuBar extends JMenuBar {
     labels.add(new JLabel("Desc:"));
     JTextField desc = new JTextField();
     input.add(desc);
-    JCheckBox exact = new JCheckBox("Exact");
+    JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
     labels.add(exact);
     input.add(new JPanel());
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", 2) == JOptionPane.OK_OPTION
@@ -296,7 +296,7 @@ public class MyMenuBar extends JMenuBar {
   protected void openSaveDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);
-    jfc.setFileFilter(new FileNameExtensionFilter("Java Package", "jar"));
+    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar)", "jar"));
     int result = jfc.showSaveDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
       File output = jfc.getSelectedFile();
@@ -309,7 +309,7 @@ public class MyMenuBar extends JMenuBar {
   protected void openLoadDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);
-    jfc.setFileFilter(new FileNameExtensionFilter("Java Package", "jar"));
+    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar)", "jar"));
     int result = jfc.showOpenDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
       File input = jfc.getSelectedFile();

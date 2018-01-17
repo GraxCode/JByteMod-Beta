@@ -35,7 +35,7 @@ public class CNSettings extends MyInternalFrame {
     final JPanel labels = new JPanel(new GridLayout(0, 1));
     panel.add(labels, "West");
     panel.add(input, "Center");
-    panel.add(new JLabel("Warning: References will not be updated!"), "South");
+    panel.add(new JLabel(JByteMod.res.getResource("ref_warn")), "South");
     labels.add(new JLabel("Class Name:"));
     JTextField name = new JTextField(cn.name);
     input.add(name);
