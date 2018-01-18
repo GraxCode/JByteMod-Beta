@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -64,8 +65,8 @@ public class SearchList extends JList<SearchEntry> {
     });
   }
 
-  public void searchForString(String ldc, boolean exact, boolean cs) {
-    new TaskLDCSearch(jbm, ldc, exact, cs).execute();
+  public void searchForString(String ldc, boolean exact, boolean cs, boolean regex) {
+    new TaskLDCSearch(jbm, ldc, exact, cs, regex).execute();
   }
 
   class TaskLDCSearch extends SwingWorker<Void, Integer> {
@@ -75,12 +76,15 @@ public class SearchList extends JList<SearchEntry> {
     private String ldc;
     private boolean exact;
     private boolean caseSens;
+    private boolean regex;
 
-    public TaskLDCSearch(JByteMod jbm, String ldc, boolean exact, boolean caseSens) {
+    public TaskLDCSearch(JByteMod jbm, String ldc, boolean exact, boolean caseSens, boolean regex) {
       this.jbm = jbm;
       this.jpb = jbm.getPP();
       this.exact = exact;
       this.caseSens = caseSens;
+      this.regex = regex;
+      
       if (!caseSens) {
         this.ldc = ldc.toLowerCase();
       } else {
@@ -95,6 +99,7 @@ public class SearchList extends JList<SearchEntry> {
       double size = values.size();
       double i = 0;
       boolean exact = this.exact;
+      boolean regex = this.regex;
       for (ClassNode cn : values) {
         for (MethodNode mn : cn.methods) {
           for (AbstractInsnNode ain : mn.instructions) {
@@ -104,7 +109,7 @@ public class SearchList extends JList<SearchEntry> {
               if (!caseSens) {
                 cst = cst.toLowerCase();
               }
-              if (exact ? cst.equals(ldc) : cst.contains(ldc)) {
+              if (regex ? Pattern.matches(ldc, cst) : (exact ? cst.equals(ldc) : cst.contains(ldc))) {
                 model.addElement(new SearchEntry(cn, mn, lin.cst.toString()));
               }
             }

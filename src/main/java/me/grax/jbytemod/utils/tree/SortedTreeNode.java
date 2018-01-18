@@ -30,8 +30,6 @@ public class SortedTreeNode extends DefaultMutableTreeNode {
   }
 
   private void setClassName() {
-    if (!c.name.contains("/"))
-      this.className = c.name + ".class";
     String[] split = c.name.split("/");
     this.className = split[split.length - 1] + ".class";
   }

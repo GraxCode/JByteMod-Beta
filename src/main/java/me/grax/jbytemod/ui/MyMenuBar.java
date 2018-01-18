@@ -11,6 +11,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -39,6 +41,7 @@ public class MyMenuBar extends JMenuBar {
 
   private JByteMod jam;
   private File lastFile;
+  private static final Icon searchIcon = new ImageIcon(MyMenuBar.class.getResource("/resources/search.png"));
 
   public MyMenuBar(JByteMod jam) {
     this.jam = jam;
@@ -231,15 +234,18 @@ public class MyMenuBar extends JMenuBar {
     panel.add(labels, "West");
     panel.add(input, "Center");
     panel.add(new JLabel(JByteMod.res.getResource("big_string_warn")), "South");
-    labels.add(new JLabel(JByteMod.res.getResource("string_cst")));
+    labels.add(new JLabel(JByteMod.res.getResource("find")));
     JTextField cst = new JTextField();
     input.add(cst);
     JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
+    JCheckBox regex = new JCheckBox("Regex");
     JCheckBox snstv = new JCheckBox(JByteMod.res.getResource("case_sens"));
     labels.add(exact);
+    labels.add(regex);
     input.add(snstv);
-    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", 2) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
-      jam.getSearchList().searchForString(cst.getText(), exact.isSelected(), snstv.isSelected());
+    input.add(new JPanel());
+    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, searchIcon) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
+      jam.getSearchList().searchForString(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
     }
   }
 
@@ -262,7 +268,7 @@ public class MyMenuBar extends JMenuBar {
     JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
     labels.add(exact);
     input.add(new JPanel());
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", 2) == JOptionPane.OK_OPTION
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, searchIcon) == JOptionPane.OK_OPTION
         && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
       jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), true);
     }
@@ -287,7 +293,7 @@ public class MyMenuBar extends JMenuBar {
     JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
     labels.add(exact);
     input.add(new JPanel());
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", 2) == JOptionPane.OK_OPTION
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, searchIcon) == JOptionPane.OK_OPTION
         && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
       jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), false);
     }

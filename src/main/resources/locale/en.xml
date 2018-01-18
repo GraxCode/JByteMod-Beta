@@ -1,5 +1,3 @@
-
-
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
    <string name="exit_warn">Do you really want to exit? All unsaved changes will be lost.</string>
@@ -13,8 +11,8 @@
    <string name="secondary_color">Secondary Color</string>
    <string name="general_group">General</string>
    <string name="color_group">Color</string>
-   <string name="big_jar_warn">Warning: This could take some time\n on big jars!</string>
-   <string name="big_string_warn">Warning: This could take some time\n on short strings!</string>
+   <string name="big_jar_warn">Warning: This could take some time on big jars!</string>
+   <string name="big_string_warn">Warning: This could take some time on short strings!</string>
    <string name="ref_warn">Warning: References will not be updated!</string>
    <string name="save">Save</string>
    <string name="save_as">Save As..</string>
@@ -31,7 +29,7 @@
    <string name="ctrl_flow_vis">Control flow visualization</string>
    <string name="exact">Exact</string>
    <string name="case_sens">Case sensitive</string>
-   <string name="string_cst">String Constant:</string>
+   <string name="find">Find:</string>
    <string name="go_to_dec">Jump to declaration</string>
    <string name="copy_text">Copy text</string>
    <string name="help">Help</string>
