@@ -24,6 +24,7 @@ import me.lpk.util.ASMUtils;
 public class JarArchive {
   private Map<String, ClassNode> classes;
   private Map<String, byte[]> output;
+  private boolean singleEntry;
 
   public JarArchive(Map<String, ClassNode> classes, Map<String, byte[]> output) {
     super();
@@ -31,14 +32,26 @@ public class JarArchive {
     this.output = output;
   }
 
+  public JarArchive(ClassNode cn) {
+    super();
+    this.classes = new HashMap<>();
+    this.singleEntry = true;
+    classes.put(cn.name, cn);
+  }
+
   public JarArchive(JByteMod jbm, File input) {
     try {
-      new TaskLoadFile(jbm, input).execute();
+      new TaskLoadJarFile(jbm, input).execute();
     } catch (Throwable t) {
       new ErrorDisplay(t);
     }
   }
 
+
+  public boolean isSingleEntry() {
+    return singleEntry;
+  }
+  
   public Map<String, ClassNode> getClasses() {
     return classes;
   }
@@ -47,7 +60,7 @@ public class JarArchive {
     return output;
   }
 
-  class TaskLoadFile extends SwingWorker<Void, Integer> {
+  class TaskLoadJarFile extends SwingWorker<Void, Integer> {
 
     private JarFile input;
     private PageEndPanel jpb;
@@ -55,7 +68,7 @@ public class JarArchive {
     private int jarSize; //including directories
     private int loaded;
 
-    public TaskLoadFile(JByteMod jbm, File input) {
+    public TaskLoadJarFile(JByteMod jbm, File input) {
       try {
         this.jarSize = countFiles(this.input = new JarFile(input));
         System.out.println(jarSize + " files to load!");

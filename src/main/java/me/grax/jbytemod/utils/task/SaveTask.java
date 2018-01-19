@@ -1,6 +1,7 @@
 package me.grax.jbytemod.utils.task;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,17 @@ public class SaveTask extends SwingWorker<Void, Integer> {
     Map<String, ClassNode> classes = this.file.getClasses();
     Map<String, byte[]> outputBytes = this.file.getOutput();
     System.out.println("Writing..");
+    if(this.file.isSingleEntry()) {
+      ClassNode node = classes.values().iterator().next();
+      ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+      node.accept(writer);
+      publish(50);
+      System.out.println("Saving..");
+      Files.write(this.output.toPath(), writer.toByteArray());
+      publish(100);
+      System.out.println("Done!");
+      return null;
+    }
     publish(0);
     double size = classes.keySet().size();
     double i = 0;

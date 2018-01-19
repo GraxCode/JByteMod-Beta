@@ -344,22 +344,25 @@ public class MyMenuBar extends JMenuBar {
   }
 
   protected void openSaveDialogue() {
-    JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
-    jfc.setAcceptAllFileFilterUsed(false);
-    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar)", "jar"));
-    int result = jfc.showSaveDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-      File output = jfc.getSelectedFile();
-      this.lastFile = output;
-      System.out.println("Selected output file: " + output.getAbsolutePath());
-      jam.saveFile(output);
+    if (jam.getFile() != null) {
+      boolean isClass = jam.getFile().isSingleEntry();
+      JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
+      jfc.setAcceptAllFileFilterUsed(false);
+      jfc.setFileFilter(new FileNameExtensionFilter(isClass ? "Java Class (*.class)" : "Java Package (*.jar)", isClass ? "class" : "jar"));
+      int result = jfc.showSaveDialog(this);
+      if (result == JFileChooser.APPROVE_OPTION) {
+        File output = jfc.getSelectedFile();
+        this.lastFile = output;
+        System.out.println("Selected output file: " + output.getAbsolutePath());
+        jam.saveFile(output);
+      }
     }
   }
 
   protected void openLoadDialogue() {
     JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
     jfc.setAcceptAllFileFilterUsed(false);
-    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar)", "jar"));
+    jfc.setFileFilter(new FileNameExtensionFilter("Java Package (*.jar) or Java Class (*.class)", "jar", "class"));
     int result = jfc.showOpenDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
       File input = jfc.getSelectedFile();

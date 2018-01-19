@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.nio.file.Files;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -41,6 +42,7 @@ import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
+import me.lpk.util.ASMUtils;
 import me.lpk.util.OpUtils;
 
 public class JByteMod extends JFrame {
@@ -146,6 +148,13 @@ public class JByteMod extends JFrame {
     if (ap.endsWith(".jar")) {
       try {
         this.file = new JarArchive(this, input);
+      } catch (Throwable e) {
+        new ErrorDisplay(e);
+      }
+    } else if (ap.endsWith(".class")) {
+      try {
+        this.file = new JarArchive(ASMUtils.getNode(Files.readAllBytes(input.toPath())));
+        this.refreshTree();
       } catch (Throwable e) {
         new ErrorDisplay(e);
       }
