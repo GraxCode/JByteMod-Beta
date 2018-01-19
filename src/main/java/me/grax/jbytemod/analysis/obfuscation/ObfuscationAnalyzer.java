@@ -141,18 +141,22 @@ public class ObfuscationAnalyzer implements Opcodes {
 
   private void analyzeName(String name, ArrayList<NameObfType> names) {
     boolean none = true;
-    if (name.length() > 32) {
+    String sname = name.substring(name.lastIndexOf('/') + 1);
+    if (sname.length() > 32) {
       names.add(NameObfType.LONG_LETTERS);
       none = false;
+    } else if (sname.length() <= 2) { //actually 3 but there are "run", "put" and "get"
+      names.add(NameObfType.SHORT_LETTERS);
+      none = false;
     }
-    if (!asciiEncoder.canEncode(name)) {
+    if (!asciiEncoder.canEncode(sname)) {
       names.add(NameObfType.HIGH_CHAR);
       none = false;
     }
-    if (keywords.contains(name)) {
+    if (keywords.contains(sname)) {
       names.add(NameObfType.JAVA_KEYWORD);
       none = false;
-    } else if (windir.contains(name.toLowerCase())) {
+    } else if (windir.contains(sname.toLowerCase())) {
       names.add(NameObfType.INVALID_WINDIR);
       none = false;
     }
