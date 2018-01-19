@@ -69,6 +69,10 @@ public class SearchList extends JList<SearchEntry> {
     new TaskLDCSearch(jbm, ldc, exact, cs, regex).execute();
   }
 
+  public void searchForPatternRegex(Pattern p) {
+    new TaskLDCSearch(jbm, p).execute();;
+  }
+
   class TaskLDCSearch extends SwingWorker<Void, Integer> {
 
     private PageEndPanel jpb;
@@ -76,20 +80,28 @@ public class SearchList extends JList<SearchEntry> {
     private String ldc;
     private boolean exact;
     private boolean caseSens;
-    private boolean regex;
+    private Pattern pattern;
 
     public TaskLDCSearch(JByteMod jbm, String ldc, boolean exact, boolean caseSens, boolean regex) {
       this.jbm = jbm;
       this.jpb = jbm.getPP();
       this.exact = exact;
       this.caseSens = caseSens;
-      this.regex = regex;
-      
+      if (regex) {
+        this.pattern = Pattern.compile(ldc);
+      }
+
       if (!caseSens) {
         this.ldc = ldc.toLowerCase();
       } else {
         this.ldc = ldc;
       }
+    }
+
+    public TaskLDCSearch(JByteMod jbm, Pattern p) {
+      this.jbm = jbm;
+      this.jpb = jbm.getPP();
+      this.pattern = p;
     }
 
     @Override
@@ -99,7 +111,7 @@ public class SearchList extends JList<SearchEntry> {
       double size = values.size();
       double i = 0;
       boolean exact = this.exact;
-      boolean regex = this.regex;
+      boolean regex = this.pattern != null;
       for (ClassNode cn : values) {
         for (MethodNode mn : cn.methods) {
           for (AbstractInsnNode ain : mn.instructions) {
@@ -109,7 +121,7 @@ public class SearchList extends JList<SearchEntry> {
               if (!caseSens) {
                 cst = cst.toLowerCase();
               }
-              if (regex ? Pattern.matches(ldc, cst) : (exact ? cst.equals(ldc) : cst.contains(ldc))) {
+              if (regex ? pattern.matcher(cst).matches() : (exact ? cst.equals(ldc) : cst.contains(ldc))) {
                 model.addElement(new SearchEntry(cn, mn, lin.cst.toString()));
               }
             }

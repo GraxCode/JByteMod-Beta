@@ -43,5 +43,7 @@
    <string name="add">Hinzufügen</string>
    <string name="move_up">Nach oben rücken</string>
    <string name="move_down">Nach unten rücken</string>
+   <string name="url_search">URLs</string>
+   <string name="email_search">Email Adressen</string>
 </resources>
 

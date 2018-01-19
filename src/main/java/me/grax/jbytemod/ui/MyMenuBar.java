@@ -31,6 +31,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.IOUtils;
 
+import android.util.Patterns;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
@@ -121,6 +122,28 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     utils.add(accman);
+    JMenu obf = new JMenu("Obfuscation Analysis");
+    utils.add(obf);
+    JMenuItem nameobf = new JMenuItem("Name Obfuscation");
+    nameobf.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (jam.getFile() != null)
+          new JNameObfAnalysis(jam.getFile().getClasses()).setVisible(true);
+      }
+    });
+    obf.add(nameobf);
+    JMenuItem methodobf = new JMenuItem("Method Obfuscation");
+    methodobf.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (jam.getFile() != null)
+          new JMethodObfAnalysis(jam.getFile().getClasses()).setVisible(true);
+      }
+    });
+    obf.add(methodobf);
     this.add(utils);
     JMenu tree = new JMenu("Tree");
     utils.add(tree);
@@ -142,6 +165,26 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     tree.add(collapse);
+    JMenu searchUtils = new JMenu(JByteMod.res.getResource("search"));
+    utils.add(searchUtils);
+    JMenuItem url = new JMenuItem(JByteMod.res.getResource("url_search"));
+    url.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        jam.getSearchList().searchForPatternRegex(Patterns.AUTOLINK_WEB_URL);
+      }
+    });
+    searchUtils.add(url);
+    JMenuItem email = new JMenuItem(JByteMod.res.getResource("email_search"));
+    email.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        jam.getSearchList().searchForPatternRegex(Patterns.EMAIL_ADDRESS);
+      }
+    });
+    searchUtils.add(email);
     this.add(getSettings());
     JMenu help = new JMenu(JByteMod.res.getResource("help"));
     JMenuItem about = new JMenuItem(JByteMod.res.getResource("about"));
@@ -244,7 +287,8 @@ public class MyMenuBar extends JMenuBar {
     labels.add(regex);
     input.add(snstv);
     input.add(new JPanel());
-    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, searchIcon) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
+    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+        searchIcon) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
       jam.getSearchList().searchForString(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
     }
   }
@@ -268,8 +312,8 @@ public class MyMenuBar extends JMenuBar {
     JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
     labels.add(exact);
     input.add(new JPanel());
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, searchIcon) == JOptionPane.OK_OPTION
-        && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+        searchIcon) == JOptionPane.OK_OPTION && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
       jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), true);
     }
   }
@@ -293,8 +337,8 @@ public class MyMenuBar extends JMenuBar {
     JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
     labels.add(exact);
     input.add(new JPanel());
-    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, searchIcon) == JOptionPane.OK_OPTION
-        && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+        searchIcon) == JOptionPane.OK_OPTION && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
       jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), false);
     }
   }
