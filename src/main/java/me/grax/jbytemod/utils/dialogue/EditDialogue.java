@@ -36,6 +36,8 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.utils.SwingUtils;
 import me.lpk.util.OpUtils;
 
 /*
@@ -371,7 +373,10 @@ public class EditDialogue {
     labels.add(new JLabel("Field Access:"));
     JFormattedTextField access = createNumberField();
     access.setValue(fn.access);
-    input.add(access);
+    input.add(SwingUtils.withButton(access, "...", e -> {
+      JAccessHelper jah = new JAccessHelper(fn, "access", access);
+      jah.setVisible(true);
+    }));
 
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit FieldNode", 2) == JOptionPane.OK_OPTION) {
       try {

@@ -19,6 +19,8 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.utils.SwingUtils;
 
 public class MNSettings extends MyInternalFrame {
   /**
@@ -56,7 +58,10 @@ public class MNSettings extends MyInternalFrame {
     formatter.setOverwriteMode(true);
     JFormattedTextField access = new JFormattedTextField(formatter);
     access.setValue(mn.access);
-    input.add(access);
+    input.add(SwingUtils.withButton(access, "...", e -> {
+      JAccessHelper jah = new JAccessHelper(mn, "access", access);
+      jah.setVisible(true);
+    }));
     labels.add(new JLabel("Method MaxLocals:"));
     JFormattedTextField maxL = new JFormattedTextField(formatter);
     maxL.setValue(mn.maxLocals);

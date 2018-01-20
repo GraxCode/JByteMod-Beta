@@ -11,19 +11,22 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JAccessHelper;
 import me.grax.jbytemod.ui.JListEditor;
+import me.grax.jbytemod.utils.SwingUtils;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
 
 public class CNSettings extends MyInternalFrame {
   /**
    * Save position
    */
-  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 30);
+  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 90);
 
   public CNSettings(ClassNode cn) {
     super("Class Settings");
@@ -46,7 +49,11 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Class Access:"));
     JFormattedTextField access = EditDialogue.createNumberField();
     access.setValue(cn.access);
-    input.add(access);
+    input.add(SwingUtils.withButton(access, "...", e -> {
+      JAccessHelper jah = new JAccessHelper(cn, "access", access);
+      jah.setVisible(true);
+      
+    }));
     labels.add(new JLabel("Class Version:"));
     JFormattedTextField version = EditDialogue.createNumberField();
     version.setValue(cn.version);
@@ -64,6 +71,9 @@ public class CNSettings extends MyInternalFrame {
       new JListEditor("Interfaces", cn, "interfaces").setVisible(true);
     });
     input.add(interfaces);
+    labels.add(new JLabel("Outer Class:"));
+    JTextField outerclass = new JTextField(cn.outerClass);
+    input.add(outerclass);
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {
@@ -89,6 +99,12 @@ public class CNSettings extends MyInternalFrame {
           cn.superName = null;
         } else {
           cn.superName = par;
+        }
+        String oc = outerclass.getText();
+        if (oc.isEmpty()) {
+          cn.outerClass = null;
+        } else {
+          cn.outerClass = oc;
         }
         if (refresh) {
           JByteMod.instance.refreshTree();
