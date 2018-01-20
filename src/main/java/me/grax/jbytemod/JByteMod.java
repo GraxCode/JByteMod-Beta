@@ -141,7 +141,7 @@ public class JByteMod extends JFrame {
   }
 
   /**
-   * Load .jar file
+   * Load .jar or .class file
    */
   public void loadFile(File input) {
     String ap = input.getAbsolutePath();

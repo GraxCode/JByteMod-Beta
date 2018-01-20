@@ -2,6 +2,9 @@ package me.grax.jbytemod.utils;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -11,7 +14,15 @@ public class ThemeChanges {
   public static void setDefaults() {
     UIDefaults defaults = UIManager.getLookAndFeelDefaults();
     defaults.put("nimbusOrange", new Color(0xFF01D328));
-    //    changeDefaultFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14)); //change font size
+    Object o = UIManager.get("InternalFrame:InternalFrameTitlePane:\"InternalFrameTitlePane.iconifyButton\"[Enabled].backgroundPainter");
+    Class<?> c = o.getClass();
+    try {
+      Field f = c.getDeclaredField("color3");
+      f.setAccessible(true);
+      f.set(o, new Color(0xFF01D328));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public static void changeDefaultFont(Font f) {

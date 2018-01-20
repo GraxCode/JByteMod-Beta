@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JListEditor;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
 
 public class CNSettings extends MyInternalFrame {
@@ -56,6 +57,13 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Class Parent:"));
     JTextField parent = new JTextField(cn.superName);
     input.add(parent);
+    labels.add(new JLabel("Class Interfaces:"));
+    JButton interfaces = new JButton(JByteMod.res.getResource("edit"));
+    interfaces.addActionListener(a -> {
+      if(!JListEditor.isOpen())
+      new JListEditor("Interfaces", cn, "interfaces").setVisible(true);
+    });
+    input.add(interfaces);
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {
