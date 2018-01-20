@@ -6,7 +6,7 @@
    <string name="about">About</string>
    <string name="sort_methods">Sort Methods</string>
    <string name="tree_search_sel">Select Tree Entries</string>
-   <string name="load_rt_startup">Load rt.jar at Startup</string>
+   <string name="use_rt">Use rt.jar instead of dynamic loading</string>
    <string name="primary_color">Primary Color</string>
    <string name="secondary_color">Secondary Color</string>
    <string name="general_group">General</string>

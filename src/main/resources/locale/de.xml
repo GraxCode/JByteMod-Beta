@@ -6,7 +6,7 @@
    <string name="about">Über</string>
    <string name="sort_methods">Methoden sortieren</string>
    <string name="tree_search_sel">Tree Nodes auswählen</string>
-   <string name="load_rt_startup">Lade rt.jar beim Start</string>
+   <string name="use_rt">rt.jar statt dynamischen Classloading</string>
    <string name="primary_color">Primäre Farbe</string>
    <string name="secondary_color">Sekundäre Farbe</string>
    <string name="general_group">Allgemein</string>

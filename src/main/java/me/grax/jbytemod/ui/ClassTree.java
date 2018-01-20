@@ -240,7 +240,7 @@ public class ClassTree extends JTree implements IDropUser {
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   if (EditDialogue.createClassDialogue(cn)) {
-                    JByteMod.instance.refreshTree();
+                    jbm.refreshTree();
                   }
                 }
               });
@@ -249,7 +249,7 @@ public class ClassTree extends JTree implements IDropUser {
               JMenuItem frames = new JMenuItem("Regenerate Frames");
               frames.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  FrameGen.regenerateFrames(cn);
+                  FrameGen.regenerateFrames(jbm, cn);
                 }
               });
               tools.add(frames);

@@ -103,7 +103,7 @@ public class JByteMod extends JFrame {
    * Create the frame.
    */
   public JByteMod() {
-    if (ops.get("load_rt_startup").getBoolean()) {
+    if (ops.get("use_rt").getBoolean()) {
       new FrameGen().start();
     }
     this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
