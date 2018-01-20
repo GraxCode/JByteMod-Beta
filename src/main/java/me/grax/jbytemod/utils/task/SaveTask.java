@@ -33,10 +33,11 @@ public class SaveTask extends SwingWorker<Void, Integer> {
   protected Void doInBackground() throws Exception {
     Map<String, ClassNode> classes = this.file.getClasses();
     Map<String, byte[]> outputBytes = this.file.getOutput();
+    int flags = JByteMod.ops.get("compute_maxs").getBoolean() ? 1 : 0;
     System.out.println("Writing..");
     if(this.file.isSingleEntry()) {
       ClassNode node = classes.values().iterator().next();
-      ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+      ClassWriter writer = new ClassWriter(flags);
       node.accept(writer);
       publish(50);
       System.out.println("Saving..");
@@ -50,7 +51,7 @@ public class SaveTask extends SwingWorker<Void, Integer> {
     double i = 0;
     for (String s : classes.keySet()) {
       ClassNode node = classes.get(s);
-      ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+      ClassWriter writer = new ClassWriter(flags);
       node.accept(writer);
       outputBytes.put(s, writer.toByteArray());
       publish((int) ((i++ / size) * 50d));

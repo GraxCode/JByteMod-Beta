@@ -45,5 +45,6 @@
    <string name="move_down">Move down</string>
    <string name="url_search">URLs</string>
    <string name="email_search">Email Addresses</string>
+   <string name="compute_maxs">Use COMPUTE_MAXS</string>
 </resources>
 
