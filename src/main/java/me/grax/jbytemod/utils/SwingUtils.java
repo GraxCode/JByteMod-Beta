@@ -12,7 +12,7 @@ public class SwingUtils {
     JPanel jp = new JPanel();
     jp.setLayout(new BorderLayout());
     jp.add(c, BorderLayout.CENTER);
-    JButton help = new JButton("...");
+    JButton help = new JButton(text);
     help.addActionListener(e);
     jp.add(help, BorderLayout.EAST);
     return jp;

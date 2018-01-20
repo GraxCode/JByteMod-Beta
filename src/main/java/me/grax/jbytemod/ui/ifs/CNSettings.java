@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -57,7 +58,9 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Class Version:"));
     JFormattedTextField version = EditDialogue.createNumberField();
     version.setValue(cn.version);
-    input.add(version);
+    input.add(SwingUtils.withButton(version, "?", e -> {
+      JOptionPane.showMessageDialog(this, "Java SE 9 = 53 (0x35 hex),\nJava SE 8 = 52 (0x34 hex),\nJava SE 7 = 51 (0x33 hex),\nJava SE 6.0 = 50 (0x32 hex),\nJava SE 5.0 = 49 (0x31 hex)");
+    }));
     labels.add(new JLabel("Class Signature:"));
     JTextField signature = new JTextField(cn.signature);
     input.add(signature);
