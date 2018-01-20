@@ -76,7 +76,7 @@ public class FrameNode extends AbstractInsnNode {
    */
   public List<Object> stack;
 
-  private FrameNode() {
+  public FrameNode() {
     super(-1);
   }
 

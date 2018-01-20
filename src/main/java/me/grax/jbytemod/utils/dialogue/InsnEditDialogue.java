@@ -117,11 +117,11 @@ public class InsnEditDialogue extends ClassDialogue {
   protected void addSpecial(Object obj, JPanel leftText, JPanel rightInput) {
     if (obj instanceof AbstractInsnNode) {
       AbstractInsnNode ain = (AbstractInsnNode) obj;
-      leftText.add(new JLabel("Opcode: "));
       String[] arr = opc.get(ain.getClass().getSimpleName());
       if (arr == null) {
         return;
       }
+      leftText.add(new JLabel("Opcode: "));
       JComboBox<String> opcode = new JComboBox<String>(arr);
       opcode.setSelectedItem(OpUtils.getOpcodeText(ain.getOpcode()).toLowerCase());
       rightInput.add(wrap("opc", opcode));

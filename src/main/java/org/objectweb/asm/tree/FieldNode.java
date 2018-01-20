@@ -118,9 +118,6 @@ public class FieldNode extends FieldVisitor {
    */
   public List<Attribute> attrs;
 
-  public FieldNode() {
-    super(Opcodes.ASM5);
-  }
 
   /**
    * Constructs a new {@link FieldNode}. <i>Subclasses must not use this
