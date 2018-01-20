@@ -71,7 +71,7 @@ public class ClassDialogue {
         WrappedPanel wp = (WrappedPanel) c;
         Field f = wp.getField();
         if (f != null) {
-          Object o = getSpecialValue(object, f.getType(), wp.getObject(), wp);
+          Object o = getSpecialValue(object, f.getName(), f.getType(), wp.getObject(), wp);
           if (o != null) {
             try {
               f.set(object, o);
@@ -88,6 +88,9 @@ public class ClassDialogue {
               e.printStackTrace();
             }
           }
+        } else {
+          Object o = wp.getObject();
+          getSpecialValue(object, o.getClass().getName(), o.getClass(), o, wp); //can also be used as void
         }
       }
       return true;
@@ -95,10 +98,9 @@ public class ClassDialogue {
     return false;
   }
 
-  protected Object getSpecialValue(Object object, Class<?> type, Object object3, WrappedPanel wp) {
+  protected Object getSpecialValue(Object object, String name, Class<?> type, Object object3, WrappedPanel wp) {
     return null;
   }
-
 
   private Object getValue(Class<?> type, Component child) {
     switch (noChilds.indexOf(type.getName())) {
@@ -134,15 +136,15 @@ public class ClassDialogue {
     rightInput.setLayout(new GridLayout(0, 1));
     addSpecial(object, leftText, rightInput);
     for (Field f : fields) {
-      if (hasNoChilds(f.getType())) {
+      if (isSpecial(f.getName(), f.getType())) {
         try {
-          rightInput.add(wrap(f, getComponent(f)));
+          rightInput.add(wrap(f, getSpecial(f.get(object), f.getName(), f.getType())));
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
-      } else if (isSpecial(f.getName(), f.getType())) {
+      } else if (hasNoChilds(f.getType())) {
         try {
-          rightInput.add(wrap(f, getSpecial(f.get(object), f.getName(), f.getType())));
+          rightInput.add(wrap(f, getComponent(f)));
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
@@ -337,14 +339,14 @@ public class ClassDialogue {
       mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
       for (int i = 0; i < size; i++) {
         Object o = Array.get(array, i);
-        if (hasNoChilds(o.getClass())) {
+        if (isSpecial(o.getClass().getName(), o.getClass())) {
+          rightInput.add(wrap(o, getSpecial(o, o.getClass().getName(), o.getClass())));
+        } else if (hasNoChilds(o.getClass())) {
           try {
             rightInput.add(wrap(o, ClassDialogue.this.getComponent(o.getClass(), o)));
           } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
           }
-        } else if (isSpecial(o.getClass().getName(), o.getClass())) {
-          rightInput.add(wrap(o, getSpecial(o, o.getClass().getName(), o.getClass())));
         } else {
           JButton edit = new JButton("Edit");
           edit.addActionListener(e -> {
@@ -377,14 +379,10 @@ public class ClassDialogue {
           Object o = wp.getObject();
           if (o != null) {
             Component child = wp.getComponent(0);
-            if (hasNoChilds(o.getClass())) {
-              try {
-                Array.set(array, i, getValue(o.getClass(), child));
-              } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-              }
-            } else if (isSpecial(o.getClass().getName(), o.getClass())) {
-              Array.set(array, i, getSpecialValue(object, o.getClass(), o, wp));
+            if (isSpecial(o.getClass().getName(), o.getClass())) {
+              Array.set(array, i, getSpecialValue(object, o.getClass().getName(), o.getClass(), o, wp));
+            } else if (hasNoChilds(o.getClass())) {
+              Array.set(array, i, getValue(o.getClass(), child));
             } else {
               Array.set(array, i, o);
             }

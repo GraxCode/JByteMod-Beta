@@ -3,7 +3,6 @@ package me.grax.jbytemod.utils.dialogue;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,6 +36,7 @@ import me.lpk.util.OpUtils;
 public class InsnEditDialogue extends ClassDialogue {
 
   private static final HashMap<String, String[]> opc = new LinkedHashMap<>();
+  private static final String[] handles;
 
   static {
     opc.put(InsnNode.class.getSimpleName(),
@@ -64,6 +64,8 @@ public class InsnEditDialogue extends ClassDialogue {
     opc.put(LabelNode.class.getSimpleName(), null);
     opc.put(LineNumberNode.class.getSimpleName(), null);
     opc.put(FrameNode.class.getSimpleName(), null);
+    handles = new String[] { "h_getfield", "h_getstatic", "h_putfield", "h_putstatic", "h_invokevirtual", "h_invokestatic", "h_invokespecial",
+        "h_newinvokespecial", "h_invokeinterface" };
   }
 
   private MethodNode mn;
@@ -130,22 +132,26 @@ public class InsnEditDialogue extends ClassDialogue {
 
   @SuppressWarnings("unchecked")
   @Override
-  protected Object getSpecialValue(Object object, Class<?> type, Object o, WrappedPanel wp) {
+  protected Object getSpecialValue(Object object, String name, Class<?> type, Object o, WrappedPanel wp) {
     if (o != null && o.equals("opc")) {
       JComboBox<String> opcode = (JComboBox<String>) wp.getComponent(0);
       AbstractInsnNode ain = (AbstractInsnNode) object;
       ain.setOpcode(OpUtils.getOpcodeIndex(String.valueOf(opcode.getSelectedItem()).toUpperCase()));
       return null;
-    } else if(type.getName().equals(LabelNode.class.getName())) {
+    } else if (type.getName().equals(LabelNode.class.getName())) {
       JComboBox<LabelNode> label = (JComboBox<LabelNode>) wp.getComponent(0);
       return label.getSelectedItem();
+    } else if (name.equals("tag") && type.getName().equals(int.class.getName())) {
+      System.out.println(o);
+      JComboBox<String> label = (JComboBox<String>) wp.getComponent(0);
+      return label.getSelectedIndex() + 1;
     }
     return null;
   }
 
   @Override
   protected boolean isSpecial(String name, Class<?> type) {
-    return type.getName().equals(LabelNode.class.getName());
+    return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())); //invokedynamic tag
   }
 
   @Override
@@ -160,6 +166,10 @@ public class InsnEditDialogue extends ClassDialogue {
       JComboBox<LabelNode> jcb = new JComboBox<>(ln.toArray(new LabelNode[0]));
       jcb.setSelectedItem(o);
       return jcb;
+    } else if (name.equals("tag")) {
+      JComboBox<String> jcb = new JComboBox<>(handles);
+      jcb.setSelectedIndex(((int) o) - 1);
+      return jcb;
     }
     return null;
   }
@@ -172,7 +182,7 @@ public class InsnEditDialogue extends ClassDialogue {
   private static boolean hasSettings(AbstractInsnNode ain) {
     return !(ain instanceof LabelNode);
   }
-  
+
   @Override
   protected ClassDialogue init(Object value) {
     return new InsnEditDialogue(mn, value);
