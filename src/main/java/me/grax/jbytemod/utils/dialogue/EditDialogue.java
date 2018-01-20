@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -16,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -37,7 +40,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
-import me.grax.jbytemod.utils.SwingUtils;
+import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.lpk.util.OpUtils;
 
 /*
@@ -90,6 +93,7 @@ public class EditDialogue {
     panel.add(input, "Center");
     JComboBox<String> opcode = null;
     LinkedHashMap<String, String> fieldNames = new LinkedHashMap<>();
+    LinkedHashMap<String, Object> savedValues = new LinkedHashMap<>();
     if (ain.getOpcode() != -1) {
       fieldNames.put("opcode", "");
       labels.add(new JLabel("Opcode: "));
@@ -132,6 +136,27 @@ public class EditDialogue {
           jcb.setSelectedIndex(0);
         }
         input.add(jcb);
+      } else if (f.getGenericType().getTypeName().equals("org.objectweb.asm.Handle")) {
+        Handle h = (Handle) f.get(ain);
+        fieldNames.put(f.getName(), "handle");
+        labels.add(new JLabel("Handle: "));
+        JButton edit = new JButton(JByteMod.res.getResource("edit"));
+        savedValues.put(f.getName(), h);
+        edit.addActionListener(e -> {
+          savedValues.put(f.getName(), createEditHandleDialog(h));
+        });
+        input.add(edit);
+      } else if (f.getGenericType().getTypeName().equals("java.lang.Object[]")) {
+        //removed because only invokedynamic uses object[] and edit array won't work with bsmArgs anyway
+        //        Object[] arr = (Object[]) f.get(ain);
+        //        fieldNames.put(f.getName(), "objectarray");
+        //        labels.add(new JLabel(toUp(f.getName()) + ": "));
+        //        JButton edit = new JButton(JByteMod.res.getResource("edit"));
+        //        savedValues.put(f.getName(), arr);
+        //        edit.addActionListener(e -> {
+        //          savedValues.put(f.getName(), EditDialogueSpecial.createEditArrayDialog(arr));
+        //        });
+        //        input.add(edit);
       } else {
         System.out.println("Unallowed edit:" + f.getName() + " " + f.getGenericType().getTypeName());
       }
@@ -161,7 +186,23 @@ public class EditDialogue {
         input.add(new JTextField(ldc.cst.toString()));
       }
     }
-
+    //Special case for invokedynamic
+    if (ain.getClass().getSimpleName().equals(InvokeDynamicInsnNode.class.getSimpleName())) {
+      InvokeDynamicInsnNode indyn = (InvokeDynamicInsnNode) ain;
+      for (Object o : indyn.bsmArgs) {
+        if (o instanceof Handle) {
+          Handle h = (Handle) o;
+          fieldNames.put("arghandle" + o.hashCode(), "handle");
+          labels.add(new JLabel("Handle in Args: "));
+          JButton edit = new JButton(JByteMod.res.getResource("edit"));
+          savedValues.put("arghandle" + o.hashCode(), h);
+          edit.addActionListener(e -> {
+            savedValues.put("arghandle" + o.hashCode(), createEditHandleDialog(h));
+          });
+          input.add(edit);
+        }
+      }
+    }
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit " + ain.getClass().getSimpleName(), 2) == JOptionPane.OK_OPTION) {
       int i = 0;
       for (String fn : fieldNames.keySet()) {
@@ -195,6 +236,10 @@ public class EditDialogue {
             error("Value not capable for type " + jcb.getSelectedItem().toString() + ": \"" + cst.getText() + "\"");
           }
           i++;
+        } else if (fn.startsWith("arghandle")) {
+          Field f = ain.getClass().getDeclaredField(fn);
+          f.set(ain, savedValues.get(fn));
+          i++;
         } else {
           String type = fieldNames.get(fn);
           if (type.equals("String")) {
@@ -213,6 +258,14 @@ public class EditDialogue {
             JComboBox<String> jcb = (JComboBox<String>) input.getComponent(i);
             Field f = ain.getClass().getDeclaredField(fn);
             f.set(ain, jcb.getSelectedItem());
+            i++;
+          } else if (type.equals("handle")) {
+            Field f = ain.getClass().getDeclaredField(fn);
+            f.set(ain, savedValues.get(fn));
+            i++;
+          } else if (type.equals("objectarray")) {
+            Field f = ain.getClass().getDeclaredField(fn);
+            f.set(ain, savedValues.get(fn));
             i++;
           }
         }
@@ -389,6 +442,42 @@ public class EditDialogue {
       }
 
     }
+  }
+
+  private static final String[] handleTags = { "H_GETFIELD", "H_GETSTATIC", "H_PUTFIELD", "H_PUTSTATIC", "H_INVOKEVIRTUAL", "H_INVOKESTATIC",
+      "H_INVOKESPECIAL", "H_NEWINVOKESPECIAL", "H_INVOKEINTERFACE" };
+
+  @SuppressWarnings("deprecation")
+  public static Handle createEditHandleDialog(Handle h) {
+    final JPanel panel = new JPanel(new BorderLayout(5, 5));
+    final JPanel input = new JPanel(new GridLayout(0, 1));
+    final JPanel labels = new JPanel(new GridLayout(0, 1));
+    panel.add(labels, "West");
+    panel.add(input, "Center");
+    panel.add(new JLabel(JByteMod.res.getResource("ref_warn")), "South");
+    labels.add(new JLabel("Handle Tag:"));
+    JComboBox<String> tag = new JComboBox<>(handleTags);
+    input.add(tag);
+    tag.setSelectedIndex(h.getTag() - 1); //tags correspond handle tags
+    labels.add(new JLabel("Handle Owner:"));
+    JTextField owner = new JTextField(h.getOwner());
+    input.add(owner);
+    labels.add(new JLabel("Handle Name:"));
+    JTextField name = new JTextField(h.getName());
+    input.add(name);
+    labels.add(new JLabel("Handle Desc:"));
+    JTextField desc = new JTextField(h.getDesc());
+    input.add(desc);
+
+    if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit Invokedynamic Handle", 2) == JOptionPane.OK_OPTION) {
+      try {
+        return new Handle(Opcodes.class.getDeclaredField((String) tag.getSelectedItem()).getInt(null), owner.getText(), name.getText(), desc.getText());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+    }
+    return h;
   }
 
   public static boolean canEdit(AbstractInsnNode ain) {

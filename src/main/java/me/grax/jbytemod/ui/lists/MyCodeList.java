@@ -34,7 +34,7 @@ import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JSearch;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
-import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
+import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
 import me.grax.jbytemod.utils.list.FieldEntry;
 import me.grax.jbytemod.utils.list.InstrEntry;
 import me.lpk.util.OpUtils;
@@ -74,7 +74,7 @@ public class MyCodeList extends JList<InstrEntry> {
               public void actionPerformed(ActionEvent e) {
                 try {
                   FieldNode fn = new FieldNode(1, "", "", "", null);
-                  EditDialogueSpec.createInsertDialogue(null, fn);
+                  EditDialogueSpecial.createInsertDialogue(null, fn);
                   if (fn.signature.isEmpty()) {
                     fn.signature = null;
                   }
@@ -254,7 +254,7 @@ public class MyCodeList extends JList<InstrEntry> {
               public void actionPerformed(ActionEvent e) {
                 try {
                   FieldNode fn = new FieldNode(1, "", "", "", null);
-                  if (EditDialogueSpec.createInsertDialogue(null, fn)) {
+                  if (EditDialogueSpecial.createInsertDialogue(null, fn)) {
                     if (fn.signature.isEmpty()) {
                       fn.signature = null;
                     }

@@ -14,6 +14,7 @@
    <string name="big_jar_warn">Warnung: Dies könnte bei großen .jar Dateien etwas dauern!</string>
    <string name="big_string_warn">Warnung: Dies könnte bei kurzen Strings etwas dauern!</string>
    <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>
+   <string name="update_warn">Warning: Wird direkt nach der Bestätigung aktualisiert!</string>
    <string name="save">Speichern</string>
    <string name="save_as">Speichern als..</string>
    <string name="load">Öffnen</string>

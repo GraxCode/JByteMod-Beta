@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.dialogue.EditDialogueSpec;
+import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
 import me.grax.jbytemod.utils.list.LVPEntry;
 
 public class LVPList extends JList<LVPEntry> {
@@ -50,7 +50,7 @@ public class LVPList extends JList<LVPEntry> {
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
-                  EditDialogueSpec.createInsertDialogue(mn, selected.getLvn());
+                  EditDialogueSpecial.createInsertDialogue(mn, selected.getLvn());
                 } catch (Exception ex) {
                   new ErrorDisplay(ex);
                 }
@@ -64,7 +64,7 @@ public class LVPList extends JList<LVPEntry> {
             public void actionPerformed(ActionEvent e) {
               try {
                 LocalVariableNode lvn = new LocalVariableNode("", "", "", null, null, mn.localVariables.size());
-                if (EditDialogueSpec.createInsertDialogue(mn, lvn))
+                if (EditDialogueSpecial.createInsertDialogue(mn, lvn))
                   if (lvn.start != null && lvn.end != null) {
                     mn.localVariables.add(lvn);
                   }

@@ -14,6 +14,7 @@
    <string name="big_jar_warn">Warning: This could take some time on big jars!</string>
    <string name="big_string_warn">Warning: This could take some time on short strings!</string>
    <string name="ref_warn">Warning: References will not be updated!</string>
+   <string name="update_warn">Warning: Updated as soon as you click OK!</string>
    <string name="save">Save</string>
    <string name="save_as">Save As..</string>
    <string name="load">Load</string>

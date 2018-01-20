@@ -38,8 +38,9 @@ public class Options {
         for(int i = 0; i < bools.size(); i++) {
           Option o1 =  bools.get(i);
           Option o2 =  defaults.get(i);
-          if(o1 == null || o2 == null || !o1.getName().equals(o2)) {
-            JOptionPane.showMessageDialog(null, "Corrupt option file, rewriting");
+          if(o1 == null || o2 == null || !o1.getName().equals(o2.getName())) {
+            System.out.println(o1 + " " + o2);
+            JOptionPane.showMessageDialog(null, "Corrupt option file, rewriting (#" + i + ")");
             this.initWithDefaults();
             this.save();
             return;

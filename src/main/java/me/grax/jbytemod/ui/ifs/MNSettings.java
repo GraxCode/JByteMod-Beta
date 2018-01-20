@@ -20,8 +20,8 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
-import me.grax.jbytemod.utils.SwingUtils;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
+import me.grax.jbytemod.utils.gui.SwingUtils;
 
 public class MNSettings extends MyInternalFrame {
   /**
