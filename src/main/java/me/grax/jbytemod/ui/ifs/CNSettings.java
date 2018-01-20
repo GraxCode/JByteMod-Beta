@@ -27,7 +27,7 @@ public class CNSettings extends MyInternalFrame {
   /**
    * Save position
    */
-  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 90);
+  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 150);
 
   public CNSettings(ClassNode cn) {
     super("Class Settings");
@@ -77,6 +77,12 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Outer Class:"));
     JTextField outerclass = new JTextField(cn.outerClass);
     input.add(outerclass);
+    labels.add(new JLabel("Outer Method:"));
+    JTextField outermethod = new JTextField(cn.outerMethod);
+    input.add(outermethod);
+    labels.add(new JLabel("Outer Method Desc:"));
+    JTextField outerdesc = new JTextField(cn.outerMethodDesc);
+    input.add(outerdesc);
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {
@@ -108,6 +114,18 @@ public class CNSettings extends MyInternalFrame {
           cn.outerClass = null;
         } else {
           cn.outerClass = oc;
+        }
+        String om = outermethod.getText();
+        if (om.isEmpty()) {
+          cn.outerMethod = null;
+        } else {
+          cn.outerMethod = om;
+        }
+        String od = outerdesc.getText();
+        if (od.isEmpty()) {
+          cn.outerMethodDesc = null;
+        } else {
+          cn.outerMethodDesc = od;
         }
         if (refresh) {
           JByteMod.instance.refreshTree();
