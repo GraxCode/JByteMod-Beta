@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.utils.list.InstrEntry;
 
-public class JSearch extends JFrame implements ActionListener {
+public class JSearch extends JDialog implements ActionListener {
 
   private MyCodeList list;
   private JTextField tf;

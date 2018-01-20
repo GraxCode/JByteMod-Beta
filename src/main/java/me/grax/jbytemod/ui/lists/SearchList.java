@@ -65,7 +65,7 @@ public class SearchList extends JList<SearchEntry> {
     });
   }
 
-  public void searchForString(String ldc, boolean exact, boolean cs, boolean regex) {
+  public void searchForConstant(String ldc, boolean exact, boolean cs, boolean regex) {
     new TaskLDCSearch(jbm, ldc, exact, cs, regex).execute();
   }
 

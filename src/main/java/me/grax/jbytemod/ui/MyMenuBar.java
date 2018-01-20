@@ -289,7 +289,7 @@ public class MyMenuBar extends JMenuBar {
     input.add(new JPanel());
     if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
         searchIcon) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
-      jam.getSearchList().searchForString(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
+      jam.getSearchList().searchForConstant(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
     }
   }
 

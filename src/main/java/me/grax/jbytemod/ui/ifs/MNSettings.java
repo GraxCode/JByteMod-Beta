@@ -21,12 +21,13 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
 import me.grax.jbytemod.utils.SwingUtils;
+import me.grax.jbytemod.utils.dialogue.EditDialogue;
 
 public class MNSettings extends MyInternalFrame {
   /**
    * Save position
    */
-  private static Rectangle bounds = new Rectangle(670, 10, 1280 / 4, 720 / 3);
+  private static Rectangle bounds = new Rectangle(670, 10, 1280 / 4, 720 / 3 + 30);
 
   public MNSettings(ClassNode cn, MethodNode mn) {
     super("Method Settings");
@@ -47,27 +48,21 @@ public class MNSettings extends MyInternalFrame {
     JTextField desc = new JTextField(mn.desc);
     input.add(desc);
     labels.add(new JLabel("Method Access:"));
-    NumberFormat format = NumberFormat.getInstance();
-    format.setGroupingUsed(false);
-    NumberFormatter formatter = new NumberFormatter(format);
-    formatter.setValueClass(Integer.class);
-    formatter.setMinimum(0);
-    formatter.setMaximum(Integer.MAX_VALUE);
-    formatter.setAllowsInvalid(false);
-    formatter.setCommitsOnValidEdit(true);
-    formatter.setOverwriteMode(true);
-    JFormattedTextField access = new JFormattedTextField(formatter);
+    JFormattedTextField access = EditDialogue.createNumberField();
     access.setValue(mn.access);
     input.add(SwingUtils.withButton(access, "...", e -> {
       JAccessHelper jah = new JAccessHelper(mn, "access", access);
       jah.setVisible(true);
     }));
+    labels.add(new JLabel("Method Signature:"));
+    JTextField signature = new JTextField(mn.signature);
+    input.add(signature);
     labels.add(new JLabel("Method MaxLocals:"));
-    JFormattedTextField maxL = new JFormattedTextField(formatter);
+    JFormattedTextField maxL = EditDialogue.createNumberField();
     maxL.setValue(mn.maxLocals);
     input.add(maxL);
     labels.add(new JLabel("Method MaxStack:"));
-    JFormattedTextField maxS = new JFormattedTextField(formatter);
+    JFormattedTextField maxS = EditDialogue.createNumberField();
     maxS.setValue(mn.maxStack);
     input.add(maxS);
     this.add(panel, BorderLayout.CENTER);
@@ -85,6 +80,12 @@ public class MNSettings extends MyInternalFrame {
         mn.access = (int) access.getValue();
         mn.maxLocals = (int) maxL.getValue();
         mn.maxStack = (int) maxS.getValue();
+        String sig = signature.getText();
+        if(sig.isEmpty()) {
+          mn.signature = null;
+        } else {
+          mn.signature = sig;
+        }
         if (refresh) {
           JByteMod.instance.getJarTree().refreshMethod(cn, mn);
         }
