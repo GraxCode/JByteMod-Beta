@@ -35,6 +35,7 @@ import me.grax.jbytemod.ui.JSearch;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogue;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
+import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.list.FieldEntry;
 import me.grax.jbytemod.utils.list.InstrEntry;
 import me.lpk.util.OpUtils;
@@ -127,7 +128,7 @@ public class MyCodeList extends JList<InstrEntry> {
               insertBefore.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   try {
-                    EditDialogue.createInsertInsnDialog(mn, ain, false);
+                    InsnEditDialogue.createInsertInsnDialog(mn, ain, false);
                     OpUtils.clearLabelCache();
                   } catch (Exception e1) {
                     new ErrorDisplay(e1);
@@ -139,7 +140,7 @@ public class MyCodeList extends JList<InstrEntry> {
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   try {
-                    EditDialogue.createInsertInsnDialog(mn, ain, true);
+                    InsnEditDialogue.createInsertInsnDialog(mn, ain, true);
                     OpUtils.clearLabelCache();
                   } catch (Exception e1) {
                     new ErrorDisplay(e1);
@@ -153,7 +154,8 @@ public class MyCodeList extends JList<InstrEntry> {
                 edit.addActionListener(new ActionListener() {
                   public void actionPerformed(ActionEvent e) {
                     try {
-                      EditDialogue.createEditInsnDialog(mn, ain);
+//                      EditDialogue.createEditInsnDialog(mn, ain);
+                      new InsnEditDialogue(mn, ain).open();
                     } catch (Exception e1) {
                       new ErrorDisplay(e1);
                     }

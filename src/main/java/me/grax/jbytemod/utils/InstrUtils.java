@@ -93,7 +93,6 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
       InvokeDynamicInsnNode idin = (InvokeDynamicInsnNode) ain;
-      System.out.println(idin.desc);
       opc += TextUtils.addTag(TextUtils.escape(idin.name), "font color=" + primColor.getString()) + " " + TextUtils.escape(idin.desc);
       break;
     }

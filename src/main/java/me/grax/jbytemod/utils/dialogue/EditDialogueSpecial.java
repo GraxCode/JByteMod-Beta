@@ -111,7 +111,6 @@ public class EditDialogueSpecial {
       lm.addColumn("Item");
       int i = 0;
       for (Object item : arr) {
-        System.out.println("clas " + item.getClass().getName());
         lm.addRow(new Object[] { String.valueOf(i), item });
         i++;
       }
