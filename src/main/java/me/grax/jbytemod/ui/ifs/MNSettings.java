@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -13,14 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.NumberFormatter;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
-import me.grax.jbytemod.utils.dialogue.EditDialogue;
+import me.grax.jbytemod.utils.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 
 public class MNSettings extends MyInternalFrame {
@@ -48,7 +46,7 @@ public class MNSettings extends MyInternalFrame {
     JTextField desc = new JTextField(mn.desc);
     input.add(desc);
     labels.add(new JLabel("Method Access:"));
-    JFormattedTextField access = EditDialogue.createNumberField();
+    JFormattedTextField access = ClassDialogue.createNumberField();
     access.setValue(mn.access);
     input.add(SwingUtils.withButton(access, "...", e -> {
       JAccessHelper jah = new JAccessHelper(mn, "access", access);
@@ -58,11 +56,11 @@ public class MNSettings extends MyInternalFrame {
     JTextField signature = new JTextField(mn.signature);
     input.add(signature);
     labels.add(new JLabel("Method MaxLocals:"));
-    JFormattedTextField maxL = EditDialogue.createNumberField();
+    JFormattedTextField maxL = ClassDialogue.createNumberField();
     maxL.setValue(mn.maxLocals);
     input.add(maxL);
     labels.add(new JLabel("Method MaxStack:"));
-    JFormattedTextField maxS = EditDialogue.createNumberField();
+    JFormattedTextField maxS = ClassDialogue.createNumberField();
     maxS.setValue(mn.maxStack);
     input.add(maxS);
     this.add(panel, BorderLayout.CENTER);

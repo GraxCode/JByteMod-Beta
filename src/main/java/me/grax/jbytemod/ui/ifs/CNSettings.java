@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import org.objectweb.asm.tree.ClassNode;
@@ -20,7 +19,7 @@ import org.objectweb.asm.tree.ClassNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
 import me.grax.jbytemod.ui.JListEditor;
-import me.grax.jbytemod.utils.dialogue.EditDialogue;
+import me.grax.jbytemod.utils.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 
 public class CNSettings extends MyInternalFrame {
@@ -48,18 +47,19 @@ public class CNSettings extends MyInternalFrame {
     JTextField sf = new JTextField(cn.sourceFile);
     input.add(sf);
     labels.add(new JLabel("Class Access:"));
-    JFormattedTextField access = EditDialogue.createNumberField();
+    JFormattedTextField access = ClassDialogue.createNumberField();
     access.setValue(cn.access);
     input.add(SwingUtils.withButton(access, "...", e -> {
       JAccessHelper jah = new JAccessHelper(cn, "access", access);
       jah.setVisible(true);
-      
+
     }));
     labels.add(new JLabel("Class Version:"));
-    JFormattedTextField version = EditDialogue.createNumberField();
+    JFormattedTextField version = ClassDialogue.createNumberField();
     version.setValue(cn.version);
     input.add(SwingUtils.withButton(version, "?", e -> {
-      JOptionPane.showMessageDialog(this, "Java SE 9 = 53 (0x35 hex),\nJava SE 8 = 52 (0x34 hex),\nJava SE 7 = 51 (0x33 hex),\nJava SE 6.0 = 50 (0x32 hex),\nJava SE 5.0 = 49 (0x31 hex)");
+      JOptionPane.showMessageDialog(this,
+          "Java SE 9 = 53 (0x35 hex),\nJava SE 8 = 52 (0x34 hex),\nJava SE 7 = 51 (0x33 hex),\nJava SE 6.0 = 50 (0x32 hex),\nJava SE 5.0 = 49 (0x31 hex)");
     }));
     labels.add(new JLabel("Class Signature:"));
     JTextField signature = new JTextField(cn.signature);
@@ -70,8 +70,8 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Class Interfaces:"));
     JButton interfaces = new JButton(JByteMod.res.getResource("edit"));
     interfaces.addActionListener(a -> {
-      if(!JListEditor.isOpen())
-      new JListEditor("Interfaces", cn, "interfaces").setVisible(true);
+      if (!JListEditor.isOpen())
+        new JListEditor("Interfaces", cn, "interfaces").setVisible(true);
     });
     input.add(interfaces);
     labels.add(new JLabel("Outer Class:"));

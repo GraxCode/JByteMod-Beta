@@ -18,6 +18,7 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
+import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.list.TCBEntry;
 
 public class TCBList extends JList<TCBEntry> {
@@ -49,7 +50,7 @@ public class TCBList extends JList<TCBEntry> {
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
-                  EditDialogueSpecial.createInsertDialogue(mn, selected.getTcbn());
+                  new InsnEditDialogue(mn, selected.getTcbn()).open();
                 } catch (Exception ex) {
                   new ErrorDisplay(ex);
                 }
@@ -63,7 +64,7 @@ public class TCBList extends JList<TCBEntry> {
             public void actionPerformed(ActionEvent e) {
               try {
                 TryCatchBlockNode tcbn = new TryCatchBlockNode(null, null, null, "");
-                if (EditDialogueSpecial.createInsertDialogue(mn, tcbn))
+                if (new InsnEditDialogue(mn, tcbn).open())
                   if (tcbn.handler != null && tcbn.start != null && tcbn.end != null) {
                     mn.tryCatchBlocks.add(tcbn);
                   }

@@ -4,9 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,6 +42,7 @@ public class InsnEditDialogue extends ClassDialogue {
   private static final HashMap<String, String[]> opc = new LinkedHashMap<>();
   private static final String[] handles;
   private static final String[] frames;
+  private static final List<String> canBeNull;
 
   static {
     opc.put(InsnNode.class.getSimpleName(),
@@ -69,6 +73,7 @@ public class InsnEditDialogue extends ClassDialogue {
     handles = new String[] { "h_getfield", "h_getstatic", "h_putfield", "h_putstatic", "h_invokevirtual", "h_invokestatic", "h_invokespecial",
         "h_newinvokespecial", "h_invokeinterface" };
     frames = new String[] { "f_new", "f_full", "f_append", "f_chop", "f_same", "f_same1" };
+    canBeNull = Arrays.asList("signature", "sourceFile", "sourceDebug", "outerClass", "outerMethod", "outerMethodDesc");
   }
 
   private MethodNode mn;
@@ -188,7 +193,7 @@ public class InsnEditDialogue extends ClassDialogue {
   }
 
   @Override
-  protected void addSpecial(Object obj, JPanel leftText, JPanel rightInput) {
+  protected void addSpecialInputs(Object obj, JPanel leftText, JPanel rightInput) {
     if (obj instanceof AbstractInsnNode) {
       AbstractInsnNode ain = (AbstractInsnNode) obj;
       String[] arr = opc.get(ain.getClass().getSimpleName());
@@ -202,14 +207,17 @@ public class InsnEditDialogue extends ClassDialogue {
     }
   }
 
+  /**
+   * Always gets called even if the field isn't even special
+   */
   @SuppressWarnings("unchecked")
   @Override
   protected Object getSpecialValue(Object object, String name, Class<?> type, Object o, WrappedPanel wp) {
-    System.out.println(name + " " + o);
     if (o != null && o.equals("opc")) {
       JComboBox<String> opcode = (JComboBox<String>) wp.getComponent(0);
       AbstractInsnNode ain = (AbstractInsnNode) object;
       ain.setOpcode(OpUtils.getOpcodeIndex(String.valueOf(opcode.getSelectedItem()).toUpperCase()));
+      System.out.println("SET OPCODE " + name + " " + type.getName());
       return null;
     } else if (type.getName().equals(LabelNode.class.getName())) {
       JComboBox<LabelNode> label = (JComboBox<LabelNode>) wp.getComponent(0);
@@ -218,22 +226,34 @@ public class InsnEditDialogue extends ClassDialogue {
       JComboBox<String> label = (JComboBox<String>) wp.getComponent(0);
       return label.getSelectedIndex() + 1;
     } else if (name.equals("type") && type.getName().equals(int.class.getName())) {
-      System.out.println(o);
       JComboBox<String> label = (JComboBox<String>) wp.getComponent(0);
       return label.getSelectedIndex() - 1;
+    } else if (canBeNull.contains(name)) {
+      System.out.println(name);
+      JPanel panel = (JPanel) wp.getComponent(0);
+      JTextField jtf = (JTextField) panel.getComponent(0);
+      JCheckBox jcb = (JCheckBox) panel.getComponent(1);
+      if (!jcb.isSelected()) {
+        return null;
+      }
+      return jtf.getText();
     }
+    System.out.println("field is null" + name + " " + type.getName());
     return null;
   }
 
   @Override
-  protected boolean isSpecial(String name, Class<?> type) {
-    return type.getName().equals(LabelNode.class.getName()) 
-        || (name.equals("tag") && type.getName().equals(int.class.getName()))  //invokedynamic tag
-        || (name.equals("type") && type.getName().equals(int.class.getName())); //frame type
+  protected boolean isModifiedSpecial(String name, Class<?> type) {
+    return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
+        || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
+        || (canBeNull.contains(name));
   }
 
+  /**
+   * Only gets called if name is modified special
+   */
   @Override
-  protected Component getSpecial(Object o, String name, Class<?> type) {
+  protected Component getModifiedSpecial(Object o, String name, Class<?> type) {
     if (type.getName().equals(LabelNode.class.getName())) {
       ArrayList<LabelNode> ln = new ArrayList<>();
       for (AbstractInsnNode nod : mn.instructions.toArray()) {
@@ -252,6 +272,28 @@ public class InsnEditDialogue extends ClassDialogue {
       JComboBox<String> jcb = new JComboBox<>(frames);
       jcb.setSelectedIndex(((int) o) + 1);
       return jcb;
+    } else if (canBeNull.contains(name)) {
+      JPanel panel = new JPanel();
+      panel.setLayout(new BorderLayout());
+      JTextField jtf = new JTextField(String.valueOf(o));
+      panel.add(jtf, BorderLayout.CENTER);
+      JCheckBox jcb = new JCheckBox("", o != null);
+      jcb.addItemListener(i -> {
+        if (jcb.isSelected()) {
+          jtf.setEnabled(true);
+        } else {
+          jtf.setText("");
+          jtf.setEnabled(false);
+        }
+      });
+      if (o == null) {
+        jtf.setEnabled(false);
+        jtf.setText("");
+      } else {
+        jtf.setEnabled(true);
+      }
+      panel.add(jcb, BorderLayout.WEST);
+      return panel;
     }
     return null;
   }

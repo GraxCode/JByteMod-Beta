@@ -29,7 +29,7 @@ import me.grax.jbytemod.JarArchive;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.MethodUtils;
 import me.grax.jbytemod.utils.asm.FrameGen;
-import me.grax.jbytemod.utils.dialogue.EditDialogue;
+import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.gui.CellRenderer;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
 import me.lpk.util.drop.IDropUser;
@@ -176,7 +176,7 @@ public class ClassTree extends JTree implements IDropUser {
               JMenuItem edit = new JMenuItem("Edit");
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  EditDialogue.createMethodDialogue(mn);
+                  new InsnEditDialogue(mn, mn).open();
                   changedChilds((TreeNode) model.getRoot());
                 }
               });
@@ -225,7 +225,7 @@ public class ClassTree extends JTree implements IDropUser {
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   MethodNode mn = new MethodNode(1, "", "()V", null, null);
-                  if (EditDialogue.createMethodDialogue(mn)) {
+                  if (new InsnEditDialogue(mn, mn).open()) {
                     if (mn.name.isEmpty() || mn.desc.isEmpty()) {
                       ErrorDisplay.error("Method name / desc cannot be empty");
                       return;
@@ -239,7 +239,7 @@ public class ClassTree extends JTree implements IDropUser {
               JMenuItem edit = new JMenuItem("Edit");
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  if (EditDialogue.createClassDialogue(cn)) {
+                  if (new InsnEditDialogue(mn, cn).open()) {
                     jbm.refreshTree();
                   }
                 }

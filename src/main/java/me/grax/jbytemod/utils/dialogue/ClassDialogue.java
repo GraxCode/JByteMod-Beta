@@ -2,6 +2,7 @@ package me.grax.jbytemod.utils.dialogue;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -43,6 +44,9 @@ public class ClassDialogue {
   }
 
   public ClassDialogue(Object object, String title) {
+    if (object instanceof List) {
+      object = ((List<?>) object).toArray(); //we already have an editing table for that
+    }
     this.object = object;
     this.clazz = object.getClass();
     this.title = title;
@@ -71,8 +75,8 @@ public class ClassDialogue {
         WrappedPanel wp = (WrappedPanel) c;
         Field f = wp.getField();
         if (f != null) {
-          Object o = getSpecialValue(object, f.getName(), f.getType(), wp.getObject(), wp);
-          if (o != null) {
+          if (isModifiedSpecial(f.getName(), f.getType())) {
+            Object o = getSpecialValue(object, f.getName(), f.getType(), wp.getObject(), wp);
             try {
               f.set(object, o);
             } catch (IllegalArgumentException | IllegalAccessException e) {
@@ -134,11 +138,11 @@ public class ClassDialogue {
     mainPanel.setLayout(new BorderLayout());
     leftText.setLayout(new GridLayout(0, 1));
     rightInput.setLayout(new GridLayout(0, 1));
-    addSpecial(object, leftText, rightInput);
+    addSpecialInputs(object, leftText, rightInput);
     for (Field f : fields) {
-      if (isSpecial(f.getName(), f.getType())) {
+      if (isModifiedSpecial(f.getName(), f.getType())) {
         try {
-          rightInput.add(wrap(f, getSpecial(f.get(object), f.getName(), f.getType())));
+          rightInput.add(wrap(f, getModifiedSpecial(f.get(object), f.getName(), f.getType())));
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
@@ -148,13 +152,13 @@ public class ClassDialogue {
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
-      } else if (f.getType().isArray()) {
-        JButton edit = new JButton("Edit Array");
+      } else if (f.getType().isArray() || f.getType().isInstance(List.class)) {
+        JButton edit = new JButton("Edit " + f.getType().getSimpleName());
         edit.addActionListener(e -> {
           try {
-            ListEditorTable t = new ListEditorTable("Edit " + f.getType().getSimpleName(), object, f);
+            ListEditorTable t = new ListEditorTable(object, f);
             if (t.open()) {
-              f.set(object, t.getArray());
+              f.set(object, f.getType().isArray() ? t.getList().toArray() : t.getList());
             }
           } catch (Exception ex) {
             ex.printStackTrace();
@@ -198,14 +202,14 @@ public class ClassDialogue {
     return new ClassDialogue(value);
   }
 
-  protected void addSpecial(Object object, JPanel leftText, JPanel rightInput) {
+  protected void addSpecialInputs(Object object, JPanel leftText, JPanel rightInput) {
   }
 
-  protected Component getSpecial(Object object, String name, Class<?> type) {
+  protected Component getModifiedSpecial(Object object, String name, Class<?> type) {
     return null;
   }
 
-  protected boolean isSpecial(String name, Class<?> type) {
+  protected boolean isModifiedSpecial(String name, Class<?> type) {
     return false;
   }
 
@@ -275,7 +279,7 @@ public class ClassDialogue {
 
   private static NumberFormatter formatter = null;
 
-  protected JFormattedTextField createNumberField() {
+  public static JFormattedTextField createNumberField() {
     if (formatter == null) {
       NumberFormat format = NumberFormat.getInstance();
       format.setGroupingUsed(false);
@@ -320,10 +324,27 @@ public class ClassDialogue {
 
   public class ListEditorTable extends JDialog {
     private static final long serialVersionUID = 1L;
-    private Object array;
 
-    public ListEditorTable(String title, Object parent, Field f) throws IllegalArgumentException, IllegalAccessException {
-      array = f.get(parent);
+    @SuppressWarnings("rawtypes")
+    private List list;
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public ListEditorTable(Object parent, Field f) throws IllegalArgumentException, IllegalAccessException {
+      Object item = f.get(parent);
+      if (item == null) {
+        this.list = new ArrayList<>();
+      } else if (item.getClass().isArray()) {
+        int size = Array.getLength(item);
+        ArrayList list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+          list.add(Array.get(item, i));
+        }
+        this.list = list;
+      } else if (item instanceof List<?>) {
+        this.list = (List<?>) item;
+      } else {
+        throw new RuntimeException();
+      }
     }
 
     private JScrollPane initializePanel() {
@@ -331,16 +352,16 @@ public class ClassDialogue {
       JPanel leftText = new JPanel();
       JPanel rightInput = new JPanel();
 
-      int size = Array.getLength(array);
+      int size = list.size();
 
       mainPanel.setLayout(new BorderLayout(15, 15));
       leftText.setLayout(new GridLayout(size, 1));
       rightInput.setLayout(new GridLayout(size, 1));
       mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
       for (int i = 0; i < size; i++) {
-        Object o = Array.get(array, i);
-        if (isSpecial(o.getClass().getName(), o.getClass())) {
-          rightInput.add(wrap(o, getSpecial(o, o.getClass().getName(), o.getClass())));
+        Object o = list.get(i);
+        if (isModifiedSpecial(o.getClass().getName(), o.getClass())) {
+          rightInput.add(wrap(o, getModifiedSpecial(o, o.getClass().getName(), o.getClass())));
         } else if (hasNoChilds(o.getClass())) {
           try {
             rightInput.add(wrap(o, ClassDialogue.this.getComponent(o.getClass(), o)));
@@ -364,10 +385,12 @@ public class ClassDialogue {
 
       mainPanel.add(leftText, BorderLayout.WEST);
       mainPanel.add(rightInput, BorderLayout.EAST);
-
-      return new JScrollPane(mainPanel);
+      JScrollPane jscp = new JScrollPane(mainPanel);
+      jscp.setPreferredSize(new Dimension(400, 400));
+      return jscp;
     }
 
+    @SuppressWarnings("unchecked")
     public boolean open() {
       JScrollPane jscp = initializePanel();
       JPanel panel = (JPanel) jscp.getViewport().getView();
@@ -379,12 +402,12 @@ public class ClassDialogue {
           Object o = wp.getObject();
           if (o != null) {
             Component child = wp.getComponent(0);
-            if (isSpecial(o.getClass().getName(), o.getClass())) {
-              Array.set(array, i, getSpecialValue(object, o.getClass().getName(), o.getClass(), o, wp));
+            if (isModifiedSpecial(o.getClass().getName(), o.getClass())) {
+              list.set(i, getSpecialValue(object, o.getClass().getName(), o.getClass(), o, wp));
             } else if (hasNoChilds(o.getClass())) {
-              Array.set(array, i, getValue(o.getClass(), child));
+              list.set(i, getValue(o.getClass(), child));
             } else {
-              Array.set(array, i, o);
+              list.set(i, o);
             }
           }
           i++;
@@ -394,8 +417,8 @@ public class ClassDialogue {
       return false;
     }
 
-    public Object getArray() {
-      return array;
+    public List<?> getList() {
+      return list;
     }
 
   }
