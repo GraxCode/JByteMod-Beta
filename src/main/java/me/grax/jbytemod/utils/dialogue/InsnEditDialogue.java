@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -73,6 +74,76 @@ public class InsnEditDialogue extends ClassDialogue {
   public InsnEditDialogue(MethodNode mn, Object object) {
     super(object);
     this.mn = mn;
+  }
+
+  @Override
+  public boolean open() {
+    Object object = getObject();
+    if (object instanceof LdcInsnNode) {
+      //special case for LdcInsnNode
+      LdcInsnNode ldc = (LdcInsnNode) object;
+      JPanel mainPanel = new JPanel();
+      JPanel leftText = new JPanel();
+      JPanel rightInput = new JPanel();
+
+      mainPanel.setLayout(new BorderLayout());
+      leftText.setLayout(new GridLayout(0, 1));
+      rightInput.setLayout(new GridLayout(0, 1));
+
+      leftText.add(new JLabel("Ldc Type: "));
+      JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long" });
+      System.out.println("LDC: " + ldc.cst.getClass().getName());
+      if (ldc.cst instanceof String) {
+        ldctype.setSelectedItem("String");
+      } else if (ldc.cst instanceof Float) {
+        ldctype.setSelectedItem("float");
+      } else if (ldc.cst instanceof Double) {
+        ldctype.setSelectedItem("double");
+      } else if (ldc.cst instanceof Long) {
+        ldctype.setSelectedItem("long");
+      } else if (ldc.cst instanceof Integer) {
+        ldctype.setSelectedItem("int");
+      } else {
+        throw new RuntimeException("Unsupported LDC Type: " + ldc.cst.getClass().getName());
+      }
+      rightInput.add(ldctype);
+      leftText.add(new JLabel("Ldc Value: "));
+      JTextField cst = new JTextField(ldc.cst.toString());
+      rightInput.add(cst);
+
+      mainPanel.add(leftText, BorderLayout.WEST);
+      mainPanel.add(rightInput, BorderLayout.CENTER);
+
+      if (JOptionPane.showConfirmDialog(null, mainPanel, "Edit LdcInsnNode", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+        try {
+          switch (ldctype.getSelectedItem().toString()) {
+          case "String":
+            ldc.cst = cst.getText();
+            break;
+          case "float":
+            ldc.cst = Float.parseFloat(cst.getText());
+            break;
+          case "double":
+            ldc.cst = Double.parseDouble(cst.getText());
+            break;
+          case "long":
+            ldc.cst = Long.parseLong(cst.getText());
+            break;
+          case "int":
+            ldc.cst = Integer.parseInt(cst.getText());
+            break;
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "Exception: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          return false;
+        }
+        return true;
+      }
+      return false;
+    }
+
+    return super.open();
   }
 
   public static void createInsertInsnDialog(MethodNode mn, AbstractInsnNode ain, boolean after) {
