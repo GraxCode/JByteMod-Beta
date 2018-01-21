@@ -8,6 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -36,9 +38,9 @@ import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
+import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.ThemeChanges;
 import me.grax.jbytemod.utils.asm.FrameGen;
-import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
@@ -177,6 +179,8 @@ public class JByteMod extends JFrame {
     }
   }
 
+  public HashMap<ClassNode, MethodNode> lastSelectedEntries = new LinkedHashMap<>();
+
   public void selectMethod(ClassNode cn, MethodNode mn) {
     OpUtils.clearLabelCache();
     this.currentNode = cn;
@@ -189,6 +193,10 @@ public class JByteMod extends JFrame {
     cfp.setNode(mn);
     dp.setText("");
     tabbedPane.selectMethod(cn, mn);
+    lastSelectedEntries.put(cn, mn);
+    if (lastSelectedEntries.size() > 5) {
+      lastSelectedEntries.remove(lastSelectedEntries.keySet().iterator().next());
+    }
   }
 
   public void selectClass(ClassNode cn) {
@@ -196,6 +204,10 @@ public class JByteMod extends JFrame {
     sp.selectClass(cn);
     clist.loadFields(cn);
     tabbedPane.selectClass(cn);
+    lastSelectedEntries.put(cn, null);
+    if (lastSelectedEntries.size() > 5) {
+      lastSelectedEntries.remove(lastSelectedEntries.keySet().iterator().next());
+    }
   }
 
   public void treeSelection(ClassNode cn, MethodNode mn) {
