@@ -171,7 +171,7 @@ public class MyCodeList extends JList<InstrEntry> {
       });
       menu.add(insert);
 
-      if (EditDialogue.canEdit(ain)) {
+      if (InsnEditDialogue.canEdit(ain)) {
         JMenuItem edit = new JMenuItem("Edit");
         edit.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {

@@ -517,6 +517,24 @@ public class OpUtils implements org.objectweb.asm.Opcodes {
     return index;
   }
 
+  
+  public static String getFrameType(int type) {
+    switch(type) {
+    case F_NEW:
+      return "F_NEW";
+    case F_FULL:
+      return "F_FULL";
+    case F_APPEND:
+      return "F_APPEND";
+    case F_CHOP:
+      return "F_CHOP";
+    case F_SAME:
+      return "F_SAME";
+    case F_SAME1:
+      return "F_NEW";
+    }
+    return "FRAME";
+  }
   /**
    * Given an integer, returns an InsnNode that will properly represent the int.
    * 

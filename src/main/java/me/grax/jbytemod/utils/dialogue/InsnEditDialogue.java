@@ -38,6 +38,7 @@ public class InsnEditDialogue extends ClassDialogue {
 
   private static final HashMap<String, String[]> opc = new LinkedHashMap<>();
   private static final String[] handles;
+  private static final String[] frames;
 
   static {
     opc.put(InsnNode.class.getSimpleName(),
@@ -67,6 +68,7 @@ public class InsnEditDialogue extends ClassDialogue {
     opc.put(FrameNode.class.getSimpleName(), null);
     handles = new String[] { "h_getfield", "h_getstatic", "h_putfield", "h_putstatic", "h_invokevirtual", "h_invokestatic", "h_invokespecial",
         "h_newinvokespecial", "h_invokeinterface" };
+    frames = new String[] { "f_new", "f_full", "f_append", "f_chop", "f_same", "f_same1" };
   }
 
   private MethodNode mn;
@@ -92,7 +94,6 @@ public class InsnEditDialogue extends ClassDialogue {
 
       leftText.add(new JLabel("Ldc Type: "));
       JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long" });
-      System.out.println("LDC: " + ldc.cst.getClass().getName());
       if (ldc.cst instanceof String) {
         ldctype.setSelectedItem("String");
       } else if (ldc.cst instanceof Float) {
@@ -204,6 +205,7 @@ public class InsnEditDialogue extends ClassDialogue {
   @SuppressWarnings("unchecked")
   @Override
   protected Object getSpecialValue(Object object, String name, Class<?> type, Object o, WrappedPanel wp) {
+    System.out.println(name + " " + o);
     if (o != null && o.equals("opc")) {
       JComboBox<String> opcode = (JComboBox<String>) wp.getComponent(0);
       AbstractInsnNode ain = (AbstractInsnNode) object;
@@ -213,16 +215,21 @@ public class InsnEditDialogue extends ClassDialogue {
       JComboBox<LabelNode> label = (JComboBox<LabelNode>) wp.getComponent(0);
       return label.getSelectedItem();
     } else if (name.equals("tag") && type.getName().equals(int.class.getName())) {
-      System.out.println(o);
       JComboBox<String> label = (JComboBox<String>) wp.getComponent(0);
       return label.getSelectedIndex() + 1;
+    } else if (name.equals("type") && type.getName().equals(int.class.getName())) {
+      System.out.println(o);
+      JComboBox<String> label = (JComboBox<String>) wp.getComponent(0);
+      return label.getSelectedIndex() - 1;
     }
     return null;
   }
 
   @Override
   protected boolean isSpecial(String name, Class<?> type) {
-    return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())); //invokedynamic tag
+    return type.getName().equals(LabelNode.class.getName()) 
+        || (name.equals("tag") && type.getName().equals(int.class.getName()))  //invokedynamic tag
+        || (name.equals("type") && type.getName().equals(int.class.getName())); //frame type
   }
 
   @Override
@@ -240,6 +247,10 @@ public class InsnEditDialogue extends ClassDialogue {
     } else if (name.equals("tag")) {
       JComboBox<String> jcb = new JComboBox<>(handles);
       jcb.setSelectedIndex(((int) o) - 1);
+      return jcb;
+    } else if (name.equals("type")) {
+      JComboBox<String> jcb = new JComboBox<>(frames);
+      jcb.setSelectedIndex(((int) o) + 1);
       return jcb;
     }
     return null;

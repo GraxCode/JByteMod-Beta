@@ -1,5 +1,8 @@
 package me.grax.jbytemod.utils;
 
+import java.util.HashMap;
+
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
@@ -62,7 +65,7 @@ public class InstrUtils {
       LdcInsnNode ldc = (LdcInsnNode) ain;
       opc += TextUtils.addTag(ldc.cst.getClass().getSimpleName(), "font color=" + primColor.getString()) + " ";
       if (ldc.cst instanceof String)
-        opc += TextUtils.addTag("\"" + ldc.cst.toString() + "\"", "font color=#559955");
+        opc += TextUtils.addTag("\"" + TextUtils.escape(ldc.cst.toString()) + "\"", "font color=#559955");
       else {
         opc += ldc.cst.toString();
       }
@@ -76,7 +79,7 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.FRAME:
       FrameNode fn = (FrameNode) ain;
-      opc = TextUtils.toLight(OpUtils.getOpcodeText(fn.type).toLowerCase() + " " + fn.local.size() + " " + fn.stack.size());
+      opc = TextUtils.toLight(OpUtils.getFrameType(fn.type).toLowerCase() + " " + fn.local.size() + " " + fn.stack.size());
       break;
     case AbstractInsnNode.TABLESWITCH_INSN:
       TableSwitchInsnNode tsin = (TableSwitchInsnNode) ain;
@@ -93,7 +96,18 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
       InvokeDynamicInsnNode idin = (InvokeDynamicInsnNode) ain;
-      opc += TextUtils.addTag(TextUtils.escape(idin.name), "font color=" + primColor.getString()) + " " + TextUtils.escape(idin.desc);
+      Object[] arr = idin.bsmArgs;
+      if (arr.length > 1) {
+        Object o = arr[1];
+        if(o instanceof Handle) {
+          Handle h = (Handle) o;
+          opc += getDisplayType(h.getDesc().split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(h.getOwner())) + "." + TextUtils.escape(h.getName())
+          + "(" + getDisplayArgs(TextUtils.escape(h.getDesc())) + ")";
+
+        }
+      } else {
+        opc += TextUtils.addTag(TextUtils.escape(idin.name), "font color=" + primColor.getString()) + " " + TextUtils.escape(idin.desc);
+      }
       break;
     }
     return opc;

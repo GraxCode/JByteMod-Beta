@@ -29,7 +29,6 @@ public class LibClassWriter extends ClassWriter {
   
   @Override
   protected String getCommonSuperClass(String type1, String type2) {
-    System.out.println("getcommonsuperclass");
     ClassNode mc1 = get(type1);
     ClassNode mc2 = get(type2);
     System.out.println(mc1.name + " " + mc2.name);
@@ -41,7 +40,6 @@ public class LibClassWriter extends ClassWriter {
       }
       return "java/lang/Object";
     }
-    System.out.println("Finding common parent of " + mc1.name + " " + mc2.name);
     ClassNode common = findCommonParent(mc1, mc2);
     if (common == null) {
       try {
