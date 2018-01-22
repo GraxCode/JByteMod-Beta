@@ -5,6 +5,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.utils.InstrUtils;
 import me.grax.jbytemod.utils.TextUtils;
+import me.grax.jbytemod.utils.asm.Hints;
 
 public class InstrEntry {
   private MethodNode m;
@@ -38,5 +39,12 @@ public class InstrEntry {
 
   public String toEasyString() {
     return InstrUtils.toEasyString(i);
+  }
+
+  public String getHint() {
+    if (i.getOpcode() >= 0) {
+      return Hints.hints[i.getOpcode()];
+    }
+    return null;
   }
 }

@@ -11,6 +11,7 @@
    <string name="secondary_color">Sekundäre Farbe</string>
    <string name="general_group">Allgemein</string>
    <string name="color_group">Farbe</string>
+   <string name="editor_group">Editor</string>
    <string name="big_jar_warn">Warnung: Dies könnte bei großen .jar Dateien etwas dauern!</string>
    <string name="big_string_warn">Warnung: Dies könnte bei kurzen Strings etwas dauern!</string>
    <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>
@@ -47,5 +48,6 @@
    <string name="url_search">URLs</string>
    <string name="email_search">Email Adressen</string>
    <string name="compute_maxs">COMPUTE_MAXS benutzen</string>
+   <string name="hints">Hilfetext</string>
 </resources>
 

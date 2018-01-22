@@ -7,6 +7,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +80,20 @@ public class MyCodeList extends JList<InstrEntry> {
       @Override
       public void actionPerformed(ActionEvent e) {
         new JSearch(MyCodeList.this).setVisible(true);
+      }
+    });
+
+    addMouseMotionListener(new MouseMotionAdapter() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        if (JByteMod.ops.get("hints").getBoolean()) {
+          ListModel<InstrEntry> m = getModel();
+          int index = locationToIndex(e.getPoint());
+          if (index > -1) {
+            InstrEntry el = m.getElementAt(index);
+            setToolTipText(el.getHint());
+          }
+        }
       }
     });
   }
