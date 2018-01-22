@@ -9,3 +9,4 @@
 target/
 jbytemod.cfg
 /plugins/
+/.gitignore
