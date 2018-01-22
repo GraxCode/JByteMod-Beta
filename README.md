@@ -21,7 +21,20 @@ I decided to recode after QMatt deleted his account it because it wasn't very st
 - JGraphX
 - JFreeGraph
 
-# How to build
+## Plugins
+
+To create a plugin you have to extend me.grax.jbytemod.Plugin and export it as a .jar file.
+
+### Installation
+
+To install a plugin you have to place the .jar file in a folder named "plugins" (that's in the same directory as JByteMod)
+
+### Example Plugin
+
+https://github.com/GraxCode/JTattooPlugin
+
+## How to build
 
     mvn package
     java -jar target/JByteMod-1.3.0.jar
+    

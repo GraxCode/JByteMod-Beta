@@ -24,6 +24,8 @@ import javax.swing.tree.TreePath;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import me.grax.jbytemod.plugin.Plugin;
+import me.grax.jbytemod.plugin.PluginManager;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.ClassTree;
@@ -69,6 +71,7 @@ public class JByteMod extends JFrame {
   private TCBList tcblist;
 
   private ClassNode currentNode;
+  private MethodNode currentMethod;
 
   private MyTabbedPane tabbedPane;
 
@@ -81,6 +84,9 @@ public class JByteMod extends JFrame {
   public static JByteMod instance;
   public static Color border;
 
+  private PluginManager pluginManager;
+
+  private MyMenuBar myMenuBar;
   /**
    * Launch the application.
    */
@@ -92,8 +98,8 @@ public class JByteMod extends JFrame {
           LookUtils.setLAF();
           ThemeChanges.setDefaults();
           JByteMod frame = new JByteMod();
-          frame.setVisible(true);
           instance = frame;
+          frame.setVisible(true);
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -121,7 +127,7 @@ public class JByteMod extends JFrame {
     border = UIManager.getColor("nimbusBorder");
     this.setBounds(100, 100, 1280, 720);
     this.setTitle("JByteMod 1.5.0");
-    this.setJMenuBar(new MyMenuBar(this));
+    this.setJMenuBar(myMenuBar = new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -140,6 +146,27 @@ public class JByteMod extends JFrame {
     border.add(b2);
     contentPane.add(border, BorderLayout.CENTER);
     contentPane.add(pp = new PageEndPanel(), BorderLayout.PAGE_END);
+  }
+ 
+  public void changeUI(String clazz) {
+    LookUtils.changeLAF(clazz);
+  }
+  @Override
+  public void setVisible(boolean b) {
+    this.setPluginManager(new PluginManager(this));
+    this.myMenuBar.addPluginMenu(pluginManager.getPlugins());
+    super.setVisible(b);
+  }
+  public MyMenuBar getMyMenuBar() {
+    return myMenuBar;
+  }
+
+  public PluginManager getPluginManager() {
+    return pluginManager;
+  }
+
+  public void setPluginManager(PluginManager pluginManager) {
+    this.pluginManager = pluginManager;
   }
 
   /**
@@ -163,6 +190,9 @@ public class JByteMod extends JFrame {
     } else {
       new ErrorDisplay(new UnsupportedOperationException(res.getResource("jar_warn")));
     }
+    for(Plugin p : pluginManager.getPlugins()) {
+      p.loadFile(file.getClasses());
+    }
   }
 
   public void refreshTree() {
@@ -184,6 +214,7 @@ public class JByteMod extends JFrame {
   public void selectMethod(ClassNode cn, MethodNode mn) {
     OpUtils.clearLabelCache();
     this.currentNode = cn;
+    this.currentMethod = mn;
     sp.selectMethod(cn, mn);
     if (!clist.loadInstructions(mn)) {
       clist.setSelectedIndex(-1);
@@ -237,6 +268,10 @@ public class JByteMod extends JFrame {
 
   public ClassNode getCurrentNode() {
     return currentNode;
+  }
+
+  public MethodNode getCurrentMethod() {
+    return currentMethod;
   }
 
   public JarArchive getFile() {

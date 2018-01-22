@@ -1,7 +1,12 @@
 package me.grax.jbytemod.utils.gui;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import me.grax.jbytemod.JByteMod;
+
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class LookUtils {
   public static void setLAF() {
@@ -14,6 +19,18 @@ public class LookUtils {
           //do nothing and continue
         }
       }
+    }
+  }
+
+  public static void changeLAF(String name) {
+    try {
+      System.out.println("Changing UI to " + name);
+      UIManager.setLookAndFeel(name);
+      UIManager.getLookAndFeel().uninitialize();
+      UIManager.setLookAndFeel(name);
+      SwingUtilities.updateComponentTreeUI(JByteMod.instance);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

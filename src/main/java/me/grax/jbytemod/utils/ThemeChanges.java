@@ -3,8 +3,6 @@ package me.grax.jbytemod.utils;
 import java.awt.Color;
 import java.awt.Font;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -12,11 +10,11 @@ import javax.swing.UIManager;
 public class ThemeChanges {
 
   public static void setDefaults() {
-    UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-    defaults.put("nimbusOrange", new Color(0xFF01D328));
-    Object o = UIManager.get("InternalFrame:InternalFrameTitlePane:\"InternalFrameTitlePane.iconifyButton\"[Enabled].backgroundPainter");
-    Class<?> c = o.getClass();
     try {
+      UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+      defaults.put("nimbusOrange", new Color(0xFF01D328));
+      Object o = UIManager.get("InternalFrame:InternalFrameTitlePane:\"InternalFrameTitlePane.iconifyButton\"[Enabled].backgroundPainter");
+      Class<?> c = o.getClass();
       Field f = c.getDeclaredField("color3");
       f.setAccessible(true);
       f.set(o, new Color(0xFF01D328));

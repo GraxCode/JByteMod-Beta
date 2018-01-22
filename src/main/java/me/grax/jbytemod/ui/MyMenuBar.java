@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -33,6 +34,7 @@ import org.apache.commons.io.IOUtils;
 
 import android.util.Patterns;
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.plugin.Plugin;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
@@ -368,6 +370,21 @@ public class MyMenuBar extends JMenuBar {
       File input = jfc.getSelectedFile();
       System.out.println("Selected input file: " + input.getAbsolutePath());
       jam.loadFile(input);
+    }
+  }
+
+  public void addPluginMenu(ArrayList<Plugin> plugins) {
+    if (!plugins.isEmpty()) {
+      JMenu pluginMenu = new JMenu("Plugins");
+      for (Plugin p : plugins) {
+        JMenuItem jmi = new JMenuItem(p.getName() + " " + p.getVersion());
+        jmi.setEnabled(p.isClickable());
+        jmi.addActionListener(e -> {
+          p.menuClick();
+        });
+        pluginMenu.add(jmi);
+      }
+      this.add(pluginMenu);
     }
   }
 }
