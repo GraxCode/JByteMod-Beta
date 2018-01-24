@@ -43,6 +43,7 @@
    <string name="ins_before">Insert before</string>
    <string name="ins_after">Insert after</string>
    <string name="add">Add</string>
+   <string name="duplicate">Duplicate</string>
    <string name="move_up">Move up</string>
    <string name="move_down">Move down</string>
    <string name="url_search">URLs</string>

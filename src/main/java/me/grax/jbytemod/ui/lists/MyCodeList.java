@@ -101,7 +101,7 @@ public class MyCodeList extends JList<InstrEntry> {
   protected void rightClickField(JByteMod jbm, FieldEntry fle) {
     ClassNode cn = fle.getCn();
     JPopupMenu menu = new JPopupMenu();
-    JMenuItem edit = new JMenuItem("Edit");
+    JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
     edit.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
@@ -113,7 +113,7 @@ public class MyCodeList extends JList<InstrEntry> {
       }
     });
     menu.add(edit);
-    JMenuItem remove = new JMenuItem("Remove");
+    JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
     remove.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         cn.fields.remove(fle.getFn());
@@ -121,7 +121,7 @@ public class MyCodeList extends JList<InstrEntry> {
       }
     });
     menu.add(remove);
-    JMenuItem add = new JMenuItem("Insert");
+    JMenuItem add = new JMenuItem(JByteMod.res.getResource("insert"));
     add.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
@@ -145,7 +145,7 @@ public class MyCodeList extends JList<InstrEntry> {
   protected void rightClickMethod(JByteMod jbm, MethodNode mn, AbstractInsnNode ain, List<InstrEntry> selected) {
     if (selected.size() > 1) {
       JPopupMenu menu = new JPopupMenu();
-      JMenuItem remove = new JMenuItem("Remove All");
+      JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove_all"));
       remove.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           for (InstrEntry sel : selected) {
@@ -160,7 +160,7 @@ public class MyCodeList extends JList<InstrEntry> {
       menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
     } else {
       JPopupMenu menu = new JPopupMenu();
-      JMenuItem insertBefore = new JMenuItem("Insert before");
+      JMenuItem insertBefore = new JMenuItem(JByteMod.res.getResource("ins_before"));
       insertBefore.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try {
@@ -172,7 +172,7 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       });
       menu.add(insertBefore);
-      JMenuItem insert = new JMenuItem("Insert after");
+      JMenuItem insert = new JMenuItem(JByteMod.res.getResource("ins_after"));
       insert.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try {
@@ -186,7 +186,7 @@ public class MyCodeList extends JList<InstrEntry> {
       menu.add(insert);
 
       if (InsnEditDialogue.canEdit(ain)) {
-        JMenuItem edit = new JMenuItem("Edit");
+        JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
         edit.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
@@ -216,7 +216,7 @@ public class MyCodeList extends JList<InstrEntry> {
         });
         menu.add(edit);
       }
-      JMenuItem duplicate = new JMenuItem("Duplicate");
+      JMenuItem duplicate = new JMenuItem(JByteMod.res.getResource("duplicate"));
       duplicate.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try {
@@ -234,7 +234,7 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       });
       menu.add(duplicate);
-      JMenuItem up = new JMenuItem("Move up");
+      JMenuItem up = new JMenuItem(JByteMod.res.getResource("move_up"));
       up.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           AbstractInsnNode node = ain.getPrevious();
@@ -245,7 +245,7 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       });
       menu.add(up);
-      JMenuItem down = new JMenuItem("Move down");
+      JMenuItem down = new JMenuItem(JByteMod.res.getResource("move_down"));
       down.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           AbstractInsnNode node = ain.getNext();
@@ -256,7 +256,7 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       });
       menu.add(down);
-      JMenuItem remove = new JMenuItem("Remove");
+      JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
       remove.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           mn.instructions.remove(ain);
@@ -273,7 +273,7 @@ public class MyCodeList extends JList<InstrEntry> {
   protected void createPopupForEmptyList(JByteMod jbm) {
     JPopupMenu menu = new JPopupMenu();
     if (currentMethod != null) {
-      JMenuItem add = new JMenuItem("Add");
+      JMenuItem add = new JMenuItem(JByteMod.res.getResource("add"));
       add.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try {
@@ -286,7 +286,7 @@ public class MyCodeList extends JList<InstrEntry> {
       });
       menu.add(add);
     } else if (currentClass != null) {
-      JMenuItem add = new JMenuItem("Add");
+      JMenuItem add = new JMenuItem(JByteMod.res.getResource("add"));
       add.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try {

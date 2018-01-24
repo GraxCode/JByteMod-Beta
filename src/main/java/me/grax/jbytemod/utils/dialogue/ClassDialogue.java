@@ -8,6 +8,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.NumberFormat;
+import java.util.AbstractCollection;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,8 +46,8 @@ public class ClassDialogue {
   }
 
   public ClassDialogue(Object object, String title) {
-    if (object instanceof List) {
-      object = ((List<?>) object).toArray(); //we already have an editing table for that
+    if (object instanceof AbstractCollection<?>) {
+      object = ((AbstractCollection<?>) object).toArray(); //we already have an editing table for that
     }
     this.object = object;
     this.clazz = object.getClass();
@@ -152,7 +154,7 @@ public class ClassDialogue {
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
-      } else if (f.getType().isArray() || f.getType().isInstance(List.class)) {
+      } else if (f.getType().isArray() || isList(f)) {
         JButton edit = new JButton("Edit " + f.getType().getSimpleName());
         edit.addActionListener(e -> {
           try {
@@ -196,6 +198,17 @@ public class ClassDialogue {
     mainPanel.add(rightInput, BorderLayout.CENTER);
 
     return mainPanel;
+  }
+
+  private boolean isList(Field f) {
+    if (AbstractCollection.class.isAssignableFrom(f.getType()))
+      return true;
+    try {
+      Object o = f.get(object);
+      return o instanceof AbstractCollection;
+    } catch (Throwable t) {
+    }
+    return false;
   }
 
   protected ClassDialogue init(Object value) {
@@ -385,8 +398,26 @@ public class ClassDialogue {
 
       mainPanel.add(leftText, BorderLayout.WEST);
       mainPanel.add(rightInput, BorderLayout.EAST);
-      JScrollPane jscp = new JScrollPane(mainPanel);
-      jscp.setPreferredSize(new Dimension(400, 400));
+      JPanel actions = new JPanel();
+      actions.setLayout(new GridLayout(1, 3));
+//      actions.add(new JButton());
+//      actions.add(new JButton());
+//      actions.add(new JButton());
+//      mainPanel.add(actions, BorderLayout.PAGE_END);
+      
+      JScrollPane jscp = new JScrollPane(mainPanel) {
+        @Override
+        public Dimension getPreferredSize() {
+          int maxWidth = 500;
+          int maxHeight = 300;
+          Dimension dim = super.getPreferredSize();
+          if (dim.width > maxWidth)
+            dim.width = maxWidth;
+          if (dim.height > maxHeight)
+            dim.height = maxHeight;
+          return dim;
+        }
+      };
       return jscp;
     }
 

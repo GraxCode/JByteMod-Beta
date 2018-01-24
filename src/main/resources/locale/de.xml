@@ -43,6 +43,7 @@
    <string name="ins_before">Davor einfügen</string>
    <string name="ins_after">Danach einfügen</string>
    <string name="add">Hinzufügen</string>
+   <string name="duplicate">Klonen</string>
    <string name="move_up">Nach oben rücken</string>
    <string name="move_down">Nach unten rücken</string>
    <string name="url_search">URLs</string>
