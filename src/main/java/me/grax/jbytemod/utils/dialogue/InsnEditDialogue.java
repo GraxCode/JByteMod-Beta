@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,6 +36,8 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.lpk.util.OpUtils;
 
 public class InsnEditDialogue extends ClassDialogue {
@@ -189,7 +192,9 @@ public class InsnEditDialogue extends ClassDialogue {
 
   @Override
   protected boolean ignore(String name) {
-    return name.equals("itf");
+    return name.equals("itf") || name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
+        || name.equals("localVariables") || name.equals("instructions") || name.equals("preLoad") || name.equals("attrs") || name.equals("extraBytes")
+        || name.equals("attrs");
   }
 
   @Override
@@ -237,8 +242,11 @@ public class InsnEditDialogue extends ClassDialogue {
         return null;
       }
       return jtf.getText();
+    } else if ("access".equals(name)) {
+      JPanel panel = (JPanel) wp.getComponent(0);
+      JFormattedTextField jftf = (JFormattedTextField) panel.getComponent(0);
+      return (int) jftf.getValue();
     }
-    System.out.println("field is null" + name + " " + type.getName());
     return null;
   }
 
@@ -246,7 +254,7 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean isModifiedSpecial(String name, Class<?> type) {
     return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
         || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
-        || (canBeNull.contains(name));
+        || (canBeNull.contains(name)) || (name.equals("access"));
   }
 
   /**
@@ -294,6 +302,15 @@ public class InsnEditDialogue extends ClassDialogue {
       }
       panel.add(jcb, BorderLayout.WEST);
       return panel;
+    } else if ("access".equals(name)) {
+      int accezz = Integer.parseInt(String.valueOf(o));
+      JFormattedTextField access = ClassDialogue.createNumberField();
+      access.setValue(accezz);
+      JPanel btnPanel = SwingUtils.withButton(access, "...", e -> {
+        JAccessHelper jah = new JAccessHelper(accezz, access);
+        jah.setVisible(true);
+      });
+      return btnPanel;
     }
     return null;
   }

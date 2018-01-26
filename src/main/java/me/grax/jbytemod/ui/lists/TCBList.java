@@ -16,6 +16,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
+import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
 import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
@@ -36,7 +37,7 @@ public class TCBList extends JList<TCBEntry> {
           TCBEntry selected = TCBList.this.getSelectedValue();
           JPopupMenu menu = new JPopupMenu();
           if (selected != null) {
-            JMenuItem remove = new JMenuItem("Remove");
+            JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
             remove.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 ClassNode cn = selected.getCn();
@@ -46,7 +47,7 @@ public class TCBList extends JList<TCBEntry> {
               }
             });
             menu.add(remove);
-            JMenuItem edit = new JMenuItem("Edit");
+            JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
@@ -59,7 +60,7 @@ public class TCBList extends JList<TCBEntry> {
             });
             menu.add(edit);
           }
-          JMenuItem insert = new JMenuItem("Insert");
+          JMenuItem insert = new JMenuItem(JByteMod.res.getResource("insert"));
           insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               try {

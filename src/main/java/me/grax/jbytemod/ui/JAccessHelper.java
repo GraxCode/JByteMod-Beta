@@ -125,6 +125,56 @@ public class JAccessHelper extends JDialog {
     }
   }
 
+  public JAccessHelper(int accezz, JFormattedTextField tf) {
+    try {
+      setBounds(100, 100, 420, 220);
+      setResizable(false);
+      setTitle("Access Helper");
+      JPanel cp = new JPanel();
+      cp.setLayout(new BorderLayout(10, 10));
+      JPanel access = new JPanel();
+      access.setLayout(new GridLayout(5, 4, 5, 5));
+      for (Field d : Opcodes.class.getDeclaredFields()) {
+        if (d.getName().startsWith("ACC_")) {
+          int acc = d.getInt(null);
+          JCheckBox jcb = new JAccCheckBox(d.getName().substring(4).toLowerCase(), acc);
+          access.add(jcb);
+          jcb.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              int acc = 0;
+              for (Component c : access.getComponents()) {
+                JAccCheckBox jacb = (JAccCheckBox) c;
+                if (jacb.isSelected())
+                  acc |= jacb.getAccess();
+              }
+              jtf.setText(String.valueOf(acc));
+              if (tf != null) {
+                tf.setValue(acc);
+              }
+            }
+          });
+          if ((accezz & acc) != 0) {
+            jcb.setSelected(true);
+          }
+        }
+      }
+      cp.add(access, BorderLayout.CENTER);
+      jtf = new JTextField();
+      jtf.setEditable(false);
+      jtf.setHorizontalAlignment(JTextField.CENTER);
+      jtf.setPreferredSize(new Dimension(60, 30));
+      jtf.setText(String.valueOf(accezz));
+      JPanel jpn = new JPanel();
+      jpn.add(jtf);
+      cp.add(jpn, BorderLayout.SOUTH);
+      this.add(cp);
+      setAlwaysOnTop(true);
+      setModal(true);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public void setVisible(boolean b) {
     super.setVisible(b);

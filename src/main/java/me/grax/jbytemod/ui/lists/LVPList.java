@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -16,6 +17,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
 import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
@@ -37,7 +39,7 @@ public class LVPList extends JList<LVPEntry> {
           LVPEntry selected = LVPList.this.getSelectedValue();
           JPopupMenu menu = new JPopupMenu();
           if (selected != null) {
-            JMenuItem remove = new JMenuItem("Remove");
+            JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
             remove.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 ClassNode cn = selected.getCn();
@@ -47,7 +49,7 @@ public class LVPList extends JList<LVPEntry> {
               }
             });
             menu.add(remove);
-            JMenuItem edit = new JMenuItem("Edit");
+            JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
@@ -60,7 +62,7 @@ public class LVPList extends JList<LVPEntry> {
             });
             menu.add(edit);
           }
-          JMenuItem insert = new JMenuItem("Insert");
+          JMenuItem insert = new JMenuItem(JByteMod.res.getResource("insert"));
           insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               try {

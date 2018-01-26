@@ -42,7 +42,7 @@ public class InstrEntry {
   }
 
   public String getHint() {
-    if (i.getOpcode() >= 0) {
+    if (i != null && i.getOpcode() >= 0) {
       return Hints.hints[i.getOpcode()];
     }
     return null;

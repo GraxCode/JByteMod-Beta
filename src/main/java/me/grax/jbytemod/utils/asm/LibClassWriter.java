@@ -31,7 +31,6 @@ public class LibClassWriter extends ClassWriter {
   protected String getCommonSuperClass(String type1, String type2) {
     ClassNode mc1 = get(type1);
     ClassNode mc2 = get(type2);
-    System.out.println(mc1.name + " " + mc2.name);
     if (mc1 == null || mc2 == null) {
       System.err.println((mc1 == null ? (mc2 == null ? (type1 + " and " + type2) : type1) : type2) + " not found. Check your classpath!");
       try {
