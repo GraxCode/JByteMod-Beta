@@ -43,7 +43,7 @@ public class InsnList implements Iterable<AbstractInsnNode> {
   /**
    * The number of instructions in this list.
    */
-  public int size;
+  private int size;
 
   /**
    * The first instruction in this list. May be <tt>null</tt>.

@@ -48,6 +48,11 @@ public class LdcInsnNode extends AbstractInsnNode {
    */
   public Object cst;
 
+  public LdcInsnNode() {
+    super(Opcodes.LDC);
+    this.cst = "";
+  }
+
   /**
    * Constructs a new {@link LdcInsnNode}.
    * 
@@ -59,11 +64,6 @@ public class LdcInsnNode extends AbstractInsnNode {
   public LdcInsnNode(final Object cst) {
     super(Opcodes.LDC);
     this.cst = cst;
-  }
-
-  public LdcInsnNode() {
-    this.opcode = Opcodes.LDC;
-    this.cst = "";
   }
 
   @Override

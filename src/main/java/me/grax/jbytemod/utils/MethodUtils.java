@@ -77,7 +77,7 @@ public class MethodUtils {
     }
     System.out.println("Removed " + i + " nodes!");
   }
-  
+
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public static void removeDeadCode(MethodNode mn) {
     Analyzer analyzer = new Analyzer(new BasicInterpreter());
@@ -95,6 +95,6 @@ public class MethodUtils {
         mn.instructions.remove(insn);
         insns[i] = null;
       }
-    }    
+    }
   }
 }

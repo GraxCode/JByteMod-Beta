@@ -63,6 +63,13 @@ public class MethodInsnNode extends AbstractInsnNode {
    */
   public boolean itf;
 
+  public MethodInsnNode() {
+    super(Opcodes.INVOKESTATIC);
+    owner = "";
+    desc = "";
+    name = "";
+  }
+
   /**
    * Constructs a new {@link MethodInsnNode}.
    * 
@@ -81,10 +88,6 @@ public class MethodInsnNode extends AbstractInsnNode {
   @Deprecated
   public MethodInsnNode(final int opcode, final String owner, final String name, final String desc) {
     this(opcode, owner, name, desc, opcode == Opcodes.INVOKEINTERFACE);
-  }
-
-  public MethodInsnNode() {
-    this.opcode = Opcodes.INVOKESTATIC;
   }
 
   /**

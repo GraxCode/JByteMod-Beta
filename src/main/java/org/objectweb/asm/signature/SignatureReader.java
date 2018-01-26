@@ -172,9 +172,6 @@ public class SignatureReader {
       visited = false;
       inner = false;
       for (;;) {
-        if (signature.length() == pos) {
-          return pos;
-        }
         switch (c = signature.charAt(pos++)) {
         case '.':
         case ';':

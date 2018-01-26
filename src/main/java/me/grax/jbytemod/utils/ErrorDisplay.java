@@ -59,7 +59,7 @@ public class ErrorDisplay extends JFrame {
     this.add(contentPane);
     this.setVisible(true);
   }
-  
+
   public static void error(String error) {
     JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
   }

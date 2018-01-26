@@ -51,6 +51,10 @@ public class MultiANewArrayInsnNode extends AbstractInsnNode {
    */
   public int dims;
 
+  public MultiANewArrayInsnNode() {
+    super(Opcodes.MULTIANEWARRAY);
+  }
+
   /**
    * Constructs a new {@link MultiANewArrayInsnNode}.
    * 

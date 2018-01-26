@@ -87,6 +87,7 @@ public class JByteMod extends JFrame {
   private PluginManager pluginManager;
 
   private MyMenuBar myMenuBar;
+
   /**
    * Launch the application.
    */
@@ -147,16 +148,18 @@ public class JByteMod extends JFrame {
     contentPane.add(border, BorderLayout.CENTER);
     contentPane.add(pp = new PageEndPanel(), BorderLayout.PAGE_END);
   }
- 
+
   public void changeUI(String clazz) {
     LookUtils.changeLAF(clazz);
   }
+
   @Override
   public void setVisible(boolean b) {
     this.setPluginManager(new PluginManager(this));
     this.myMenuBar.addPluginMenu(pluginManager.getPlugins());
     super.setVisible(b);
   }
+
   public MyMenuBar getMyMenuBar() {
     return myMenuBar;
   }
@@ -190,7 +193,7 @@ public class JByteMod extends JFrame {
     } else {
       new ErrorDisplay(new UnsupportedOperationException(res.getResource("jar_warn")));
     }
-    for(Plugin p : pluginManager.getPlugins()) {
+    for (Plugin p : pluginManager.getPlugins()) {
       p.loadFile(file.getClasses());
     }
   }

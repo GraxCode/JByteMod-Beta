@@ -70,7 +70,8 @@ public class SearchList extends JList<SearchEntry> {
   }
 
   public void searchForPatternRegex(Pattern p) {
-    new TaskLDCSearch(jbm, p).execute();;
+    new TaskLDCSearch(jbm, p).execute();
+    ;
   }
 
   class TaskLDCSearch extends SwingWorker<Void, Integer> {

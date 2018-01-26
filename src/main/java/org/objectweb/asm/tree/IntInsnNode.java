@@ -46,6 +46,10 @@ public class IntInsnNode extends AbstractInsnNode {
    */
   public int operand;
 
+  public IntInsnNode() {
+    super(Opcodes.BIPUSH);
+  }
+
   /**
    * Constructs a new {@link IntInsnNode}.
    * 
@@ -58,10 +62,6 @@ public class IntInsnNode extends AbstractInsnNode {
   public IntInsnNode(final int opcode, final int operand) {
     super(opcode);
     this.operand = operand;
-  }
-
-  public IntInsnNode() {
-    this.opcode = Opcodes.BIPUSH;
   }
 
   /**

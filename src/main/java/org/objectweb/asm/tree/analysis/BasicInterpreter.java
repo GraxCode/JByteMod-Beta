@@ -52,7 +52,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 public class BasicInterpreter extends Interpreter<BasicValue> implements Opcodes {
 
   public BasicInterpreter() {
-    super(ASM5);
+    super(ASM6);
   }
 
   protected BasicInterpreter(final int api) {
@@ -81,8 +81,7 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements Opcodes
       return BasicValue.DOUBLE_VALUE;
     case Type.ARRAY:
     case Type.OBJECT:
-      return new BasicValue(type);
-    //BasicValue.REFERENCE_VALUE;
+      return BasicValue.REFERENCE_VALUE;
     default:
       throw new Error("Internal error");
     }

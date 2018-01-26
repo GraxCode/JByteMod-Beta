@@ -49,6 +49,10 @@ public class VarInsnNode extends AbstractInsnNode {
    */
   public int var;
 
+  public VarInsnNode() {
+    super(Opcodes.ALOAD);
+  }
+
   /**
    * Constructs a new {@link VarInsnNode}.
    * 
@@ -63,10 +67,6 @@ public class VarInsnNode extends AbstractInsnNode {
   public VarInsnNode(final int opcode, final int var) {
     super(opcode);
     this.var = var;
-  }
-
-  public VarInsnNode() {
-    this.opcode = Opcodes.ALOAD;
   }
 
   /**

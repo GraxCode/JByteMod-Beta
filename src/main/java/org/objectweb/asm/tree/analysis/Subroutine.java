@@ -40,18 +40,18 @@ import org.objectweb.asm.tree.LabelNode;
  * 
  * @author Eric Bruneton
  */
-public class Subroutine {
+class Subroutine {
 
-  public LabelNode start;
+  LabelNode start;
 
-  public boolean[] access;
+  boolean[] access;
 
-  public List<JumpInsnNode> callers;
+  List<JumpInsnNode> callers;
 
   private Subroutine() {
   }
 
-  public Subroutine(final LabelNode start, final int maxLocals, final JumpInsnNode caller) {
+  Subroutine(final LabelNode start, final int maxLocals, final JumpInsnNode caller) {
     this.start = start;
     this.access = new boolean[maxLocals];
     this.callers = new ArrayList<JumpInsnNode>();

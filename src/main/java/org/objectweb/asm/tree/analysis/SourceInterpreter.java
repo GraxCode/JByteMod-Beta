@@ -49,7 +49,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 public class SourceInterpreter extends Interpreter<SourceValue> implements Opcodes {
 
   public SourceInterpreter() {
-    super(ASM5);
+    super(ASM6);
   }
 
   protected SourceInterpreter(final int api) {

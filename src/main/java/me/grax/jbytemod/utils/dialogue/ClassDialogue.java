@@ -232,17 +232,15 @@ public class ClassDialogue {
     return false;
   }
 
-  protected Component wrap(Field f, Component... component) {
+  protected Component wrap(Field f, Component component) {
     WrappedPanel wp = new WrappedPanel(f);
-    for (Component c : component)
-      wp.add(c);
+    wp.add(component);
     return wp;
   }
 
-  protected Component wrap(Object o, Component... component) {
+  protected Component wrap(Object o, Component component) {
     WrappedPanel wp = new WrappedPanel(o);
-    for (Component c : component)
-      wp.add(c);
+    wp.add(component);
     return wp;
   }
 
@@ -385,6 +383,7 @@ public class ClassDialogue {
         Object o = list.get(i);
         if (o == null) {
           lm.addRow(new Object[] { i, "null", null });
+          continue;
         }
         lm.addRow(new Object[] { i, o.getClass().getSimpleName(), o });
       }
@@ -429,7 +428,7 @@ public class ClassDialogue {
       JButton edit = new JButton(JByteMod.res.getResource(JByteMod.res.getResource("edit")));
       edit.addActionListener(a -> {
         int row = jtable.getSelectedRow();
-        if(row == -1) {
+        if (row == -1) {
           return;
         }
         Object o = lm.getValueAt(row, 2);
@@ -465,7 +464,7 @@ public class ClassDialogue {
       JScrollPane scrollPane = (JScrollPane) panel.getComponent(0);
       JTable table = (JTable) scrollPane.getViewport().getView();
       if (JOptionPane.showConfirmDialog(null, panel, "Edit Array", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-        for(int row = 0; row < table.getRowCount(); row++) {
+        for (int row = 0; row < table.getRowCount(); row++) {
           int i = (int) table.getValueAt(row, 0);
           Object o = table.getValueAt(row, 2);
           list.set(i, o);

@@ -329,15 +329,10 @@ public class Type {
     Type[] args = new Type[size];
     off = 1;
     size = 0;
-    try {
-      while (buf[off] != ')') {
-        args[size] = getType(buf, off);
-        off += args[size].len + (args[size].sort == OBJECT ? 2 : 0);
-        size += 1;
-      }
-    } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-      System.err.println(methodDescriptor);
-      e.printStackTrace();
+    while (buf[off] != ')') {
+      args[size] = getType(buf, off);
+      off += args[size].len + (args[size].sort == OBJECT ? 2 : 0);
+      size += 1;
     }
     return args;
   }
@@ -371,7 +366,16 @@ public class Type {
    */
   public static Type getReturnType(final String methodDescriptor) {
     char[] buf = methodDescriptor.toCharArray();
-    return getType(buf, methodDescriptor.indexOf(')') + 1);
+    int off = 1;
+    while (true) {
+      char car = buf[off++];
+      if (car == ')') {
+        return getType(buf, off);
+      } else if (car == 'L') {
+        while (buf[off++] != ';') {
+        }
+      }
+    }
   }
 
   /**

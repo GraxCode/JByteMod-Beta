@@ -48,6 +48,11 @@ public class TypeInsnNode extends AbstractInsnNode {
    */
   public String desc;
 
+  public TypeInsnNode() {
+    super(Opcodes.NEW);
+    desc = "";
+  }
+
   /**
    * Constructs a new {@link TypeInsnNode}.
    * 
@@ -61,10 +66,6 @@ public class TypeInsnNode extends AbstractInsnNode {
   public TypeInsnNode(final int opcode, final String desc) {
     super(opcode);
     this.desc = desc;
-  }
-
-  public TypeInsnNode() {
-    this.opcode = Opcodes.NEW;
   }
 
   /**

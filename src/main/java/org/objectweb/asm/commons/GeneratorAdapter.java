@@ -44,6 +44,14 @@ import org.objectweb.asm.Type;
  * A {@link org.objectweb.asm.MethodVisitor} with convenient methods to generate
  * code. For example, using this adapter, the class below
  * 
+ * <pre>
+ * public class Example {
+ *   public static void main(String[] args) {
+ *     System.out.println(&quot;Hello world!&quot;);
+ *   }
+ * }
+ * </pre>
+ * 
  * can be generated as follows:
  * 
  * <pre>
@@ -236,7 +244,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
    *           If a subclass calls this constructor.
    */
   public GeneratorAdapter(final MethodVisitor mv, final int access, final String name, final String desc) {
-    this(Opcodes.ASM5, mv, access, name, desc);
+    this(Opcodes.ASM6, mv, access, name, desc);
     if (getClass() != GeneratorAdapter.class) {
       throw new IllegalStateException();
     }
@@ -247,7 +255,8 @@ public class GeneratorAdapter extends LocalVariablesSorter {
    * 
    * @param api
    *          the ASM API version implemented by this visitor. Must be one of
-   *          {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+   *          {@link Opcodes#ASM4}, {@link Opcodes#ASM5} or {@link Opcodes#ASM6}
+   *          .
    * @param mv
    *          the method visitor to which this adapter delegates calls.
    * @param access

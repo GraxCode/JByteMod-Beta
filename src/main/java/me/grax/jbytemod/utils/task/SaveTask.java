@@ -35,7 +35,7 @@ public class SaveTask extends SwingWorker<Void, Integer> {
     Map<String, byte[]> outputBytes = this.file.getOutput();
     int flags = JByteMod.ops.get("compute_maxs").getBoolean() ? 1 : 0;
     System.out.println("Writing..");
-    if(this.file.isSingleEntry()) {
+    if (this.file.isSingleEntry()) {
       ClassNode node = classes.values().iterator().next();
       ClassWriter writer = new ClassWriter(flags);
       node.accept(writer);

@@ -1,8 +1,9 @@
 package me.grax.jbytemod.analysis.obfuscation.enums;
 
 public enum MethodObfType {
-  NONE("None"),TCBO("Unneccesary TCBs"), POP2("POP2 Exploit")/*, LOCAL_VAR("Local Var Obf")*/, STRING("String Obfuscation"), INVOKEDYNAMIC("Invokedynamic");
-  
+  NONE("None"), TCBO("Unneccesary TCBs"), POP2(
+      "POP2 Exploit")/* , LOCAL_VAR("Local Var Obf") */, STRING("String Obfuscation"), INVOKEDYNAMIC("Invokedynamic");
+
   private final String type;
 
   private MethodObfType(String type) {
@@ -12,5 +13,5 @@ public enum MethodObfType {
   public String getType() {
     return type;
   }
-  
+
 }

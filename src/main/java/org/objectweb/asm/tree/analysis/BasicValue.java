@@ -97,9 +97,9 @@ public class BasicValue implements Value {
     if (this == UNINITIALIZED_VALUE) {
       return ".";
     } else if (this == RETURNADDRESS_VALUE) {
-      return "R";
+      return "A";
     } else if (this == REFERENCE_VALUE) {
-      return "V";
+      return "R";
     } else {
       return type.getDescriptor();
     }

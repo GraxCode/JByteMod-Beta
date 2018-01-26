@@ -43,7 +43,7 @@ public class AnnotationRemapper extends AnnotationVisitor {
   protected final Remapper remapper;
 
   public AnnotationRemapper(final AnnotationVisitor av, final Remapper remapper) {
-    this(Opcodes.ASM5, av, remapper);
+    this(Opcodes.ASM6, av, remapper);
   }
 
   protected AnnotationRemapper(final int api, final AnnotationVisitor av, final Remapper remapper) {

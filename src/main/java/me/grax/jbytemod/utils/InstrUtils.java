@@ -99,10 +99,10 @@ public class InstrUtils {
       Object[] arr = idin.bsmArgs;
       if (arr.length > 1) {
         Object o = arr[1];
-        if(o instanceof Handle) {
+        if (o instanceof Handle) {
           Handle h = (Handle) o;
-          opc += getDisplayType(h.getDesc().split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(h.getOwner())) + "." + TextUtils.escape(h.getName())
-          + "(" + getDisplayArgs(TextUtils.escape(h.getDesc())) + ")";
+          opc += getDisplayType(h.getDesc().split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(h.getOwner())) + "."
+              + TextUtils.escape(h.getName()) + "(" + getDisplayArgs(TextUtils.escape(h.getDesc())) + ")";
 
         }
       } else {

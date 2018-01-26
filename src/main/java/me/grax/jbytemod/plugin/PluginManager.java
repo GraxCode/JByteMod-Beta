@@ -32,13 +32,13 @@ public class PluginManager {
 
   @SuppressWarnings("deprecation")
   private void loadPlugins() {
-//    ClassLoader parent = ClassLoader.getSystemClassLoader();
+    //    ClassLoader parent = ClassLoader.getSystemClassLoader();
     for (File f : pluginFolder.listFiles()) {
       if (f.getName().endsWith(".jar")) {
         try {
           ZipFile zip = new ZipFile(f);
           Enumeration<? extends ZipEntry> entries = zip.entries();
-//          ClassLoader loader = URLClassLoader.newInstance(new URL[] { f.toURI().toURL() }, parent);
+          //          ClassLoader loader = URLClassLoader.newInstance(new URL[] { f.toURI().toURL() }, parent);
           addURL(f.toURL());
           while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
@@ -58,8 +58,8 @@ public class PluginManager {
               }
             }
           }
-//          parent = loader;
-//          Thread.currentThread().setContextClassLoader(loader);
+          //          parent = loader;
+          //          Thread.currentThread().setContextClassLoader(loader);
           zip.close();
         } catch (Exception e) {
           e.printStackTrace();
@@ -68,10 +68,10 @@ public class PluginManager {
       }
     }
     try {
-//      Class<?> loader = ClassLoader.class;
-//      Field f2 = loader.getDeclaredField("scl");
-//      f2.setAccessible(true);
-//      f2.set(null, parent);
+      //      Class<?> loader = ClassLoader.class;
+      //      Field f2 = loader.getDeclaredField("scl");
+      //      f2.setAccessible(true);
+      //      f2.set(null, parent);
     } catch (Exception e) {
       e.printStackTrace();
     }

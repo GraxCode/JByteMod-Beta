@@ -58,22 +58,22 @@ public class Frame<V extends Value> {
    * The expected return type of the analyzed method, or <tt>null</tt> if the
    * method returns void.
    */
-  protected V returnValue;
+  private V returnValue;
 
   /**
    * The local variables and operand stack of this frame.
    */
-  protected V[] values;
+  private V[] values;
 
   /**
    * The number of local variables of this frame.
    */
-  protected int locals;
+  private int locals;
 
   /**
    * The number of elements in the operand stack.
    */
-  protected int top;
+  private int top;
 
   /**
    * Constructs a new frame with the given size.
@@ -123,10 +123,6 @@ public class Frame<V extends Value> {
    */
   public void setReturn(final V v) {
     returnValue = v;
-  }
-
-  public V getReturn() {
-    return returnValue;
   }
 
   /**
@@ -720,7 +716,8 @@ public class Frame<V extends Value> {
    * 
    * @return a string representation of this frame.
    */
-  public String toString_orig() {
+  @Override
+  public String toString() {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < getLocals(); ++i) {
       sb.append(getLocal(i));
@@ -728,30 +725,6 @@ public class Frame<V extends Value> {
     sb.append(' ');
     for (int i = 0; i < getStackSize(); ++i) {
       sb.append(getStack(i).toString());
-    }
-    return sb.toString();
-  }
-
-  /**
-   * Returns a string representation of this frame.
-   * 
-   * @return a string representation of this frame.
-   */
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("Locals");
-    sb.append("\n");
-    for (int i = 0; i < getLocals(); ++i) {
-      sb.append("\t");
-      sb.append("[" + i + "] " + getLocal(i));
-      sb.append("\n");
-    }
-    sb.append("Stack");
-    sb.append("\n");
-    for (int i = 0; i < getStackSize(); ++i) {
-      sb.append("\t");
-      sb.append("[" + i + "] " + getStack(i).toString());
-      sb.append("\n");
     }
     return sb.toString();
   }

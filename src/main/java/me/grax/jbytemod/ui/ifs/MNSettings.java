@@ -79,7 +79,7 @@ public class MNSettings extends MyInternalFrame {
         mn.maxLocals = (int) maxL.getValue();
         mn.maxStack = (int) maxS.getValue();
         String sig = signature.getText();
-        if(sig.isEmpty()) {
+        if (sig.isEmpty()) {
           mn.signature = null;
         } else {
           mn.signature = sig;

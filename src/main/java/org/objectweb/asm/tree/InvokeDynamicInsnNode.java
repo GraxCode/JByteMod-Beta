@@ -62,6 +62,15 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
    */
   public Object[] bsmArgs;
 
+  @SuppressWarnings("deprecation")
+  public InvokeDynamicInsnNode() {
+    super(Opcodes.INVOKEDYNAMIC);
+    name = "";
+    desc = "";
+    bsmArgs = new Object[3];
+    bsm = new Handle(Opcodes.H_INVOKESTATIC, "", "", "");
+  }
+
   /**
    * Constructs a new {@link InvokeDynamicInsnNode}.
    * 

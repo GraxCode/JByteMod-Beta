@@ -68,7 +68,7 @@ public abstract class Remapper {
     return desc;
   }
 
-  protected Type mapType(Type t) {
+  private Type mapType(Type t) {
     switch (t.getSort()) {
     case Type.ARRAY:
       String s = mapDesc(t.getElementType().getDescriptor());
@@ -219,6 +219,30 @@ public abstract class Remapper {
    * @return new name of the field.
    */
   public String mapFieldName(String owner, String name, String desc) {
+    return name;
+  }
+
+  /**
+   * Map package name to the new name. Subclasses can override.
+   * 
+   * @param name
+   *          name of the package
+   * @return new name of the package
+   */
+  public String mapPackageName(String name) {
+    String fakeName = map(name + ".FakeClassName");
+    int index;
+    return fakeName == null || (index = fakeName.lastIndexOf('.')) == -1 ? name : fakeName.substring(0, index);
+  }
+
+  /**
+   * Map module name to the new name. Subclasses can override.
+   * 
+   * @param name
+   *          name of the module
+   * @return new name of the module
+   */
+  public String mapModuleName(String name) {
     return name;
   }
 

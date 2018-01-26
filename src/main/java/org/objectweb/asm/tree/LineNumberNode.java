@@ -53,6 +53,10 @@ public class LineNumberNode extends AbstractInsnNode {
    */
   public LabelNode start;
 
+  public LineNumberNode() {
+    super(-1);
+  }
+
   /**
    * Constructs a new {@link LineNumberNode}.
    * 
@@ -66,9 +70,6 @@ public class LineNumberNode extends AbstractInsnNode {
     super(-1);
     this.line = line;
     this.start = start;
-  }
-
-  public LineNumberNode() {
   }
 
   @Override

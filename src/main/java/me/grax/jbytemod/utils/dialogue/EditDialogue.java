@@ -471,7 +471,8 @@ public class EditDialogue {
 
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Edit Invokedynamic Handle", 2) == JOptionPane.OK_OPTION) {
       try {
-        return new Handle(Opcodes.class.getDeclaredField((String) tag.getSelectedItem()).getInt(null), owner.getText(), name.getText(), desc.getText());
+        return new Handle(Opcodes.class.getDeclaredField((String) tag.getSelectedItem()).getInt(null), owner.getText(), name.getText(),
+            desc.getText());
       } catch (Exception e) {
         e.printStackTrace();
       }

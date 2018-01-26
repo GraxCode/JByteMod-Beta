@@ -36,7 +36,7 @@ public abstract class JObfAnalysis extends JFrame {
   protected abstract CategoryDataset analyze(Map<String, ClassNode> nodes);
 
   protected abstract String[] getDescriptors();
-  
+
   private JFreeChart createChart(CategoryDataset categoryDataset) {
     String[] desc = getDescriptors();
     JFreeChart chart = ChartFactory.createBarChart(desc[0], desc[1], desc[2], categoryDataset);

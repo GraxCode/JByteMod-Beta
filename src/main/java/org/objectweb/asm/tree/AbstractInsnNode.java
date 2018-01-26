@@ -124,17 +124,9 @@ public abstract class AbstractInsnNode {
   public static final int LINE = 15;
 
   /**
-   * The of this instruction.
+   * The opcode of this instruction.
    */
   protected int opcode;
-
-  public void setOpcode(int opcode) {
-    this.opcode = opcode;
-  }
-
-  public AbstractInsnNode() {
-    this.opcode = -1;
-  }
 
   /**
    * The runtime visible type annotations of this instruction. This field is
@@ -320,5 +312,9 @@ public abstract class AbstractInsnNode {
       }
     }
     return this;
+  }
+
+  public void setOpcode(int opcodeIndex) {
+    this.opcode = opcodeIndex;
   }
 }

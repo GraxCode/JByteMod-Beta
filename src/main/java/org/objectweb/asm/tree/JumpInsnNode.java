@@ -48,6 +48,10 @@ public class JumpInsnNode extends AbstractInsnNode {
    */
   public LabelNode label;
 
+  public JumpInsnNode() {
+    super(Opcodes.GOTO);
+  }
+
   /**
    * Constructs a new {@link JumpInsnNode}.
    * 
@@ -64,10 +68,6 @@ public class JumpInsnNode extends AbstractInsnNode {
   public JumpInsnNode(final int opcode, final LabelNode label) {
     super(opcode);
     this.label = label;
-  }
-
-  public JumpInsnNode() {
-    this.opcode = Opcodes.GOTO;
   }
 
   /**

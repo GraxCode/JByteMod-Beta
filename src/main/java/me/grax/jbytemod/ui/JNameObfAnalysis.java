@@ -30,32 +30,32 @@ public class JNameObfAnalysis extends JObfAnalysis {
     final String clazzes = "Classes";
     final String methods = "Methods";
     final String fields = "Fields";
-    
+
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    for(NameObfType t : NameObfType.values()) {
-      if(t == NameObfType.NONE)
+    for (NameObfType t : NameObfType.values()) {
+      if (t == NameObfType.NONE)
         continue;
       int i = 0;
-      for(NameObfType not : nr.cnames) {
-        if(not == t) {
+      for (NameObfType not : nr.cnames) {
+        if (not == t) {
           i++;
         }
       }
-      dataset.addValue((double) (i / (double)nr.cnames.size()) * 100d, clazzes, t.getType());
+      dataset.addValue((double) (i / (double) nr.cnames.size()) * 100d, clazzes, t.getType());
       i = 0;
-      for(NameObfType not : nr.mnames) {
-        if(not == t) {
+      for (NameObfType not : nr.mnames) {
+        if (not == t) {
           i++;
         }
       }
-      dataset.addValue((double) (i / (double)nr.mnames.size())* 100d, methods, t.getType());
+      dataset.addValue((double) (i / (double) nr.mnames.size()) * 100d, methods, t.getType());
       i = 0;
-      for(NameObfType not : nr.fnames) {
-        if(not == t) {
+      for (NameObfType not : nr.fnames) {
+        if (not == t) {
           i++;
         }
       }
-      dataset.addValue((double) (i / (double)nr.fnames.size()) * 100d, fields, t.getType());
+      dataset.addValue((double) (i / (double) nr.fnames.size()) * 100d, fields, t.getType());
     }
     return dataset;
   }

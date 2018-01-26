@@ -103,7 +103,7 @@ final class AnnotationWriter extends AnnotationVisitor {
    *          stored.
    */
   AnnotationWriter(final ClassWriter cw, final boolean named, final ByteVector bv, final ByteVector parent, final int offset) {
-    super(Opcodes.ASM5);
+    super(Opcodes.ASM6);
     this.cw = cw;
     this.named = named;
     this.bv = bv;

@@ -18,16 +18,16 @@ public class JMethodObfAnalysis extends JObfAnalysis {
   protected CategoryDataset analyze(Map<String, ClassNode> nodes) {
     MethodResult mr = analyzer.analyzeMethod();
     final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    for(MethodObfType t : MethodObfType.values()) {
-      if(t == MethodObfType.NONE)
+    for (MethodObfType t : MethodObfType.values()) {
+      if (t == MethodObfType.NONE)
         continue;
       int i = 0;
-      for(MethodObfType not : mr.mobf) {
-        if(not == t) {
+      for (MethodObfType not : mr.mobf) {
+        if (not == t) {
           i++;
         }
       }
-      dataset.addValue((double) (i / (double)mr.mobf.size()) * 100d, "", t.getType());
+      dataset.addValue((double) (i / (double) mr.mobf.size()) * 100d, "", t.getType());
     }
     return dataset;
   }

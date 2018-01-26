@@ -23,7 +23,7 @@ public class ControlFlowPanel extends JPanel {
   private MethodNode node;
   private ArrayList<Block> cf = new ArrayList<>();
   private mxGraph graph;
-  
+
   private static final String edgeColor = "#111111";
   private static final String jumpColor = "#39698a";
 

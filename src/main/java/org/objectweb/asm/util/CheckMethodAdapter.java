@@ -394,7 +394,7 @@ public class CheckMethodAdapter extends MethodVisitor {
    *           If a subclass calls this constructor.
    */
   public CheckMethodAdapter(final MethodVisitor mv, final Map<Label, Integer> labels) {
-    this(Opcodes.ASM5, mv, labels);
+    this(Opcodes.ASM6, mv, labels);
     if (getClass() != CheckMethodAdapter.class) {
       throw new IllegalStateException();
     }
@@ -407,7 +407,8 @@ public class CheckMethodAdapter extends MethodVisitor {
    * 
    * @param api
    *          the ASM API version implemented by this CheckMethodAdapter. Must
-   *          be one of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+   *          be one of {@link Opcodes#ASM4}, {@link Opcodes#ASM5} or
+   *          {@link Opcodes#ASM6}.
    * @param mv
    *          the method visitor to which this adapter must delegate calls.
    * @param labels
@@ -688,6 +689,10 @@ public class CheckMethodAdapter extends MethodVisitor {
     if (opcode == Opcodes.INVOKEINTERFACE && !itf) {
       throw new IllegalArgumentException("INVOKEINTERFACE can't be used with classes");
     }
+    if (opcode == Opcodes.INVOKESPECIAL && itf && (version & 0xFFFF) < Opcodes.V1_8) {
+      throw new IllegalArgumentException("INVOKESPECIAL can't be used with interfaces prior to Java 8");
+    }
+
     // Calling super.visitMethodInsn requires to call the correct version
     // depending on this.api (otherwise infinite loops can occur). To
     // simplify and to make it easier to automatically remove the backward

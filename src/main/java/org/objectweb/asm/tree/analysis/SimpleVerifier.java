@@ -104,7 +104,7 @@ public class SimpleVerifier extends BasicVerifier {
    *          if the class that is verified is an interface.
    */
   public SimpleVerifier(final Type currentClass, final Type currentSuperClass, final List<Type> currentClassInterfaces, final boolean isInterface) {
-    this(ASM5, currentClass, currentSuperClass, currentClassInterfaces, isInterface);
+    this(ASM6, currentClass, currentSuperClass, currentClassInterfaces, isInterface);
   }
 
   protected SimpleVerifier(final int api, final Type currentClass, final Type currentSuperClass, final List<Type> currentClassInterfaces,

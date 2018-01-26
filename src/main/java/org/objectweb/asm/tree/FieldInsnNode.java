@@ -58,6 +58,13 @@ public class FieldInsnNode extends AbstractInsnNode {
    */
   public String desc;
 
+  public FieldInsnNode() {
+    super(Opcodes.GETSTATIC);
+    owner = "";
+    desc = "";
+    name = "";
+  }
+
   /**
    * Constructs a new {@link FieldInsnNode}.
    * 
@@ -77,10 +84,6 @@ public class FieldInsnNode extends AbstractInsnNode {
     this.owner = owner;
     this.name = name;
     this.desc = desc;
-  }
-
-  public FieldInsnNode() {
-    this.opcode = Opcodes.GETSTATIC;
   }
 
   /**

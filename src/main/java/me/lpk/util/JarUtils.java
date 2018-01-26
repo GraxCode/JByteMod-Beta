@@ -81,7 +81,6 @@ public class JarUtils {
                 mn.owner = cn.name;
               }
               classes.put(cn.name, cn);
-              cn.preLoad = bytes;
             }
           } catch (Exception e) {
             e.printStackTrace();

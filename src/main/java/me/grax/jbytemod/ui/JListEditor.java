@@ -42,8 +42,8 @@ public class JListEditor extends JFrame {
 
       JTable jtable = new JTable() {
         @Override
-        public boolean isCellEditable(int row, int column) {                
-            return column > 0;               
+        public boolean isCellEditable(int row, int column) {
+          return column > 0;
         };
       };
       jtable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -57,10 +57,10 @@ public class JListEditor extends JFrame {
         i++;
       }
       jtable.setModel(lm);
-      
+
       //why the hell does this not work with AUTO_RESIZE_LAST_COMPONENT
       //jtable.getColumnModel().getColumn(0).setPreferredWidth(30);
-      
+
       this.add(new JScrollPane(jtable), BorderLayout.CENTER);
       JPanel actions = new JPanel();
       actions.setLayout(new GridLayout(1, 4));

@@ -41,6 +41,9 @@ import org.objectweb.asm.Opcodes;
  */
 public class InsnNode extends AbstractInsnNode {
 
+  public InsnNode() {
+    super(Opcodes.DUP);
+  }
   /**
    * Constructs a new {@link InsnNode}.
    * 
@@ -62,10 +65,6 @@ public class InsnNode extends AbstractInsnNode {
    */
   public InsnNode(final int opcode) {
     super(opcode);
-  }
-
-  public InsnNode() {
-    this.opcode = Opcodes.POP;
   }
 
   @Override

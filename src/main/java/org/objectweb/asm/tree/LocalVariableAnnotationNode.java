@@ -92,7 +92,7 @@ public class LocalVariableAnnotationNode extends TypeAnnotationNode {
    *          the class descriptor of the annotation class.
    */
   public LocalVariableAnnotationNode(int typeRef, TypePath typePath, LabelNode[] start, LabelNode[] end, int[] index, String desc) {
-    this(Opcodes.ASM5, typeRef, typePath, start, end, index, desc);
+    this(Opcodes.ASM6, typeRef, typePath, start, end, index, desc);
   }
 
   /**
@@ -100,7 +100,8 @@ public class LocalVariableAnnotationNode extends TypeAnnotationNode {
    * 
    * @param api
    *          the ASM API version implemented by this visitor. Must be one of
-   *          {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+   *          {@link Opcodes#ASM4}, {@link Opcodes#ASM5} or {@link Opcodes#ASM6}
+   *          .
    * @param typeRef
    *          a reference to the annotated type. See {@link TypeReference}.
    * @param start
@@ -149,6 +150,6 @@ public class LocalVariableAnnotationNode extends TypeAnnotationNode {
       end[i] = this.end.get(i).getLabel();
       index[i] = this.index.get(i);
     }
-    accept(mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, true));
+    accept(mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible));
   }
 }

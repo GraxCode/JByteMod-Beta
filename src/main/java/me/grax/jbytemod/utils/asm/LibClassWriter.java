@@ -21,12 +21,11 @@ public class LibClassWriter extends ClassWriter {
     super(flags);
     this.classes = new HashMap<>(classes);
     this.util = new ParentUtils(classes);
-    if(libraries != null) {
+    if (libraries != null) {
       classes.putAll(libraries);
     }
   }
 
-  
   @Override
   protected String getCommonSuperClass(String type1, String type2) {
     ClassNode mc1 = get(type1);

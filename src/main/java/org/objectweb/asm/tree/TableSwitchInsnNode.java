@@ -66,6 +66,11 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
    */
   public List<LabelNode> labels;
 
+  public TableSwitchInsnNode() {
+    super(Opcodes.TABLESWITCH);
+    labels = new ArrayList<>();
+  }
+
   /**
    * Constructs a new {@link TableSwitchInsnNode}.
    * 
@@ -88,10 +93,6 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
     if (labels != null) {
       this.labels.addAll(Arrays.asList(labels));
     }
-  }
-
-  public TableSwitchInsnNode() {
-    this.opcode = Opcodes.TABLESWITCH;
   }
 
   @Override

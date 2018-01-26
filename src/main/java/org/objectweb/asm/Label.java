@@ -273,21 +273,10 @@ public class Label {
    *           if this label is not resolved yet.
    */
   public int getOffset() {
-    if (!ignore && (status & RESOLVED) == 0) {
+    if ((status & RESOLVED) == 0) {
       throw new IllegalStateException("Label offset position has not been resolved yet");
     }
     return position;
-  }
-
-  boolean ignore;
-
-  public Label setIgnoreStatus(boolean ignore) {
-    this.ignore = ignore;
-    return this;
-  }
-
-  public boolean resolved() {
-    return ((status & RESOLVED) != 0);
   }
 
   /**
@@ -365,13 +354,12 @@ public class Label {
    *          the position of this label in the bytecode.
    * @param data
    *          the bytecode of the method.
-   * @return <tt>true</tt> if a blank that was left for this label was to small
+   * @return <tt>true</tt> if a blank that was left for this label was too small
    *         to store the offset. In such a case the corresponding jump
    *         instruction is replaced with a pseudo instruction (using unused
    *         opcodes) using an unsigned two bytes offset. These pseudo
-   *         instructions will need to be replaced with true instructions with
-   *         wider offsets (4 bytes instead of 2). This is done in
-   *         {@link MethodWriter#resizeInstructions}.
+   *         instructions will be replaced with standard bytecode instructions
+   *         with wider offsets (4 bytes instead of 2), in ClassReader.
    * @throws IllegalArgumentException
    *           if this label has already been resolved, or if it has not been
    *           created by the given code writer.
@@ -428,7 +416,7 @@ public class Label {
    * @return the first label of the series to which this label belongs.
    */
   Label getFirst() {
-    return !ClassReader.FRAMES || frame == null ? this : frame.owner;
+    return frame == null ? this : frame.owner;
   }
 
   // ------------------------------------------------------------------------

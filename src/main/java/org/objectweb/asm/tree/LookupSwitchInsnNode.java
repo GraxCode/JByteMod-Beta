@@ -61,6 +61,12 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
    */
   public List<LabelNode> labels;
 
+  public LookupSwitchInsnNode() {
+    super(Opcodes.LOOKUPSWITCH);
+    keys = new ArrayList<>();
+    labels = new ArrayList<>();
+  }
+
   /**
    * Constructs a new {@link LookupSwitchInsnNode}.
    * 
@@ -85,10 +91,6 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
     if (labels != null) {
       this.labels.addAll(Arrays.asList(labels));
     }
-  }
-
-  public LookupSwitchInsnNode() {
-    this.opcode = Opcodes.LOOKUPSWITCH;
   }
 
   @Override

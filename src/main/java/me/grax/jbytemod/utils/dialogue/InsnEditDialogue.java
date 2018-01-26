@@ -3,6 +3,8 @@ package me.grax.jbytemod.utils.dialogue;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,6 +39,8 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.utils.InstrUtils;
+import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.lpk.util.OpUtils;
 
@@ -46,7 +50,7 @@ public class InsnEditDialogue extends ClassDialogue {
   private static final String[] handles;
   private static final String[] frames;
   private static final List<String> canBeNull;
-
+  private static final HashMap<String, String> textFieldToolTips;
   static {
     opc.put(InsnNode.class.getSimpleName(),
         new String[] { "nop", "aconst_null", "iconst_m1", "iconst_0", "iconst_1", "iconst_2", "iconst_3", "iconst_4", "iconst_5", "lconst_0",
@@ -77,6 +81,8 @@ public class InsnEditDialogue extends ClassDialogue {
         "h_newinvokespecial", "h_invokeinterface" };
     frames = new String[] { "f_new", "f_full", "f_append", "f_chop", "f_same", "f_same1" };
     canBeNull = Arrays.asList("signature", "sourceFile", "sourceDebug", "outerClass", "outerMethod", "outerMethodDesc");
+    textFieldToolTips = new HashMap<>();
+    textFieldToolTips.put("desc", "e.g. ()V");
   }
 
   private MethodNode mn;
@@ -222,7 +228,6 @@ public class InsnEditDialogue extends ClassDialogue {
       JComboBox<String> opcode = (JComboBox<String>) wp.getComponent(0);
       AbstractInsnNode ain = (AbstractInsnNode) object;
       ain.setOpcode(OpUtils.getOpcodeIndex(String.valueOf(opcode.getSelectedItem()).toUpperCase()));
-      System.out.println("SET OPCODE " + name + " " + type.getName());
       return null;
     } else if (type.getName().equals(LabelNode.class.getName())) {
       JComboBox<LabelNode> label = (JComboBox<LabelNode>) wp.getComponent(0);
@@ -234,7 +239,6 @@ public class InsnEditDialogue extends ClassDialogue {
       JComboBox<String> label = (JComboBox<String>) wp.getComponent(0);
       return label.getSelectedIndex() - 1;
     } else if (canBeNull.contains(name)) {
-      System.out.println(name);
       JPanel panel = (JPanel) wp.getComponent(0);
       JTextField jtf = (JTextField) panel.getComponent(0);
       JCheckBox jcb = (JCheckBox) panel.getComponent(1);
@@ -246,6 +250,9 @@ public class InsnEditDialogue extends ClassDialogue {
       JPanel panel = (JPanel) wp.getComponent(0);
       JFormattedTextField jftf = (JFormattedTextField) panel.getComponent(0);
       return (int) jftf.getValue();
+    } else if (textFieldToolTips.containsKey(name)) {
+      JTextField jtf = (JTextField) wp.getComponent(0);
+      return jtf.getText();
     }
     return null;
   }
@@ -254,7 +261,7 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean isModifiedSpecial(String name, Class<?> type) {
     return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
         || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
-        || (canBeNull.contains(name)) || (name.equals("access"));
+        || (canBeNull.contains(name)) || (name.equals("access")) || (textFieldToolTips.containsKey(name));
   }
 
   /**
@@ -284,6 +291,7 @@ public class InsnEditDialogue extends ClassDialogue {
       JPanel panel = new JPanel();
       panel.setLayout(new BorderLayout());
       JTextField jtf = new JTextField(String.valueOf(o));
+      jtf.setToolTipText("Can be null");
       panel.add(jtf, BorderLayout.CENTER);
       JCheckBox jcb = new JCheckBox("", o != null);
       jcb.addItemListener(i -> {
@@ -311,6 +319,30 @@ public class InsnEditDialogue extends ClassDialogue {
         jah.setVisible(true);
       });
       return btnPanel;
+    } else if (textFieldToolTips.containsKey(name)) {
+      JTextField jtf = new JTextField((String) o);
+      jtf.setToolTipText(textFieldToolTips.get(name));
+      if (name.equals("desc")) {
+        jtf.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseEntered(MouseEvent me) {
+            try {
+              String val = jtf.getText();
+              if (val.startsWith("(")) {
+                jtf.setToolTipText(InstrUtils.getDisplayType(val.split("\\)")[1], false) + " (" + InstrUtils.getDisplayArgsEasy(val) + ")");
+              } else if (!val.isEmpty()) {
+                jtf.setToolTipText(InstrUtils.getDisplayType(val, false));
+              } else {
+                jtf.setToolTipText(textFieldToolTips.get(name));
+              }
+            } catch (Throwable t) {
+              t.printStackTrace();
+              jtf.setToolTipText(textFieldToolTips.get(name));
+            }
+          }
+        });
+      }
+      return jtf;
     }
     return null;
   }

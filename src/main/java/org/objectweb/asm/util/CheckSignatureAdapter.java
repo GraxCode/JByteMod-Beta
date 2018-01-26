@@ -112,7 +112,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
    *          <tt>null</tt>.
    */
   public CheckSignatureAdapter(final int type, final SignatureVisitor sv) {
-    this(Opcodes.ASM5, type, sv);
+    this(Opcodes.ASM6, type, sv);
   }
 
   /**
@@ -120,7 +120,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
    * 
    * @param api
    *          the ASM API version implemented by this visitor. Must be one of
-   *          {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+   *          {@link Opcodes#ASM4}, {@link Opcodes#ASM5} or {@link Opcodes#ASM6}
+   *          .
    * @param type
    *          the type of signature to be checked. See {@link #CLASS_SIGNATURE},
    *          {@link #METHOD_SIGNATURE} and {@link #TYPE_SIGNATURE}.
@@ -142,7 +143,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
     if (type == TYPE_SIGNATURE || (state != EMPTY && state != FORMAL && state != BOUND)) {
       throw new IllegalStateException();
     }
-    CheckMethodAdapter.checkIdentifier(name, "formal type parameter");
+    checkIdentifier(name, "formal type parameter");
     state = FORMAL;
     if (sv != null) {
       sv.visitFormalTypeParameter(name);
@@ -249,7 +250,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
     if (type != TYPE_SIGNATURE || state != EMPTY) {
       throw new IllegalStateException();
     }
-    CheckMethodAdapter.checkIdentifier(name, "type variable");
+    checkIdentifier(name, "type variable");
     state = SIMPLE_TYPE;
     if (sv != null) {
       sv.visitTypeVariable(name);
@@ -271,7 +272,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
     if (type != TYPE_SIGNATURE || state != EMPTY) {
       throw new IllegalStateException();
     }
-    CheckMethodAdapter.checkInternalName(name, "class name");
+    checkClassName(name, "class name");
     state = CLASS_TYPE;
     if (sv != null) {
       sv.visitClassType(name);
@@ -283,7 +284,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
     if (state != CLASS_TYPE) {
       throw new IllegalStateException();
     }
-    CheckMethodAdapter.checkIdentifier(name, "inner class name");
+    checkIdentifier(name, "inner class name");
     if (sv != null) {
       sv.visitInnerClassType(name);
     }
@@ -319,6 +320,28 @@ public class CheckSignatureAdapter extends SignatureVisitor {
     state = END;
     if (sv != null) {
       sv.visitEnd();
+    }
+  }
+
+  private void checkClassName(final String name, final String msg) {
+    if (name == null || name.length() == 0) {
+      throw new IllegalArgumentException("Invalid " + msg + " (must not be null or empty)");
+    }
+    for (int i = 0; i < name.length(); ++i) {
+      if (".;[<>:".indexOf(name.charAt(i)) != -1) {
+        throw new IllegalArgumentException("Invalid " + msg + " (must not contain . ; [ < > or :): " + name);
+      }
+    }
+  }
+
+  private void checkIdentifier(final String name, final String msg) {
+    if (name == null || name.length() == 0) {
+      throw new IllegalArgumentException("Invalid " + msg + " (must not be null or empty)");
+    }
+    for (int i = 0; i < name.length(); ++i) {
+      if (".;[/<>:".indexOf(name.charAt(i)) != -1) {
+        throw new IllegalArgumentException("Invalid " + msg + " (must not contain . ; [ / < > or :): " + name);
+      }
     }
   }
 }

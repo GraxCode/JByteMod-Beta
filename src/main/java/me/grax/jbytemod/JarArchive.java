@@ -47,11 +47,10 @@ public class JarArchive {
     }
   }
 
-
   public boolean isSingleEntry() {
     return singleEntry;
   }
-  
+
   public Map<String, ClassNode> getClasses() {
     return classes;
   }
@@ -127,7 +126,6 @@ public class JarArchive {
                   mn.owner = cn.name;
                 }
                 classes.put(cn.name, cn);
-                cn.preLoad = bytes;
               }
             } catch (Exception e) {
               e.printStackTrace();
