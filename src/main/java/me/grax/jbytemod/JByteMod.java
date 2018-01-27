@@ -114,8 +114,11 @@ public class JByteMod extends JFrame {
       }
     });
     border = UIManager.getColor("nimbusBorder");
+    if (border == null) {
+      border = new Color(146, 151, 161);
+    }
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.5.1");
+    this.setTitle("JByteMod 1.5.2");
     this.setJMenuBar(myMenuBar = new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -125,7 +128,9 @@ public class JByteMod extends JFrame {
     this.setTCBList(new TCBList());
     this.setLVPList(new LVPList());
     JPanel border = new JPanel();
-    border.setBorder(new LineBorder(JByteMod.border));
+    if (!UIManager.getLookAndFeel().getName().equals("WebLookAndFeel")) {
+      border.setBorder(new LineBorder(JByteMod.border));
+    }
     border.setLayout(new GridLayout());
     JSplitPane splitPane = new MySplitPane(this, jarTree);
     JPanel b2 = new JPanel();
@@ -323,5 +328,12 @@ public class JByteMod extends JFrame {
 
   public void setCFP(ControlFlowPanel cfp) {
     this.cfp = cfp;
+  }
+
+  public static void restartGUI() {
+    instance.dispose();
+    instance = null;
+    System.gc();
+    JByteMod.main(new String[0]);
   }
 }

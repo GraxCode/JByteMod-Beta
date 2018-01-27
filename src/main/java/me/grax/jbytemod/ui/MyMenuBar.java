@@ -246,6 +246,9 @@ public class MyMenuBar extends JMenuBar {
           public void actionPerformed(ActionEvent e) {
             op.setValue(jmi.isSelected());
             o.save();
+            if(op.getName().equals("use_weblaf")) {
+              JByteMod.restartGUI();
+            }
           }
         });
         menu.add(jmi);
@@ -271,6 +274,7 @@ public class MyMenuBar extends JMenuBar {
     }
     return settings;
   }
+
 
   protected void searchLDC() {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));

@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 import org.benf.cfr.reader.PluginRunner;
 import org.benf.cfr.reader.api.ClassFileSource;

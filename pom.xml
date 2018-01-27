@@ -61,6 +61,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
+            <version>2.5.2</version>
             <executions>
                <execution>
                   <id>install-weblaf</id>
@@ -84,8 +85,8 @@
                   <configuration>
                      <file>${basedir}/lib/cfr_0_125.jar</file>
                      <repositoryLayout>default</repositoryLayout>
-                     <groupId>com.benf.cfr</groupId>
-                     <artifactId>cfr</artifactId>
+                     <groupId>org.benf</groupId>
+                     <artifactId>reader</artifactId>
                      <version>1.2.5</version>
                      <packaging>jar</packaging>
                      <generatePom>true</generatePom>
@@ -142,6 +143,11 @@
          <groupId>com.weblaf</groupId>
          <artifactId>weblaf</artifactId>
          <version>1.2.9</version>
+      </dependency>
+	  <dependency>
+         <groupId>org.benf</groupId>
+         <artifactId>reader</artifactId>
+         <version>1.2.5</version>
       </dependency>
    </dependencies>
 </project>
