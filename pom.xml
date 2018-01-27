@@ -63,14 +63,30 @@
             <artifactId>maven-install-plugin</artifactId>
             <executions>
                <execution>
-                  <id>install-external</id>
-                  <phase>clean</phase>
+                  <id>install-weblaf</id>
+                  <phase>package</phase>
                   <configuration>
                      <file>${basedir}/lib/weblaf-complete-1.29-fixed.jar</file>
                      <repositoryLayout>default</repositoryLayout>
                      <groupId>com.weblaf</groupId>
                      <artifactId>weblaf</artifactId>
                      <version>1.2.9</version>
+                     <packaging>jar</packaging>
+                     <generatePom>true</generatePom>
+                  </configuration>
+                  <goals>
+                     <goal>install-file</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>install-cfr</id>
+                  <phase>package</phase>
+                  <configuration>
+                     <file>${basedir}/lib/cfr_0_125.jar</file>
+                     <repositoryLayout>default</repositoryLayout>
+                     <groupId>com.benf.cfr</groupId>
+                     <artifactId>cfr</artifactId>
+                     <version>1.2.5</version>
                      <packaging>jar</packaging>
                      <generatePom>true</generatePom>
                   </configuration>

@@ -16,6 +16,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.decompiler.CFRDecompiler;
 import me.grax.jbytemod.decompiler.Decompiler;
 import me.grax.jbytemod.decompiler.Decompilers;
 import me.grax.jbytemod.decompiler.FernflowerDecompiler;
@@ -24,7 +25,7 @@ import me.grax.jbytemod.decompiler.ProcyonDecompiler;
 public class DecompilerTab extends JPanel {
   private DecompilerPanel dp;
   private JLabel label;
-  protected Decompilers decompiler = Decompilers.Procyon; //TODO setting
+  protected Decompilers decompiler = Decompilers.PROCYON; //TODO setting
   private JByteMod jbm;
 
   public DecompilerTab(JByteMod jbm) {
@@ -46,7 +47,7 @@ public class DecompilerTab extends JPanel {
 
       public void actionPerformed(ActionEvent e) {
         DecompilerTab.this.decompiler = (Decompilers) decompilerCombo.getSelectedItem();
-        label.setText(decompiler + " Decompiler");
+        label.setText(decompiler.getName() + " " + decompiler.getVersion());
         decompile(Decompiler.last, true);
       }
     });
@@ -73,11 +74,14 @@ public class DecompilerTab extends JPanel {
     }
     Decompiler d = null;
     switch (decompiler) {
-    case Procyon:
+    case PROCYON:
       d = new ProcyonDecompiler(jbm, dp);
       break;
-    case Fernflower:
+    case FERNFLOWER:
       d = new FernflowerDecompiler(jbm, dp);
+      break;
+    case CFR:
+      d = new CFRDecompiler(jbm, dp);
       break;
     }
     d.setNode(cn);
