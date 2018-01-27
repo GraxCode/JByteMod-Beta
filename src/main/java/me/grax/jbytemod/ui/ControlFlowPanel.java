@@ -10,6 +10,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
@@ -23,6 +24,7 @@ public class ControlFlowPanel extends JPanel {
   private MethodNode node;
   private ArrayList<Block> cf = new ArrayList<>();
   private mxGraph graph;
+  private mxGraphComponent graphComponent;
 
   private static final String edgeColor = "#111111";
   private static final String jumpColor = "#39698a";
@@ -39,7 +41,7 @@ public class ControlFlowPanel extends JPanel {
     graph.setAutoOrigin(true);
     graph.setAutoSizeCells(true);
     graph.setHtmlLabels(true);
-    mxGraphComponent graphComponent = new mxGraphComponent(graph);
+    graphComponent = new mxGraphComponent(graph);
     graphComponent.setEnabled(false);
     this.add(graphComponent);
   }
@@ -85,6 +87,13 @@ public class ControlFlowPanel extends JPanel {
       graph.getModel().endUpdate();
     }
     new mxHierarchicalLayout(graph).execute(graph.getDefaultParent());
+    double widthLayout = graphComponent.getLayoutAreaSize().getWidth();
+    double heightLayout = graphComponent.getLayoutAreaSize().getHeight();
+
+    double width = graph.getGraphBounds().getWidth();
+    graph.getModel().setGeometry(graph.getDefaultParent(), 
+            new mxGeometry((widthLayout - width)/2, 16,
+                    widthLayout, heightLayout));
     this.repaint();
   }
 
