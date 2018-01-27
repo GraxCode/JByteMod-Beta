@@ -11,6 +11,7 @@
    <string name="general_group">Allgemein</string>
    <string name="color_group">Farbe</string>
    <string name="editor_group">Editor</string>
+   <string name="style_group">Style</string>
    <string name="big_jar_warn">Warnung: Dies könnte bei großen .jar Dateien etwas dauern!</string>
    <string name="big_string_warn">Warnung: Dies könnte bei kurzen Strings etwas dauern!</string>
    <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>

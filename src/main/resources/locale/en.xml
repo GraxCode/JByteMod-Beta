@@ -11,6 +11,7 @@
    <string name="general_group">General</string>
    <string name="color_group">Color</string>
    <string name="editor_group">Editor</string>
+   <string name="style_group">Style</string>
    <string name="big_jar_warn">Warning: This could take some time on big jars!</string>
    <string name="big_string_warn">Warning: This could take some time on short strings!</string>
    <string name="ref_warn">Warning: References will not be updated!</string>
