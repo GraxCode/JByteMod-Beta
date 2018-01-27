@@ -6,8 +6,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import me.grax.jbytemod.JByteMod;
 
-import javax.swing.UnsupportedLookAndFeelException;
-
 public class LookUtils {
   public static void setLAF() {
     for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -24,7 +22,7 @@ public class LookUtils {
 
   public static void changeLAF(String name) {
     try {
-      System.out.println("Changing UI to " + name);
+      JByteMod.LOGGER.log("Changing UI to " + name);
       UIManager.setLookAndFeel(name);
       UIManager.getLookAndFeel().uninitialize();
       UIManager.setLookAndFeel(name);

@@ -355,7 +355,7 @@ public class MyMenuBar extends JMenuBar {
       if (result == JFileChooser.APPROVE_OPTION) {
         File output = jfc.getSelectedFile();
         this.lastFile = output;
-        System.out.println("Selected output file: " + output.getAbsolutePath());
+        JByteMod.LOGGER.log("Selected output file: " + output.getAbsolutePath());
         jam.saveFile(output);
       }
     }
@@ -368,7 +368,7 @@ public class MyMenuBar extends JMenuBar {
     int result = jfc.showOpenDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
       File input = jfc.getSelectedFile();
-      System.out.println("Selected input file: " + input.getAbsolutePath());
+      JByteMod.LOGGER.log("Selected input file: " + input.getAbsolutePath());
       jam.loadFile(input);
     }
   }

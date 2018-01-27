@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
+import me.grax.jbytemod.JByteMod;
+
 public class ThemeChanges {
 
   public static void setDefaults() {
@@ -19,7 +21,7 @@ public class ThemeChanges {
       f.setAccessible(true);
       f.set(o, new Color(0xFF01D328));
     } catch (Exception e) {
-      e.printStackTrace();
+      JByteMod.LOGGER.err("Failed to apply nimbus theme changes");
     }
   }
 

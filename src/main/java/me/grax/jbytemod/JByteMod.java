@@ -24,6 +24,7 @@ import javax.swing.tree.TreePath;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import me.grax.jbytemod.logging.Logging;
 import me.grax.jbytemod.plugin.Plugin;
 import me.grax.jbytemod.plugin.PluginManager;
 import me.grax.jbytemod.res.LanguageRes;
@@ -51,42 +52,30 @@ import me.lpk.util.OpUtils;
 
 public class JByteMod extends JFrame {
 
-  private JPanel contentPane;
-
+  public static final Logging LOGGER = new Logging();
   public static final LanguageRes res = new LanguageRes();
   public static final Options ops = new Options();
 
+  private JPanel contentPane;
   private JarArchive file;
-
   private ClassTree jarTree;
-
   private MyCodeList clist;
-
   private PageEndPanel pp;
-
   private SearchList slist;
-
   private DecompilerPanel dp;
-
   private TCBList tcblist;
+  private MyTabbedPane tabbedPane;
+  private InfoPanel sp;
+  private LVPList lvplist;
+  private ControlFlowPanel cfp;
+  private MyMenuBar myMenuBar;
 
   private ClassNode currentNode;
   private MethodNode currentMethod;
 
-  private MyTabbedPane tabbedPane;
-
-  private InfoPanel sp;
-
-  private LVPList lvplist;
-
-  private ControlFlowPanel cfp;
-
   public static JByteMod instance;
   public static Color border;
-
   private PluginManager pluginManager;
-
-  private MyMenuBar myMenuBar;
 
   /**
    * Launch the application.
@@ -127,7 +116,7 @@ public class JByteMod extends JFrame {
     });
     border = UIManager.getColor("nimbusBorder");
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.5.0");
+    this.setTitle("JByteMod 1.5.1");
     this.setJMenuBar(myMenuBar = new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -199,8 +188,7 @@ public class JByteMod extends JFrame {
   }
 
   public void refreshTree() {
-    System.out.println("Successfully loaded file!");
-    System.out.println("Building tree..");
+    LOGGER.log("Building tree..");
     this.jarTree.refreshTree(file);
   }
 
@@ -245,28 +233,29 @@ public class JByteMod extends JFrame {
   }
 
   public void treeSelection(ClassNode cn, MethodNode mn) {
-    if (ops.get("tree_search_sel").getBoolean()) {
-      //selection may take some time
-      new Thread(() -> {
-        DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
-        this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
-      }).start();
-    }
+    //selection may take some time
+    new Thread(() -> {
+      DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
+      this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
+    }).start();
   }
 
-  private void selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
+  private boolean selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
     for (int i = 0; i < tm.getChildCount(node); i++) {
       SortedTreeNode child = (SortedTreeNode) tm.getChild(node, i);
       if (child.getMn() != null && child.getMn().equals(mn)) {
         TreePath tp = new TreePath(tm.getPathToRoot(child));
         jarTree.setSelectionPath(tp);
         jarTree.scrollPathToVisible(tp);
-        break;
+        return true;
       }
       if (!child.isLeaf()) {
-        selectEntry(mn, tm, child);
+        if (selectEntry(mn, tm, child)) {
+          return true;
+        }
       }
     }
+    return false;
   }
 
   public ClassNode getCurrentNode() {

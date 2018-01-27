@@ -32,13 +32,11 @@ public class PluginManager {
 
   @SuppressWarnings("deprecation")
   private void loadPlugins() {
-    //    ClassLoader parent = ClassLoader.getSystemClassLoader();
     for (File f : pluginFolder.listFiles()) {
       if (f.getName().endsWith(".jar")) {
         try {
           ZipFile zip = new ZipFile(f);
           Enumeration<? extends ZipEntry> entries = zip.entries();
-          //          ClassLoader loader = URLClassLoader.newInstance(new URL[] { f.toURI().toURL() }, parent);
           addURL(f.toURL());
           while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
@@ -47,7 +45,6 @@ public class PluginManager {
               try {
                 Class<?> loaded = Class.forName(name.replace('/', '.').substring(0, name.length() - 6), true, ClassLoader.getSystemClassLoader());
                 if (Plugin.class.isAssignableFrom(loaded)) {
-                  System.out.println("loaded " + loaded.getSuperclass().getName());
                   Plugin p = (Plugin) loaded.newInstance();
                   p.init();
                   this.plugins.add(p);
@@ -58,24 +55,14 @@ public class PluginManager {
               }
             }
           }
-          //          parent = loader;
-          //          Thread.currentThread().setContextClassLoader(loader);
           zip.close();
         } catch (Exception e) {
           e.printStackTrace();
-          System.err.println("Plugin " + f.getName() + " failed to load!");
+          JByteMod.LOGGER.err("Plugin " + f.getName() + " failed to load!");
         }
       }
     }
-    try {
-      //      Class<?> loader = ClassLoader.class;
-      //      Field f2 = loader.getDeclaredField("scl");
-      //      f2.setAccessible(true);
-      //      f2.set(null, parent);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    System.out.println(plugins.size() + " plugins loaded!");
+    JByteMod.LOGGER.log(plugins.size() + " plugin(s) loaded!");
   }
 
   public static void addURL(URL u) throws IOException {

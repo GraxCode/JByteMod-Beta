@@ -23,6 +23,8 @@ import org.objectweb.asm.tree.analysis.AnalyzerException;
 import org.objectweb.asm.tree.analysis.BasicInterpreter;
 import org.objectweb.asm.tree.analysis.Frame;
 
+import me.grax.jbytemod.JByteMod;
+
 public class MethodUtils {
   public static void clear(MethodNode mn) {
     mn.instructions.clear();
@@ -75,7 +77,7 @@ public class MethodUtils {
         i++;
       }
     }
-    System.out.println("Removed " + i + " nodes!");
+    JByteMod.LOGGER.log("Removed " + i + " nodes!");
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })

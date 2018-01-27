@@ -34,16 +34,16 @@ public class SaveTask extends SwingWorker<Void, Integer> {
     Map<String, ClassNode> classes = this.file.getClasses();
     Map<String, byte[]> outputBytes = this.file.getOutput();
     int flags = JByteMod.ops.get("compute_maxs").getBoolean() ? 1 : 0;
-    System.out.println("Writing..");
+    JByteMod.LOGGER.log("Writing..");
     if (this.file.isSingleEntry()) {
       ClassNode node = classes.values().iterator().next();
       ClassWriter writer = new ClassWriter(flags);
       node.accept(writer);
       publish(50);
-      System.out.println("Saving..");
+      JByteMod.LOGGER.log("Saving..");
       Files.write(this.output.toPath(), writer.toByteArray());
       publish(100);
-      System.out.println("Done!");
+      JByteMod.LOGGER.log("Done!");
       return null;
     }
     publish(0);
@@ -57,10 +57,10 @@ public class SaveTask extends SwingWorker<Void, Integer> {
       publish((int) ((i++ / size) * 50d));
     }
     publish(50);
-    System.out.println("Saving..");
+    JByteMod.LOGGER.log("Saving..");
     JarUtils.saveAsJar(outputBytes, output.getAbsolutePath());
     publish(100);
-    System.out.println("Done!");
+    JByteMod.LOGGER.log("Done!");
     return null;
   }
 

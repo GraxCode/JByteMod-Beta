@@ -18,14 +18,13 @@ public class Options {
   private static final File propFile = new File("jbytemod.cfg");
 
   public List<Option> bools = new ArrayList<>();
-  public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("tree_search_sel", false, Type.BOOLEAN),
-      new Option("use_rt", false, Type.BOOLEAN), new Option("compute_maxs", true, Type.BOOLEAN),
-      new Option("hints", false, Type.BOOLEAN, "editor_group"), new Option("primary_color", "#557799", Type.STRING, "color_group"),
-      new Option("secondary_color", "#995555", Type.STRING, "color_group"));
+  public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
+      new Option("compute_maxs", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
+      new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"));
 
   public Options() {
     if (propFile.exists()) {
-      System.out.println("Loading settings... ");
+      JByteMod.LOGGER.log("Loading settings... ");
       try {
         Files.lines(propFile.toPath()).forEach(l -> {
           String[] split = l.split("=");
@@ -33,7 +32,7 @@ public class Options {
           try {
             bools.add(new Option(def[0], split[1], Type.valueOf(def[1]), def[2]));
           } catch (Exception e) {
-            System.err.println("Couldn't parse line: " + l);
+            JByteMod.LOGGER.warn("Couldn't parse line: " + l);
           }
         });
         for (int i = 0; i < bools.size(); i++) {
@@ -47,7 +46,7 @@ public class Options {
           }
         }
         if (bools.isEmpty()) {
-          System.err.println("Couldn't read file, probably empty");
+          JByteMod.LOGGER.warn("Couldn't read file, probably empty");
           this.initWithDefaults();
           this.save();
         }
@@ -55,7 +54,7 @@ public class Options {
         e.printStackTrace();
       }
     } else {
-      System.out.println("Property File does not exist, creating...");
+      JByteMod.LOGGER.warn("Property File does not exist, creating...");
       this.initWithDefaults();
       this.save();
     }

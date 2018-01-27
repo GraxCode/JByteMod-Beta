@@ -33,7 +33,7 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
       this.bytes = b;
       HashMap<String, Object> map = new HashMap<>();
       map.put("asc", "1"); //encode non-ASCII characters in string and character literals as Unicode escapes
-      Fernflower f = new Fernflower(this, this, new HashMap<>(), new PrintStreamLogger(System.out));
+      Fernflower f = new Fernflower(this, this, new HashMap<>(), new PrintStreamLogger(JByteMod.LOGGER));
       StructContext sc = f.getStructContext();
       StructClass cl = new StructClass(b, true, sc.getLoader());
       sc.getClasses().put(cn.name, cl);

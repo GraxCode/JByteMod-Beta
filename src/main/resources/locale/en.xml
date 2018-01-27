@@ -5,7 +5,6 @@
    <string name="jar_warn">Other files than .jar are not supported yet, please select a java archive.</string>
    <string name="about">About</string>
    <string name="sort_methods">Sort Methods</string>
-   <string name="tree_search_sel">Select Tree Entries</string>
    <string name="use_rt">Use rt.jar instead of dynamic loading</string>
    <string name="primary_color">Primary Color</string>
    <string name="secondary_color">Secondary Color</string>
@@ -35,7 +34,7 @@
    <string name="go_to_dec">Jump to declaration</string>
    <string name="copy_text">Copy text</string>
    <string name="help">Help</string>
-   <string name="utils">Utils</string>
+   <string name="utils">Utilities</string>
    <string name="remove">Remove</string>
    <string name="remove_all">Remove all</string>
    <string name="edit">Edit</string>
@@ -47,7 +46,8 @@
    <string name="move_up">Move up</string>
    <string name="move_down">Move down</string>
    <string name="url_search">URLs</string>
-   <string name="email_search">Email Addresses</string>
+   <string name="email_search">Email addresses</string>
    <string name="hints">Hints</string>
+   <string name="select_tree">Select tree entry</string>
 </resources>
 

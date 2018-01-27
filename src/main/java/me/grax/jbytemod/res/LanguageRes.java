@@ -11,13 +11,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
 public class LanguageRes {
   private final HashMap<String, String> map = new HashMap<>();
 
   public LanguageRes() {
-    System.out.println("Reading Language XML..");
+    JByteMod.LOGGER.log("Reading Language XML..");
     this.readXML();
   }
 
@@ -40,7 +41,7 @@ public class LanguageRes {
           map.put(el.getAttribute("name"), e.getTextContent());
         }
       }
-      System.out.println("Successfully loaded " + map.size() + " resources");
+      JByteMod.LOGGER.log("Successfully loaded " + map.size() + " resources");
     } catch (Exception e) {
       new ErrorDisplay(e);
     }
@@ -49,7 +50,7 @@ public class LanguageRes {
   private InputStream getXML() {
     InputStream is = LanguageRes.class.getResourceAsStream("/locale/" + this.getLanguage() + ".xml");
     if (is == null) {
-      System.out.println("Using default en.xml");
+      JByteMod.LOGGER.warn("Locale not found, using default en.xml");
       is = LanguageRes.class.getResourceAsStream("/locale/en.xml");
     }
     return is;

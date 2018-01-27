@@ -92,7 +92,7 @@ public class JListEditor extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
           try {
-            System.out.println("Updating List!");
+            JByteMod.LOGGER.log("Updating List!");
             TableModel model = jtable.getModel();
             ArrayList<String> list = new ArrayList<>();
             for (int i = 0; i < model.getRowCount(); i++) {

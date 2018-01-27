@@ -5,7 +5,6 @@
    <string name="jar_warn">Andere Dateien als .jar werden noch nicht unterstützt, bitte wählen Sie ein Java-Archiv.</string>
    <string name="about">Über</string>
    <string name="sort_methods">Methoden sortieren</string>
-   <string name="tree_search_sel">Tree Nodes auswählen</string>
    <string name="use_rt">rt.jar statt dynamischen Classloading</string>
    <string name="primary_color">Primäre Farbe</string>
    <string name="secondary_color">Sekundäre Farbe</string>
@@ -50,5 +49,6 @@
    <string name="email_search">Email Adressen</string>
    <string name="compute_maxs">COMPUTE_MAXS benutzen</string>
    <string name="hints">Hilfetext</string>
+   <string name="select_tree">Tree-Element auswählen</string>
 </resources>
 

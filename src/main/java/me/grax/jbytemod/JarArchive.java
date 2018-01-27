@@ -70,7 +70,7 @@ public class JarArchive {
     public TaskLoadJarFile(JByteMod jbm, File input) {
       try {
         this.jarSize = countFiles(this.input = new JarFile(input));
-        System.out.println(jarSize + " files to load!");
+        JByteMod.LOGGER.log(jarSize + " files to load!");
         this.jbm = jbm;
         this.jpb = jbm.getPP();
       } catch (IOException e) {
@@ -129,6 +129,7 @@ public class JarArchive {
               }
             } catch (Exception e) {
               e.printStackTrace();
+              JByteMod.LOGGER.err("Failed loading class file " + name);
             }
           }
         } else if (!en.isDirectory()) {
@@ -137,6 +138,7 @@ public class JarArchive {
         }
       } catch (Exception e) {
         e.printStackTrace();
+        JByteMod.LOGGER.err("Failed loading file");
       }
       return;
     }
@@ -150,6 +152,7 @@ public class JarArchive {
 
     @Override
     protected void done() {
+      JByteMod.LOGGER.log("Successfully loaded file!");
       jbm.refreshTree();
     }
   }

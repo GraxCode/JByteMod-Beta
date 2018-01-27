@@ -39,7 +39,7 @@ public class FrameGen extends Thread {
       ClassNode node2 = ASMUtils.getNode(cw.toByteArray());
       cn.methods.clear();
       cn.methods.addAll(node2.methods);
-      System.out.println("Successfully regenerated frames at class " + cn.name);
+      JByteMod.LOGGER.log("Successfully regenerated frames at class " + cn.name);
     } catch (Exception e) {
       e.printStackTrace();
       return;
@@ -50,7 +50,7 @@ public class FrameGen extends Thread {
   public void run() {
     try {
       libraries = JarUtils.loadRT();
-      System.out.println("Successfully loaded RT.jar");
+      JByteMod.LOGGER.log("Successfully loaded RT.jar");
     } catch (IOException e) {
       new ErrorDisplay(e);
     }

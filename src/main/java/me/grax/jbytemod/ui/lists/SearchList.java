@@ -47,10 +47,18 @@ public class SearchList extends JList<SearchEntry> {
               ClassNode cn = SearchList.this.getSelectedValue().getCn();
               MethodNode mn = SearchList.this.getSelectedValue().getMn();
               jbm.selectMethod(cn, mn);
-              jbm.treeSelection(cn, mn);
             }
           });
           menu.add(decl);
+          JMenuItem treeEntry = new JMenuItem(JByteMod.res.getResource("select_tree"));
+          treeEntry.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              ClassNode cn = SearchList.this.getSelectedValue().getCn();
+              MethodNode mn = SearchList.this.getSelectedValue().getMn();
+              jbm.treeSelection(cn, mn);
+            }
+          });
+          menu.add(treeEntry);
           JMenuItem copy = new JMenuItem(JByteMod.res.getResource("copy_text"));
           copy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -143,7 +151,7 @@ public class SearchList extends JList<SearchEntry> {
 
     @Override
     protected void done() {
-      System.out.println("Search finished!");
+      JByteMod.LOGGER.log("Search finished!");
     }
   }
 
@@ -232,7 +240,7 @@ public class SearchList extends JList<SearchEntry> {
     @Override
     protected void done() {
       jpb.setValue(100);
-      System.out.println("Search finished!");
+      JByteMod.LOGGER.log("Search finished!");
     }
   }
 }
