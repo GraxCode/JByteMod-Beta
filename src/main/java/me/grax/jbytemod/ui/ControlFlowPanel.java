@@ -1,17 +1,20 @@
 package me.grax.jbytemod.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import me.grax.jbytemod.analysis.block.Block;
@@ -35,15 +38,17 @@ public class ControlFlowPanel extends JPanel {
   private static final String jumpColorPink = "#8a386d";
 
   public ControlFlowPanel() {
+    this.setBorder(new EmptyBorder(30, 30, 30, 30));
     this.setLayout(new BorderLayout(0, 0));
-
+    this.setBackground(Color.WHITE);
     graph = new mxGraph();
     graph.setAutoOrigin(true);
     graph.setAutoSizeCells(true);
     graph.setHtmlLabels(true);
     graphComponent = new mxGraphComponent(graph);
     graphComponent.setEnabled(false);
-    this.add(graphComponent);
+    graphComponent.setBorder(new EmptyBorder(0, 0, 0, 0));
+    this.add(graphComponent, BorderLayout.CENTER);
   }
 
   public MethodNode getNode() {
@@ -73,8 +78,8 @@ public class ControlFlowPanel extends JPanel {
     }
     Object parent = graph.getDefaultParent();
     graph.getModel().beginUpdate();
-    graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
     try {
+      graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
       existing.clear();
       if (!cf.isEmpty()) {
         for (Block b : cf) {
@@ -83,17 +88,12 @@ public class ControlFlowPanel extends JPanel {
           }
         }
       }
+      mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+      layout.setFineTuning(true);
+      layout.execute(graph.getDefaultParent());
     } finally {
       graph.getModel().endUpdate();
     }
-    new mxHierarchicalLayout(graph).execute(graph.getDefaultParent());
-    double widthLayout = graphComponent.getLayoutAreaSize().getWidth();
-    double heightLayout = graphComponent.getLayoutAreaSize().getHeight();
-
-    double width = graph.getGraphBounds().getWidth();
-    graph.getModel().setGeometry(graph.getDefaultParent(), 
-            new mxGeometry((widthLayout - width)/2, 16,
-                    widthLayout, heightLayout));
     this.repaint();
   }
 
@@ -108,7 +108,8 @@ public class ControlFlowPanel extends JPanel {
       for (AbstractInsnNode ain : b.getNodes()) {
         text += InstrUtils.toString(ain) + "\n";
       }
-      v1 = graph.insertVertex(parent, null, text, 150, 10, 80, 40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1;");
+      v1 = graph.insertVertex(parent, null, text, 150, 10, 80, 40,
+          "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1;margin-right=20px;");
       graph.updateCellSize(v1); //resize cell
 
       existing.put(b, v1);
