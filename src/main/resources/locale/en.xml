@@ -49,5 +49,6 @@
    <string name="email_search">Email addresses</string>
    <string name="hints">Hints</string>
    <string name="select_tree">Select tree entry</string>
+   <string name="use_weblaf">Use WebLaF (Needs restart)</string>
 </resources>
 

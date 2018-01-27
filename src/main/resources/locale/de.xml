@@ -50,5 +50,6 @@
    <string name="compute_maxs">COMPUTE_MAXS benutzen</string>
    <string name="hints">Hilfetext</string>
    <string name="select_tree">Tree-Element auswählen</string>
+   <string name="use_weblaf">WebLaF benutzen (Neustart notwendig)</string>
 </resources>
 

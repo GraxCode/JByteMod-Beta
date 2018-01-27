@@ -86,7 +86,6 @@ public class JByteMod extends JFrame {
       public void run() {
         try {
           LookUtils.setLAF();
-          ThemeChanges.setDefaults();
           JByteMod frame = new JByteMod();
           instance = frame;
           frame.setVisible(true);

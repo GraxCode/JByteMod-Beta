@@ -20,7 +20,7 @@ public class Options {
   public List<Option> bools = new ArrayList<>();
   public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
       new Option("compute_maxs", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
-      new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"));
+      new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"), new Option("use_weblaf", true, Type.BOOLEAN, "style_group"));
 
   public Options() {
     if (propFile.exists()) {
