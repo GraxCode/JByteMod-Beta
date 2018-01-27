@@ -35,6 +35,6 @@ https://github.com/GraxCode/JTattooPlugin
 
 ## How to build
 
-    mvn package
+    mvn clean package
     java -jar target/JByteMod-1.5.1.jar
     
