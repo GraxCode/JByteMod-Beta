@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+   <string name="exit_warn">¿Realmente quieres salir? Todos los cambios no guardados se pederán.</string>
+   <string name="is_sure">¿Estás seguro/a?</string>
+   <string name="jar_warn">Otros archivos que no sean .jar aún no están soportados, por favor selecciona un archivo java.</string>
+   <string name="about">Acerca de</string>
+   <string name="sort_methods">Ordenar métodos</string>
+   <string name="use_rt">Usar rt.jar en vez de dynamic loading</string>
+   <string name="primary_color">Color primario</string>
+   <string name="secondary_color">Color secundario</string>
+   <string name="general_group">General</string>
+   <string name="color_group">Color</string>
+   <string name="editor_group">Editor</string>
+   <string name="style_group">Estilo</string>
+   <string name="big_jar_warn">Advertencia: ¡Esto puede tomar un tiempo en jars muy grandes!</string>
+   <string name="big_string_warn">Advertencia: ¡Esto puede tomar un tiempo en strings cortos!</string>
+   <string name="ref_warn">Advertencia: ¡Las referencias no serán actualizadas!</string>
+   <string name="update_warn">Advertencia: ¡Se actualizará cuando hagas click en OK!</string>
+   <string name="save">Guardar</string>
+   <string name="save_as">Guardar como...</string>
+   <string name="load">Abrir</string>
+   <string name="tree_reload">Recargar arbol</string>
+   <string name="collapse_all">Colapsar todo</string>
+   <string name="about">Acerca de</string>
+   <string name="licenses">Licencias</string>
+   <string name="java_archive">Arquitectura Java</string>
+   <string name="settings">Opciones</string>
+   <string name="search">Buscar</string>
+   <string name="search_results">Resultados de búsqueda</string>
+   <string name="analysis">Análisis</string>
+   <string name="ctrl_flow_vis">Control flow visualization</string>
+   <string name="exact">Exacto</string>
+   <string name="case_sens">Distinguir mayúsculas</string>
+   <string name="find">Encontrar:</string>
+   <string name="go_to_dec">Ir a la declaración</string>
+   <string name="copy_text">Copiar texto</string>
+   <string name="help">Ayuda</string>
+   <string name="utils">Utilidades</string>
+   <string name="remove">Remover</string>
+   <string name="remove_all">Remover todo</string>
+   <string name="edit">Editar</string>
+   <string name="insert">Insertar</string>
+   <string name="ins_before">Insertar después</string>
+   <string name="ins_after">Insertar antes</string>
+   <string name="add">Añadir</string>
+   <string name="duplicate">Duplicar</string>
+   <string name="move_up">Mover arriba</string>
+   <string name="move_down">Mover abajo</string>
+   <string name="url_search">URLs</string>
+   <string name="email_search">Direcciones de Email</string>
+   <string name="hints">Consejos</string>
+   <string name="select_tree">Select tree entry</string>
+   <string name="use_weblaf">Usar WebLaF (Será necesario reiniciar)</string>
+</resources>
+
