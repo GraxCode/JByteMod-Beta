@@ -42,7 +42,6 @@ import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.ThemeChanges;
 import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.SaveTask;
@@ -55,7 +54,8 @@ public class JByteMod extends JFrame {
   public static final Logging LOGGER = new Logging();
   public static final LanguageRes res = new LanguageRes();
   public static final Options ops = new Options();
-
+  private static boolean lafInit;
+  
   private JPanel contentPane;
   private JarArchive file;
   private ClassTree jarTree;
@@ -83,9 +83,13 @@ public class JByteMod extends JFrame {
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
 
+
       public void run() {
         try {
-          LookUtils.setLAF();
+          if (!lafInit) {
+            LookUtils.setLAF();
+            lafInit = true;
+          }
           JByteMod frame = new JByteMod();
           instance = frame;
           frame.setVisible(true);
@@ -129,6 +133,7 @@ public class JByteMod extends JFrame {
     this.setLVPList(new LVPList());
     JPanel border = new JPanel();
     if (!UIManager.getLookAndFeel().getName().equals("WebLookAndFeel")) {
+      //looks better without border for weblaf
       border.setBorder(new LineBorder(JByteMod.border));
     }
     border.setLayout(new GridLayout());
@@ -335,5 +340,9 @@ public class JByteMod extends JFrame {
     instance = null;
     System.gc();
     JByteMod.main(new String[0]);
+  }
+
+  public static void resetLAF() {
+    lafInit = false;
   }
 }

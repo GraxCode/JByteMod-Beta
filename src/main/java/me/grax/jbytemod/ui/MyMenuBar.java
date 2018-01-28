@@ -247,6 +247,7 @@ public class MyMenuBar extends JMenuBar {
             op.setValue(jmi.isSelected());
             o.save();
             if(op.getName().equals("use_weblaf")) {
+              JByteMod.resetLAF();
               JByteMod.restartGUI();
             }
           }
