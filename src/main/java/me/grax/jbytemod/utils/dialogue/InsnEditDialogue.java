@@ -199,7 +199,7 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean ignore(String name) {
     return name.equals("itf") || name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
         || name.equals("localVariables") || name.equals("instructions") || name.equals("preLoad") || name.equals("attrs") || name.equals("extraBytes")
-        || name.equals("attrs");
+        || name.equals("attrs") || name.equals("methods") || name.equals("fields");
   }
 
   @Override

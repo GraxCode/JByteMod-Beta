@@ -34,6 +34,7 @@ import java.util.Map;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * A node that represents an invokedynamic instruction.
@@ -67,7 +68,7 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
     super(Opcodes.INVOKEDYNAMIC);
     name = "";
     desc = "";
-    bsmArgs = new Object[3];
+    bsmArgs = new Object[] { Type.getType("()V"), new Handle(Opcodes.H_INVOKESTATIC, "", "", ""), Type.getType("(V") };
     bsm = new Handle(Opcodes.H_INVOKESTATIC, "", "", "");
   }
 

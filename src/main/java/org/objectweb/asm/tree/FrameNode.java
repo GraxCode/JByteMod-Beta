@@ -78,6 +78,9 @@ public class FrameNode extends AbstractInsnNode {
 
   public FrameNode() {
     super(-1);
+    local = new ArrayList<>();
+    stack = new ArrayList<>();
+    
   }
 
   /**

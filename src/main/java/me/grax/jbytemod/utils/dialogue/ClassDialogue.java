@@ -7,13 +7,13 @@ import java.awt.GridLayout;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.text.NumberFormat;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,13 +26,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.NumberFormatter;
 import javax.swing.text.PlainDocument;
+
+import org.objectweb.asm.Type;
 
 import me.grax.jbytemod.JByteMod;
 
@@ -45,7 +45,8 @@ public class ClassDialogue {
   private String title;
 
   private static final List<String> noChilds = Arrays.asList(String.class.getName(), Integer.class.getName(), int.class.getName(),
-      char.class.getName(), Character.class.getName(), boolean.class.getName(), Boolean.class.getName(), char[].class.getName());
+      char.class.getName(), Character.class.getName(), boolean.class.getName(), Boolean.class.getName(), char[].class.getName(),
+      Type.class.getName());
 
   public ClassDialogue(Object object) {
     this(object, "Edit " + object.getClass().getSimpleName());
@@ -115,6 +116,7 @@ public class ClassDialogue {
   }
 
   private Object getValue(Class<?> type, Component child) {
+    System.out.println();
     switch (noChilds.indexOf(type.getName())) {
     case 0:
       JTextField jtf = (JTextField) child;
@@ -133,6 +135,9 @@ public class ClassDialogue {
     case 7:
       jtf = (JTextField) child;
       return jtf.getText().toCharArray();
+    case 8:
+      jtf = (JTextField) child;
+      return Type.getType(jtf.getText());
     default:
       throw new RuntimeException("" + noChilds.indexOf(type));
     }
@@ -277,6 +282,8 @@ public class ClassDialogue {
       return new JCheckBox("", (boolean) o);
     case 7:
       return new JTextField(new String((char[]) o));
+    case 8:
+      return new JTextField(new String(((Type) o).getInternalName()));
     default:
       throw new RuntimeException();
     }
@@ -345,6 +352,10 @@ public class ClassDialogue {
     @SuppressWarnings("rawtypes")
     private List list;
 
+    private Class<?> type;
+
+    private JTable jtable;
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public ListEditorTable(Object parent, Field f) throws IllegalArgumentException, IllegalAccessException {
       Object item = f.get(parent);
@@ -361,6 +372,17 @@ public class ClassDialogue {
         this.list = (List<?>) item;
       } else {
         throw new RuntimeException();
+      }
+      if (f.getType().isArray()) {
+        this.type = f.getType().getComponentType();
+      } else {
+        java.lang.reflect.Type type = f.getGenericType();
+        if (type instanceof ParameterizedType) {
+          ParameterizedType pType = (ParameterizedType) type;
+          this.type = (Class<?>) pType.getActualTypeArguments()[0];
+        } else {
+          this.type = Object.class;
+        }
       }
     }
 
@@ -387,7 +409,7 @@ public class ClassDialogue {
         }
         lm.addRow(new Object[] { i, o.getClass().getSimpleName(), o });
       }
-      JTable jtable = new JTable() {
+      jtable = new JTable() {
         @Override
         public boolean isCellEditable(int row, int column) {
           return false;
@@ -399,22 +421,28 @@ public class ClassDialogue {
       JPanel actions = new JPanel();
       actions.setLayout(new GridLayout(1, 4));
       //TODO more list editing functions
-      //      JButton add = new JButton(JByteMod.res.getResource("add"));
-      //      add.addActionListener(a -> {
-      //        JOptionPane.showMessageDialog(null, "Currently not supported :/");
-      //        //        int c = lm.getRowCount();
-      //        //        lm.addRow(new Object[] { c, list.getClass().getSimpleName(),  });
-      //        //        jtable.setRowSelectionInterval(c, c);
-      //      });
-      //      actions.add(add);
-      //      JButton addNull = new JButton("Add null");
-      //      addNull.addActionListener(a -> {
-      //        JOptionPane.showMessageDialog(null, "Currently not supported :/");
-      //        //        int c = lm.getRowCount();
-      //        //        lm.addRow(new Object[] { c, list.getClass().getSimpleName(),  });
-      //        //        jtable.setRowSelectionInterval(c, c);
-      //      });
-      //      actions.add(addNull);
+      JButton add = new JButton(JByteMod.res.getResource("add"));
+      add.addActionListener(a -> {
+        try {
+          int row = jtable.getSelectedRow();
+          Object o = type.getConstructor().newInstance();
+          Object edit = extraEditWindow(o, -1, jtable);
+          if (edit != null) {
+            if (row != -1) {
+              lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
+              recalcIndex();
+            } else {
+              lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
+            }
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "Node not supported");
+        }
+      });
+      if (!type.getName().equals(Object.class.getName())) {
+        actions.add(add);
+      }
       JButton remove = new JButton(JByteMod.res.getResource("remove"));
       remove.addActionListener(a -> {
         int[] selectedRows = jtable.getSelectedRows();
@@ -458,6 +486,13 @@ public class ClassDialogue {
       return mainPanel;
     }
 
+    public void recalcIndex() {
+      DefaultTableModel lm = (DefaultTableModel) jtable.getModel();
+      for (int i = 0; i < lm.getRowCount(); i++) {
+        lm.setValueAt(i, i, 0);
+      }
+    }
+
     @SuppressWarnings("unchecked")
     public boolean open() {
       JPanel panel = initializePanel();
@@ -467,7 +502,11 @@ public class ClassDialogue {
         for (int row = 0; row < table.getRowCount(); row++) {
           int i = (int) table.getValueAt(row, 0);
           Object o = table.getValueAt(row, 2);
-          list.set(i, o);
+          if (i >= list.size()) {
+            list.add(o);
+          } else {
+            list.set(i, o);
+          }
         }
         return true;
       }
@@ -478,16 +517,14 @@ public class ClassDialogue {
       return list;
     }
 
-    public void extraEditWindow(Object o, int row, JTable jtable) {
+    public Object extraEditWindow(Object o, int row, JTable jtable) {
       JPanel mainPanel = new JPanel();
       JPanel leftText = new JPanel();
       JPanel rightInput = new JPanel();
 
-      int size = list.size();
-
       mainPanel.setLayout(new BorderLayout(15, 15));
-      leftText.setLayout(new GridLayout(size, 1));
-      rightInput.setLayout(new GridLayout(size, 1));
+      leftText.setLayout(new GridLayout(1, 1));
+      rightInput.setLayout(new GridLayout(1, 1));
       if (isModifiedSpecial(o.getClass().getName(), o.getClass())) {
         rightInput.add(wrap(o, getModifiedSpecial(o, o.getClass().getName(), o.getClass())));
       } else if (hasNoChilds(o.getClass())) {
@@ -527,44 +564,14 @@ public class ClassDialogue {
         if (newObject == null) {
           newObject = o;
         }
-        DefaultTableModel lm = (DefaultTableModel) jtable.getModel();
-        lm.insertRow(row, new Object[] { row, newObject.getClass().getSimpleName(), newObject });
-        lm.removeRow(row);
+        if (row != -1) {
+          DefaultTableModel lm = (DefaultTableModel) jtable.getModel();
+          lm.insertRow(row, new Object[] { row, newObject.getClass().getSimpleName(), newObject });
+          lm.removeRow(row + 1);
+        }
+        return newObject;
       }
-    }
-  }
-
-  class ValueRenderer implements TableCellRenderer {
-
-    private Component component;
-
-    public ValueRenderer(Component c) {
-      this.component = c;
-    }
-
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      component.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-      return component;
-    }
-  }
-
-  class TableEditor extends AbstractCellEditor implements TableCellEditor {
-    private Object o;
-    private Component c;
-
-    public TableEditor(Component c) {
-      this.c = c;
-    }
-
-    @Override
-    public Object getCellEditorValue() {
-      return o;
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-      o = value;
-      return c;
+      return null;
     }
   }
 
@@ -603,7 +610,6 @@ public class ClassDialogue {
       }
 
     }
-
   }
 
 }
