@@ -40,7 +40,6 @@ import org.objectweb.asm.tree.VarInsnNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
 import me.grax.jbytemod.utils.InstrUtils;
-import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.lpk.util.OpUtils;
 

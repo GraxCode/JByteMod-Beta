@@ -1,13 +1,8 @@
 package me.grax.jbytemod.logging;
 
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 

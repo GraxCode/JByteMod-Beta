@@ -19,12 +19,10 @@ public class SaveTask extends SwingWorker<Void, Integer> {
 
   private File output;
   private PageEndPanel jpb;
-  private JByteMod jbm;
   private JarArchive file;
 
   public SaveTask(JByteMod jbm, File output, JarArchive file) {
     this.output = output;
-    this.jbm = jbm;
     this.file = file;
     this.jpb = jbm.getPP();
   }

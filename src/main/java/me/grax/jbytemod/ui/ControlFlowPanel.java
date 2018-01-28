@@ -48,6 +48,7 @@ public class ControlFlowPanel extends JPanel {
     graph.setHtmlLabels(true);
     setStyles();
     graphComponent = new mxGraphComponent(graph);
+    graphComponent.getViewport().setBackground(Color.WHITE);
     graphComponent.setEnabled(false);
     graphComponent.setBorder(new EmptyBorder(0, 0, 0, 0));
     this.add(graphComponent, BorderLayout.CENTER);

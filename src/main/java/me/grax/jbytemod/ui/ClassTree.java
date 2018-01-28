@@ -73,7 +73,7 @@ public class ClassTree extends JTree implements IDropUser {
     this.setTransferHandler(new JarDropHandler(this, 0));
   }
 
-  private ArrayList<Object> expandedNodes = new ArrayList<>();
+  private static ArrayList<Object> expandedNodes = new ArrayList<>();
 
   public void refreshTree(JarArchive jar) {
     DefaultTreeModel tm = this.model;
@@ -289,7 +289,7 @@ public class ClassTree extends JTree implements IDropUser {
   public void changedChilds(TreeNode node) {
     model.nodeChanged(node);
     if (node.getChildCount() >= 0) {
-      for (Enumeration e = node.children(); e.hasMoreElements();) {
+      for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
         TreeNode n = (TreeNode) e.nextElement();
         changedChilds(n);
       }

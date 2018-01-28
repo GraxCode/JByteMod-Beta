@@ -1,7 +1,5 @@
 package me.grax.jbytemod.utils;
 
-import java.util.HashMap;
-
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;

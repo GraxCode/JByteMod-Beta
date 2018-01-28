@@ -36,7 +36,6 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JSearch;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
 import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.list.FieldEntry;
 import me.grax.jbytemod.utils.list.InstrEntry;
@@ -126,10 +125,7 @@ public class MyCodeList extends JList<InstrEntry> {
       public void actionPerformed(ActionEvent e) {
         try {
           FieldNode fn = new FieldNode(1, "", "", "", null);
-          if (EditDialogueSpecial.createInsertDialogue(null, fn)) {
-            if (fn.signature.isEmpty()) {
-              fn.signature = null;
-            }
+          if (new InsnEditDialogue(null, fn).open()) {
             cn.fields.add(fn);
           }
         } catch (Exception e1) {
@@ -291,11 +287,9 @@ public class MyCodeList extends JList<InstrEntry> {
         public void actionPerformed(ActionEvent e) {
           try {
             FieldNode fn = new FieldNode(1, "", "", "", null);
-            EditDialogueSpecial.createInsertDialogue(null, fn);
-            if (fn.signature.isEmpty()) {
-              fn.signature = null;
+            if (new InsnEditDialogue(null, fn).open()) {
+              currentClass.fields.add(fn);
             }
-            currentClass.fields.add(fn);
           } catch (Exception e1) {
             new ErrorDisplay(e1);
           }

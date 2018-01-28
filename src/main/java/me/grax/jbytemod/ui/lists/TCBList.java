@@ -18,7 +18,6 @@ import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.dialogue.EditDialogueSpecial;
 import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.list.TCBEntry;
 

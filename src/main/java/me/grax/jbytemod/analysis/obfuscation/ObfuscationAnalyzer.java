@@ -1,6 +1,7 @@
 package me.grax.jbytemod.analysis.obfuscation;
 
 import java.nio.charset.Charset;
+
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,14 +16,14 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
-import com.strobel.decompiler.ast.TryCatchBlock;
-
 import me.grax.jbytemod.analysis.obfuscation.enums.MethodObfType;
 import me.grax.jbytemod.analysis.obfuscation.enums.NameObfType;
 import me.grax.jbytemod.analysis.obfuscation.result.MethodResult;
 import me.grax.jbytemod.analysis.obfuscation.result.NamesResult;
 import me.lpk.util.OpUtils;
 
+
+@SuppressWarnings("unused")
 public class ObfuscationAnalyzer implements Opcodes {
   private Map<String, ClassNode> classes;
 

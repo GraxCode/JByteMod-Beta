@@ -54,10 +54,13 @@ public class JByteMod extends JFrame {
   public static final Logging LOGGER = new Logging();
   public static final LanguageRes res = new LanguageRes();
   public static final Options ops = new Options();
+  
   private static boolean lafInit;
   
+  private static JarArchive file;
+  public static HashMap<ClassNode, MethodNode> lastSelectedTreeEntries = new LinkedHashMap<>();
+  
   private JPanel contentPane;
-  private JarArchive file;
   private ClassTree jarTree;
   private MyCodeList clist;
   private PageEndPanel pp;
@@ -122,7 +125,7 @@ public class JByteMod extends JFrame {
       border = new Color(146, 151, 161);
     }
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.5.2");
+    this.setTitle("JByteMod 1.5.3");
     this.setJMenuBar(myMenuBar = new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
@@ -145,6 +148,9 @@ public class JByteMod extends JFrame {
     border.add(b2);
     contentPane.add(border, BorderLayout.CENTER);
     contentPane.add(pp = new PageEndPanel(), BorderLayout.PAGE_END);
+    if(file != null) {
+      this.refreshTree();
+    }
   }
 
   public void changeUI(String clazz) {
@@ -177,13 +183,13 @@ public class JByteMod extends JFrame {
     String ap = input.getAbsolutePath();
     if (ap.endsWith(".jar")) {
       try {
-        this.file = new JarArchive(this, input);
+        file = new JarArchive(this, input);
       } catch (Throwable e) {
         new ErrorDisplay(e);
       }
     } else if (ap.endsWith(".class")) {
       try {
-        this.file = new JarArchive(ASMUtils.getNode(Files.readAllBytes(input.toPath())));
+        file = new JarArchive(ASMUtils.getNode(Files.readAllBytes(input.toPath())));
         this.refreshTree();
       } catch (Throwable e) {
         new ErrorDisplay(e);
@@ -209,8 +215,6 @@ public class JByteMod extends JFrame {
     }
   }
 
-  public HashMap<ClassNode, MethodNode> lastSelectedEntries = new LinkedHashMap<>();
-
   public void selectMethod(ClassNode cn, MethodNode mn) {
     OpUtils.clearLabelCache();
     this.currentNode = cn;
@@ -224,9 +228,9 @@ public class JByteMod extends JFrame {
     cfp.setNode(mn);
     dp.setText("");
     tabbedPane.selectMethod(cn, mn);
-    lastSelectedEntries.put(cn, mn);
-    if (lastSelectedEntries.size() > 5) {
-      lastSelectedEntries.remove(lastSelectedEntries.keySet().iterator().next());
+    lastSelectedTreeEntries.put(cn, mn);
+    if (lastSelectedTreeEntries.size() > 5) {
+      lastSelectedTreeEntries.remove(lastSelectedTreeEntries.keySet().iterator().next());
     }
   }
 
@@ -235,9 +239,9 @@ public class JByteMod extends JFrame {
     sp.selectClass(cn);
     clist.loadFields(cn);
     tabbedPane.selectClass(cn);
-    lastSelectedEntries.put(cn, null);
-    if (lastSelectedEntries.size() > 5) {
-      lastSelectedEntries.remove(lastSelectedEntries.keySet().iterator().next());
+    lastSelectedTreeEntries.put(cn, null);
+    if (lastSelectedTreeEntries.size() > 5) {
+      lastSelectedTreeEntries.remove(lastSelectedTreeEntries.keySet().iterator().next());
     }
   }
 
@@ -245,7 +249,9 @@ public class JByteMod extends JFrame {
     //selection may take some time
     new Thread(() -> {
       DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
-      this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot());
+      if(this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot())) {
+        jarTree.repaint();
+      }
     }).start();
   }
 

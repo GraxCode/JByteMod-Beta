@@ -2,7 +2,6 @@ package me.grax.jbytemod.plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -17,12 +16,10 @@ public class PluginManager {
 
   private File pluginFolder = new File("plugins");
 
-  private JByteMod jbm;
 
   private final ArrayList<Plugin> plugins = new ArrayList<>();
 
   public PluginManager(JByteMod jbm) {
-    this.jbm = jbm;
     if (pluginFolder.exists() && pluginFolder.isDirectory()) {
       loadPlugins();
     } else {
