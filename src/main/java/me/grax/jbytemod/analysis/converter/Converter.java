@@ -23,7 +23,12 @@ public class Converter implements Opcodes {
     this.nodes = new ArrayList<>(Arrays.asList(mn.instructions.toArray()));
   }
 
-  public ArrayList<Block> convert() {
+  public Converter(AbstractInsnNode[] array) {
+    assert (array != null && array.length > 0);
+    this.nodes = new ArrayList<>(Arrays.asList(array));
+  }
+
+  public ArrayList<Block> convert(boolean simplify) {
     ArrayList<Block> blocks = new ArrayList<>();
     HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
     Block block = null;
@@ -123,6 +128,42 @@ public class Converter implements Opcodes {
         blockAtNext.getInput().add(b);
       }
     }
+    if (simplify) {
+      for (Block b : new ArrayList<>(blocks)) {
+        if (b.getInput().isEmpty()) {
+          simplifyBlock(new ArrayList<>(), blocks, b);
+        }
+      }
+
+    }
     return blocks;
+  }
+
+  private void simplifyBlock(ArrayList<Block> simplified, ArrayList<Block> blocks, Block b) {
+    if (simplified.contains(b)) {
+      return;
+    }
+    simplified.add(b);
+    while (true) {
+      if (b.getOutput().size() == 1) {
+        Block to = b.getOutput().get(0);
+        //also optimizes unnecessary gotos
+        if (to.getInput().size() == 1) {
+          assert (to.getInput().get(0) == b);
+          b.getNodes().addAll(to.getNodes());
+          b.setEndNode(to.getEndNode());
+          b.setOutput(to.getOutput());
+          blocks.remove(to);
+          continue;
+        }
+      }
+      break;
+    }
+    for (Block output : b.getOutput()) {
+      if (!blocks.contains(output)) {
+        System.out.println("failure");
+      }
+      simplifyBlock(simplified, blocks, output);
+    }
   }
 }

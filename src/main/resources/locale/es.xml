@@ -51,5 +51,6 @@
    <string name="hints">Consejos</string>
    <string name="select_tree">Select tree entry</string>
    <string name="use_weblaf">Usar WebLaF (Será necesario reiniciar)</string>
+   <!--<string name="simplify_graph">Simplify control flow graph</string>-->
 </resources>
 

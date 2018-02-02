@@ -18,6 +18,7 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
+import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
 import me.grax.jbytemod.analysis.converter.Converter;
 import me.grax.jbytemod.utils.ErrorDisplay;
@@ -87,7 +88,7 @@ public class ControlFlowPanel extends JPanel {
     }
     Converter c = new Converter(node);
     try {
-      cf.addAll(c.convert());
+      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean()));
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorDisplay(e);

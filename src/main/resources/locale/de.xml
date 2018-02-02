@@ -52,5 +52,6 @@
    <string name="hints">Hilfetext</string>
    <string name="select_tree">Tree-Element auswählen</string>
    <string name="use_weblaf">WebLaF benutzen (Neustart notwendig)</string>
+   <string name="simplify_graph">Control Flow Graph vereinfachen</string>
 </resources>
 
