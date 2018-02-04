@@ -12,6 +12,7 @@
    <string name="color_group">Farbe</string>
    <string name="editor_group">Editor</string>
    <string name="style_group">Style</string>
+   <string name="graph_group">Graph</string>
    <string name="big_jar_warn">Warnung: Dies könnte bei großen .jar Dateien etwas dauern!</string>
    <string name="big_string_warn">Warnung: Dies könnte bei kurzen Strings etwas dauern!</string>
    <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>
@@ -53,5 +54,6 @@
    <string name="select_tree">Tree-Element auswählen</string>
    <string name="use_weblaf">WebLaF benutzen (Neustart notwendig)</string>
    <string name="simplify_graph">Control Flow Graph vereinfachen</string>
+   <string name="remove_redundant">Überzählige Blöcke entfernen</string>
 </resources>
 

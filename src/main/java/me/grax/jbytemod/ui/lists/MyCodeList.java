@@ -92,6 +92,8 @@ public class MyCodeList extends JList<InstrEntry> {
             InstrEntry el = m.getElementAt(index);
             setToolTipText(el.getHint());
           }
+        } else {
+          setToolTipText(null);
         }
       }
     });

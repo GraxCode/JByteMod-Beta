@@ -88,7 +88,7 @@ public class ControlFlowPanel extends JPanel {
     }
     Converter c = new Converter(node);
     try {
-      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean()));
+      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean()));
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorDisplay(e);

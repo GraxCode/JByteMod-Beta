@@ -28,7 +28,7 @@ public class Converter implements Opcodes {
     this.nodes = new ArrayList<>(Arrays.asList(array));
   }
 
-  public ArrayList<Block> convert(boolean simplify) {
+  public ArrayList<Block> convert(boolean simplify, boolean removeRedundant) {
     ArrayList<Block> blocks = new ArrayList<>();
     HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
     Block block = null;
@@ -134,9 +134,47 @@ public class Converter implements Opcodes {
           simplifyBlock(new ArrayList<>(), blocks, b);
         }
       }
-
+    }
+    if (removeRedundant) {
+      for (Block b : new ArrayList<>(blocks)) {
+        if (b.getInput().isEmpty()) {
+          removeNonsense(new ArrayList<>(), blocks, b);
+        }
+      }
     }
     return blocks;
+  }
+
+  private void removeNonsense(ArrayList<Block> visited, ArrayList<Block> blocks, Block b) {
+    if (visited.contains(b)) {
+      return;
+    }
+    visited.add(b);
+    if (b.endsWithJump()) {
+      if (b.getInput().size() == 1 && b.getOutput().size() == 1) {
+        if (isJumpBlock(b)) {
+          Block input = b.getInput().get(0);
+          Block output = b.getOutput().get(0);
+          input.getOutput().remove(b);
+          input.getOutput().add(output);
+          output.getInput().remove(b);
+          output.getInput().add(input);
+        }
+      }
+    }
+    for (Block output : b.getOutput()) {
+      removeNonsense(visited, blocks, output);
+    }
+  }
+
+  private boolean isJumpBlock(Block b) {
+    for (AbstractInsnNode ain : b.getNodes()) {
+      int type = ain.getType();
+      if (type != AbstractInsnNode.LABEL && type != AbstractInsnNode.LINE && type != AbstractInsnNode.FRAME && type != AbstractInsnNode.JUMP_INSN) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private void simplifyBlock(ArrayList<Block> simplified, ArrayList<Block> blocks, Block b) {
@@ -160,9 +198,6 @@ public class Converter implements Opcodes {
       break;
     }
     for (Block output : b.getOutput()) {
-      if (!blocks.contains(output)) {
-        System.out.println("failure");
-      }
       simplifyBlock(simplified, blocks, output);
     }
   }

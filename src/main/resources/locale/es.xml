@@ -12,6 +12,7 @@
    <string name="color_group">Color</string>
    <string name="editor_group">Editor</string>
    <string name="style_group">Estilo</string>
+   <!--<string name="graph_group">Graph</string>-->
    <string name="big_jar_warn">Advertencia: ¡Esto puede tomar un tiempo en jars muy grandes!</string>
    <string name="big_string_warn">Advertencia: ¡Esto puede tomar un tiempo en strings cortos!</string>
    <string name="ref_warn">Advertencia: ¡Las referencias no serán actualizadas!</string>
@@ -52,5 +53,6 @@
    <string name="select_tree">Select tree entry</string>
    <string name="use_weblaf">Usar WebLaF (Será necesario reiniciar)</string>
    <!--<string name="simplify_graph">Simplify control flow graph</string>-->
+   <!--<string name="remove_redundant">Remove redundant blocks</string>-->
 </resources>
 
