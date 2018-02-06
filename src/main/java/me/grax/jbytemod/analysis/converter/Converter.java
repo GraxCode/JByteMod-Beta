@@ -162,7 +162,7 @@ public class Converter implements Opcodes {
         }
       }
     }
-    for (Block output : b.getOutput()) {
+    for (Block output : new ArrayList<>(b.getOutput())) {
       removeNonsense(visited, blocks, output);
     }
   }
