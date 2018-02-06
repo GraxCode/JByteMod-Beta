@@ -54,5 +54,6 @@
    <string name="use_weblaf">Usar WebLaF (Será necesario reiniciar)</string>
    <!--<string name="simplify_graph">Simplify control flow graph</string>-->
    <!--<string name="remove_redundant">Remove redundant blocks</string>-->
+   <!-- <string name="select_code_tab">Select code tab</string> -->
 </resources>
 

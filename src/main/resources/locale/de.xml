@@ -55,5 +55,6 @@
    <string name="use_weblaf">WebLaF benutzen (Neustart notwendig)</string>
    <string name="simplify_graph">Control Flow Graph vereinfachen</string>
    <string name="remove_redundant">Überzählige Blöcke entfernen</string>
+   <string name="select_code_tab">Reiter "Code" automatisch auswählen</string>
 </resources>
 

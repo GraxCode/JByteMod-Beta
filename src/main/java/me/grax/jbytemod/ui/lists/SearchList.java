@@ -7,8 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.DefaultListModel;
@@ -16,18 +14,14 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.utils.list.SearchEntry;
+import me.grax.jbytemod.utils.task.search.LdcTask;
+import me.grax.jbytemod.utils.task.search.ReferenceTask;
 
 public class SearchList extends JList<SearchEntry> {
 
@@ -74,173 +68,14 @@ public class SearchList extends JList<SearchEntry> {
   }
 
   public void searchForConstant(String ldc, boolean exact, boolean cs, boolean regex) {
-    new TaskLDCSearch(jbm, ldc, exact, cs, regex).execute();
+    new LdcTask(this, jbm, ldc, exact, cs, regex).execute();
   }
 
   public void searchForPatternRegex(Pattern p) {
-    new TaskLDCSearch(jbm, p).execute();
-    ;
-  }
-
-  class TaskLDCSearch extends SwingWorker<Void, Integer> {
-
-    private PageEndPanel jpb;
-    private JByteMod jbm;
-    private String ldc;
-    private boolean exact;
-    private boolean caseSens;
-    private Pattern pattern;
-
-    public TaskLDCSearch(JByteMod jbm, String ldc, boolean exact, boolean caseSens, boolean regex) {
-      this.jbm = jbm;
-      this.jpb = jbm.getPP();
-      this.exact = exact;
-      this.caseSens = caseSens;
-      if (regex) {
-        this.pattern = Pattern.compile(ldc);
-      }
-
-      if (!caseSens) {
-        this.ldc = ldc.toLowerCase();
-      } else {
-        this.ldc = ldc;
-      }
-    }
-
-    public TaskLDCSearch(JByteMod jbm, Pattern p) {
-      this.jbm = jbm;
-      this.jpb = jbm.getPP();
-      this.pattern = p;
-    }
-
-    @Override
-    protected Void doInBackground() throws Exception {
-      DefaultListModel<SearchEntry> model = new DefaultListModel<>();
-      Collection<ClassNode> values = jbm.getFile().getClasses().values();
-      double size = values.size();
-      double i = 0;
-      boolean exact = this.exact;
-      boolean regex = this.pattern != null;
-      for (ClassNode cn : values) {
-        for (MethodNode mn : cn.methods) {
-          for (AbstractInsnNode ain : mn.instructions) {
-            if (ain.getType() == AbstractInsnNode.LDC_INSN) {
-              LdcInsnNode lin = (LdcInsnNode) ain;
-              String cst = lin.cst.toString();
-              if (!caseSens) {
-                cst = cst.toLowerCase();
-              }
-              if (regex ? pattern.matcher(cst).matches() : (exact ? cst.equals(ldc) : cst.contains(ldc))) {
-                model.addElement(new SearchEntry(cn, mn, lin.cst.toString()));
-              }
-            }
-          }
-        }
-        publish(Math.min((int) (i++ / size * 100d) + 1, 100));
-      }
-      SearchList.this.setModel(model);
-      return null;
-    }
-
-    @Override
-    protected void process(List<Integer> chunks) {
-      int i = chunks.get(chunks.size() - 1);
-      jpb.setValue(i);
-      super.process(chunks);
-    }
-
-    @Override
-    protected void done() {
-      JByteMod.LOGGER.log("Search finished!");
-    }
+    new LdcTask(this, jbm, p).execute();
   }
 
   public void searchForFMInsn(String owner, String name, String desc, boolean exact, boolean field) {
-    new TaskFMSearch(jbm, owner, name, desc, exact, field).execute();
-
-  }
-
-  class TaskFMSearch extends SwingWorker<Void, Integer> {
-
-    private PageEndPanel jpb;
-    private JByteMod jbm;
-    private boolean exact;
-    private String owner;
-    private String name;
-    private String desc;
-    private boolean field;
-
-    public TaskFMSearch(JByteMod jbm, String owner, String name, String desc, boolean exact, boolean field) {
-      this.jbm = jbm;
-      this.jpb = jbm.getPP();
-      this.exact = exact;
-      this.owner = owner;
-      this.name = name;
-      this.desc = desc;
-      this.field = field;
-    }
-
-    @Override
-    protected Void doInBackground() throws Exception {
-      DefaultListModel<SearchEntry> model = new DefaultListModel<SearchEntry>() {
-        @Override
-        protected void fireIntervalAdded(Object source, int index0, int index1) {
-        }
-      };
-      Collection<ClassNode> values = jbm.getFile().getClasses().values();
-      double size = values.size();
-      double i = 0;
-      boolean exact = this.exact;
-      for (ClassNode cn : values) {
-        for (MethodNode mn : cn.methods) {
-          for (AbstractInsnNode ain : mn.instructions) {
-            if (field) {
-              if (ain.getType() == AbstractInsnNode.FIELD_INSN) {
-                FieldInsnNode fin = (FieldInsnNode) ain;
-                if (exact) {
-                  if (fin.owner.equals(owner) && fin.name.equals(name) && fin.desc.equals(desc)) {
-                    model.addElement(new SearchEntry(cn, mn, fin));
-                  }
-                } else {
-                  if (fin.owner.contains(owner) && fin.name.contains(name) && fin.desc.contains(desc)) {
-                    model.addElement(new SearchEntry(cn, mn, fin));
-                  }
-                }
-              }
-            } else {
-              if (ain.getType() == AbstractInsnNode.METHOD_INSN) {
-                MethodInsnNode min = (MethodInsnNode) ain;
-                if (exact) {
-                  if (min.owner.equals(owner) && min.name.equals(name) && min.desc.equals(desc)) {
-                    model.addElement(new SearchEntry(cn, mn, min));
-                  }
-                } else {
-                  if (min.owner.contains(owner) && min.name.contains(name) && min.desc.contains(desc)) {
-                    model.addElement(new SearchEntry(cn, mn, min));
-                  }
-                }
-              }
-            }
-          }
-        }
-        publish(Math.min((int) (i++ / size * 100d) + 1, 100));
-      }
-      SearchList.this.setModel(model);
-      publish(100);
-      return null;
-    }
-
-    @Override
-    protected void process(List<Integer> chunks) {
-      int i = chunks.get(chunks.size() - 1);
-      jpb.setValue(i);
-      super.process(chunks);
-    }
-
-    @Override
-    protected void done() {
-      jpb.setValue(100);
-      JByteMod.LOGGER.log("Search finished!");
-    }
+    new ReferenceTask(this, jbm, owner, name, desc, exact, field).execute();
   }
 }

@@ -19,8 +19,8 @@ public class Options {
 
   public List<Option> bools = new ArrayList<>();
   public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
-      new Option("compute_maxs", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
-      new Option("simplify_graph", false, Type.BOOLEAN, "graph_group"), new Option("remove_redundant", false, Type.BOOLEAN, "graph_group"),
+      new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
+      new Option("simplify_graph", true, Type.BOOLEAN, "graph_group"), new Option("remove_redundant", false, Type.BOOLEAN, "graph_group"),
       new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"),
       new Option("use_weblaf", true, Type.BOOLEAN, "style_group"));
 
@@ -41,15 +41,15 @@ public class Options {
           Option o1 = bools.get(i);
           Option o2 = defaults.get(i);
           if (o1 == null || o2 == null || !o1.getName().equals(o2.getName())) {
-            JOptionPane.showMessageDialog(null, "Corrupt option file, rewriting (#" + i + ")");
-            this.initWithDefaults();
+            JByteMod.LOGGER.warn("Option file not matching defaults, maybe from old version?");
+            this.initWithDefaults(true);
             this.save();
             return;
           }
         }
         if (bools.isEmpty()) {
           JByteMod.LOGGER.warn("Couldn't read file, probably empty");
-          this.initWithDefaults();
+          this.initWithDefaults(false);
           this.save();
         }
       } catch (IOException e) {
@@ -57,14 +57,34 @@ public class Options {
       }
     } else {
       JByteMod.LOGGER.warn("Property File does not exist, creating...");
-      this.initWithDefaults();
+      this.initWithDefaults(false);
       this.save();
     }
   }
 
-  private void initWithDefaults() {
-    bools = new ArrayList<>();
-    bools.addAll(defaults);
+  private void initWithDefaults(boolean keepExisting) {
+    if (keepExisting) {
+      for (Option o : defaults) {
+        if (find(o.getName()) == null) {
+          bools.add(o);
+        }
+      }
+      for (Option o : new ArrayList<>(bools)) {
+        boolean contains = false;
+        for (Option def : defaults) {
+          if (def.getName().equalsIgnoreCase(o.getName())) {
+            contains = true;
+            break;
+          }
+        }
+        if(!contains) {
+          bools.remove(o);
+        }
+      }
+    } else {
+      bools = new ArrayList<>();
+      bools.addAll(defaults);
+    }
   }
 
   public void save() {
@@ -82,20 +102,27 @@ public class Options {
   }
 
   public Option get(String name) {
-    for (Option o : bools) {
-      if (o.getName().equalsIgnoreCase(name)) {
-        return o;
-      }
+    Option op = find(name);
+    if(op != null) {
+      return op;
     }
     JOptionPane.showMessageDialog(null, "Missing option: " + name + "\nRewriting your config file!");
-    this.initWithDefaults();
+    this.initWithDefaults(false);
     this.save();
-    for (Option o : bools) {
-      if (o.getName().equalsIgnoreCase(name)) {
-        return o;
-      }
+    op = find(name);
+    if(op != null) {
+      return op;
     }
     throw new RuntimeException("Option not found: " + name);
   }
 
+  private Option find(String name) {
+    for (Option o : bools) {
+      if (o.getName().equalsIgnoreCase(name)) {
+        return o;
+      }
+    }
+    return null;
+  }
+  
 }

@@ -54,12 +54,12 @@ public class JByteMod extends JFrame {
   public static final Logging LOGGER = new Logging();
   public static final LanguageRes res = new LanguageRes();
   public static final Options ops = new Options();
-  
+
   private static boolean lafInit;
-  
+
   private static JarArchive file;
   public static HashMap<ClassNode, MethodNode> lastSelectedTreeEntries = new LinkedHashMap<>();
-  
+
   private JPanel contentPane;
   private ClassTree jarTree;
   private MyCodeList clist;
@@ -85,7 +85,6 @@ public class JByteMod extends JFrame {
    */
   public static void main(String[] args) {
     EventQueue.invokeLater(new Runnable() {
-
 
       public void run() {
         try {
@@ -148,7 +147,7 @@ public class JByteMod extends JFrame {
     border.add(b2);
     contentPane.add(border, BorderLayout.CENTER);
     contentPane.add(pp = new PageEndPanel(), BorderLayout.PAGE_END);
-    if(file != null) {
+    if (file != null) {
       this.refreshTree();
     }
   }
@@ -216,6 +215,9 @@ public class JByteMod extends JFrame {
   }
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
+    if (ops.get("select_code_tab").getBoolean()) {
+      tabbedPane.setSelectedIndex(0);
+    }
     OpUtils.clearLabelCache();
     this.currentNode = cn;
     this.currentMethod = mn;
@@ -235,6 +237,9 @@ public class JByteMod extends JFrame {
   }
 
   public void selectClass(ClassNode cn) {
+    if (ops.get("select_code_tab").getBoolean()) {
+      tabbedPane.setSelectedIndex(0);
+    }
     this.currentNode = cn;
     sp.selectClass(cn);
     clist.loadFields(cn);
@@ -249,7 +254,7 @@ public class JByteMod extends JFrame {
     //selection may take some time
     new Thread(() -> {
       DefaultTreeModel tm = (DefaultTreeModel) jarTree.getModel();
-      if(this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot())) {
+      if (this.selectEntry(mn, tm, (SortedTreeNode) tm.getRoot())) {
         jarTree.repaint();
       }
     }).start();
