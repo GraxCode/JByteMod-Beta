@@ -7,6 +7,7 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
 
 import me.grax.jbytemod.utils.list.InstrEntry;
+import me.grax.jbytemod.utils.list.LazyListModel;
 
 public class AdressList extends JList<String> {
   private MyCodeList cl;
@@ -26,8 +27,8 @@ public class AdressList extends JList<String> {
   }
 
   public void updateAdr() {
-    DefaultListModel<String> lm = new DefaultListModel<String>();
-    DefaultListModel<InstrEntry> clm = (DefaultListModel<InstrEntry>) cl.getModel();
+    LazyListModel<String> lm = new LazyListModel<String>();
+    LazyListModel<InstrEntry> clm = (LazyListModel<InstrEntry>) cl.getModel();
     if (clm.getSize() > 9999) {
       throw new RuntimeException("code too big");
     }

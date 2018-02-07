@@ -15,6 +15,8 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.ui.lists.SearchList;
+import me.grax.jbytemod.utils.TextUtils;
+import me.grax.jbytemod.utils.list.LazyListModel;
 import me.grax.jbytemod.utils.list.SearchEntry;
 
 public class LdcTask extends SwingWorker<Void, Integer> {
@@ -53,7 +55,7 @@ public class LdcTask extends SwingWorker<Void, Integer> {
 
   @Override
   protected Void doInBackground() throws Exception {
-    DefaultListModel<SearchEntry> model = new DefaultListModel<>();
+    LazyListModel<SearchEntry> model = new LazyListModel<>();
     Collection<ClassNode> values = jbm.getFile().getClasses().values();
     double size = values.size();
     double i = 0;
@@ -69,7 +71,7 @@ public class LdcTask extends SwingWorker<Void, Integer> {
               cst = cst.toLowerCase();
             }
             if (regex ? pattern.matcher(cst).matches() : (exact ? cst.equals(ldc) : cst.contains(ldc))) {
-              model.addElement(new SearchEntry(cn, mn, lin.cst.toString()));
+              model.addElement(new SearchEntry(cn, mn, TextUtils.escape(TextUtils.max(lin.cst.toString(), 100))));
             }
           }
         }

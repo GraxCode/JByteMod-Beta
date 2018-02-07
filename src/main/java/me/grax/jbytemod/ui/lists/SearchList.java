@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -19,6 +18,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.utils.list.LazyListModel;
 import me.grax.jbytemod.utils.list.SearchEntry;
 import me.grax.jbytemod.utils.task.search.LdcTask;
 import me.grax.jbytemod.utils.task.search.ReferenceTask;
@@ -28,7 +28,7 @@ public class SearchList extends JList<SearchEntry> {
   private JByteMod jbm;
 
   public SearchList(JByteMod jbm) {
-    super(new DefaultListModel<SearchEntry>());
+    super(new LazyListModel<SearchEntry>());
     this.jbm = jbm;
     this.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
     this.addMouseListener(new MouseAdapter() {
@@ -65,6 +65,7 @@ public class SearchList extends JList<SearchEntry> {
         }
       }
     });
+    this.setPrototypeCellValue(new SearchEntry());
   }
 
   public void searchForConstant(String ldc, boolean exact, boolean cs, boolean regex) {

@@ -15,6 +15,7 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.ui.lists.SearchList;
+import me.grax.jbytemod.utils.list.LazyListModel;
 import me.grax.jbytemod.utils.list.SearchEntry;
 
 public class ReferenceTask extends SwingWorker<Void, Integer> {
@@ -41,11 +42,7 @@ public class ReferenceTask extends SwingWorker<Void, Integer> {
 
   @Override
   protected Void doInBackground() throws Exception {
-    DefaultListModel<SearchEntry> model = new DefaultListModel<SearchEntry>() {
-      @Override
-      protected void fireIntervalAdded(Object source, int index0, int index1) {
-      }
-    };
+    LazyListModel<SearchEntry> model = new LazyListModel<SearchEntry>();
     Collection<ClassNode> values = jbm.getFile().getClasses().values();
     double size = values.size();
     double i = 0;

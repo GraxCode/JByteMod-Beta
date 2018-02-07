@@ -25,7 +25,7 @@ public class JAboutFrame extends JDialog {
     cp.setLayout(new BorderLayout());
     cp.setBorder(new EmptyBorder(10, 10, 10, 10));
     setResizable(false);
-    JButton close = new JButton("Close");
+    JButton close = new JButton(JByteMod.res.getResource("close"));
     close.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

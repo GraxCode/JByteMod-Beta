@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-   <string name="exit_warn">Willst du JByteMod wirklich schließen? Alle Änderungen werden nicht gespeichert.</string>
-   <string name="is_sure">Bist du dir sicher?</string>
+   <string name="exit_warn">Wollen Sie JByteMod wirklich schließen? Alle Änderungen werden nicht gespeichert.</string>
+   <string name="is_sure">Sind sie sich sicher?</string>
    <string name="jar_warn">Andere Dateien als .jar werden noch nicht unterstützt, bitte wählen Sie ein Java-Archiv.</string>
    <string name="about">Über</string>
    <string name="sort_methods">Methoden sortieren</string>
@@ -56,5 +56,22 @@
    <string name="simplify_graph">Control Flow Graph vereinfachen</string>
    <string name="remove_redundant">Überzählige Blöcke entfernen</string>
    <string name="select_code_tab">Reiter "Code" automatisch auswählen</string>
+   <string name="tools">Tools</string>
+   <string name="clear">Leeren</string>
+   <string name="confirm">Bestätigen</string>
+   <string name="confirm_clear">Wollen Sie die Method wirklich leeren?</string>
+   <string name="confirm_lines">Wollen Sie wirklich alle LineNumberNodes entfernen?</string>
+   <string name="confirm_dead_code">Wollen Sie wirklich unbenutzen Code entfernen?</string>
+   <string name="remove_lines">Liniennummern entfernen</string>
+   <string name="remove_dead_code">Unerreichbaren code entfernen</string>
+   <string name="add_method">MethodNode hinzufügen</string>
+   <string name="generate_frames">Frames generieren</string>
+   <string name="reload">Aktualisieren</string>
+   <string name="close">Schließen</string>
+   <string name="whole_word">Ganzes Wort</string>
+   <string name="find_next">Suchen</string>
+   <string name="file">Datei</string>
+   <string name="java_archive">Java Archiv</string>
+   <string name="load_rt">rt.jar ist noch nicht geladen, wollen Sie das jetzt tun?</string>
 </resources>
 

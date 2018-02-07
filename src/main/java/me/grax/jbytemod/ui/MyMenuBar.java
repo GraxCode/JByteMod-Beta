@@ -52,7 +52,7 @@ public class MyMenuBar extends JMenuBar {
   }
 
   private void initFileMenu() {
-    JMenu file = new JMenu("File");
+    JMenu file = new JMenu(JByteMod.res.getResource("file"));
     JMenuItem save = new JMenuItem(JByteMod.res.getResource("save"));
     JMenuItem saveas = new JMenuItem(JByteMod.res.getResource("save_as"));
     JMenuItem load = new JMenuItem(JByteMod.res.getResource("load"));

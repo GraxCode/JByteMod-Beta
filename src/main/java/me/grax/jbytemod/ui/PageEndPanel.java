@@ -2,6 +2,8 @@ package me.grax.jbytemod.ui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +17,7 @@ public class PageEndPanel extends JPanel {
   private JProgressBar pb;
   private JLabel percent;
   private JLabel label;
+  private static final String copyright = "\u00A9 GraxCode 2016 - 2018";
 
   public PageEndPanel() {
     this.pb = new JProgressBar() {
@@ -29,14 +32,13 @@ public class PageEndPanel extends JPanel {
         }
       }
     };
-
     this.setLayout(new GridLayout(1, 4));
     this.setBorder(new EmptyBorder(3, 0, 0, 0));
     this.add(pb);
     this.add(percent = new JLabel());
     percent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
     this.add(new JPanel());
-    label = new JLabel("\u00A9 GraxCode 2016 - 2018");
+    label = new JLabel(copyright);
     label.setHorizontalAlignment(SwingConstants.RIGHT);
     label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
     this.add(label);
@@ -49,5 +51,13 @@ public class PageEndPanel extends JPanel {
         pb.repaint();
       }
     });
+  }
+  
+  public void setTip(String s) {
+    if(s != null) {
+      label.setText(s);
+    } else {
+      label.setText(copyright);
+    }
   }
 }

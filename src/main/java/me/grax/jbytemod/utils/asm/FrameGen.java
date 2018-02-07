@@ -19,8 +19,7 @@ public class FrameGen extends Thread {
 
   public static void regenerateFrames(JByteMod jbm, ClassNode cn) {
     if (libraries == null && JByteMod.ops.get("use_rt").getBoolean()) {
-      if (JOptionPane.showConfirmDialog(null,
-          "It seems like rt.jar hasn't been loaded, would you like to load it now? (This could take some time)") == JOptionPane.OK_OPTION) {
+      if (JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("load_rt")) == JOptionPane.OK_OPTION) {
         try {
           libraries = JarUtils.loadRT();
         } catch (IOException e) {

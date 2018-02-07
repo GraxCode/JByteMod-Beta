@@ -52,7 +52,7 @@ public class DecompilerTab extends JPanel {
       }
     });
     rs.add(decompilerCombo);
-    JButton reload = new JButton("Reload");
+    JButton reload = new JButton(JByteMod.res.getResource("reload"));
     reload.addActionListener(new ActionListener() {
 
       @Override

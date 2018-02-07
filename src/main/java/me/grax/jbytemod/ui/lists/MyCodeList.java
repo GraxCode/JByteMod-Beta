@@ -14,7 +14,6 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
-import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -39,6 +38,8 @@ import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.list.FieldEntry;
 import me.grax.jbytemod.utils.list.InstrEntry;
+import me.grax.jbytemod.utils.list.LazyListModel;
+import me.grax.jbytemod.utils.list.PrototypeEntry;
 import me.lpk.util.OpUtils;
 
 public class MyCodeList extends JList<InstrEntry> {
@@ -48,7 +49,7 @@ public class MyCodeList extends JList<InstrEntry> {
   private ClassNode currentClass;
 
   public MyCodeList(JByteMod jam, JLabel editor) {
-    super(new DefaultListModel<InstrEntry>());
+    super(new LazyListModel<InstrEntry>());
     this.editor = editor;
     this.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 13));
     this.addMouseListener(new MouseAdapter() {
@@ -97,6 +98,7 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       }
     });
+    this.setPrototypeCellValue(new PrototypeEntry());
   }
 
   protected void rightClickField(JByteMod jbm, FieldEntry fle) {
@@ -322,7 +324,7 @@ public class MyCodeList extends JList<InstrEntry> {
   public boolean loadInstructions(MethodNode m) {
     this.currentMethod = m;
     this.currentClass = null;
-    DefaultListModel<InstrEntry> lm = new DefaultListModel<InstrEntry>();
+    LazyListModel<InstrEntry> lm = new LazyListModel<InstrEntry>();
     editor.setText(m.name + m.desc);
     ArrayList<InstrEntry> entries = new ArrayList<>();
     for (AbstractInsnNode i : m.instructions) {
@@ -345,7 +347,7 @@ public class MyCodeList extends JList<InstrEntry> {
   public boolean loadFields(ClassNode cn) {
     this.currentClass = cn;
     this.currentMethod = null;
-    DefaultListModel<InstrEntry> lm = new DefaultListModel<InstrEntry>();
+    LazyListModel<InstrEntry> lm = new LazyListModel<InstrEntry>();
     editor.setText(cn.name + " Fields");
     ArrayList<InstrEntry> entries = new ArrayList<>();
     for (FieldNode fn : cn.fields) {

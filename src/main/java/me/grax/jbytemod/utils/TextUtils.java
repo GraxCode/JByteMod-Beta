@@ -29,4 +29,11 @@ public class TextUtils {
   public static String toItalics(String str) {
     return addTag(str, "i");
   }
+
+  public static String max(String string, int i) {
+    if (string.length() > i) {
+      return string.substring(0, i) + "...";
+    }
+    return string;
+  }
 }

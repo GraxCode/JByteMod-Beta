@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.utils.list.InstrEntry;
 
@@ -45,14 +46,14 @@ public class JSearch extends JDialog implements ActionListener {
     border.add(find, BorderLayout.NORTH);
     JPanel boxes = new JPanel(new GridLayout(2, 2));
     find.add(boxes, BorderLayout.SOUTH);
-    boxes.add(mc = new JCheckBox("Match Case"));
-    boxes.add(ww = new JCheckBox("Whole Word"));
+    boxes.add(mc = new JCheckBox(JByteMod.res.getResource("case_sens")));
+    boxes.add(ww = new JCheckBox(JByteMod.res.getResource("whole_word")));
     cp.add(border, BorderLayout.NORTH);
     JPanel bottom = new JPanel(new GridLayout(1, 0, 10, 10));
-    JButton findBtn = new JButton("Find next");
+    JButton findBtn = new JButton(JByteMod.res.getResource("find_next"));
     findBtn.addActionListener(this);
     bottom.add(findBtn);
-    JButton closeBtn = new JButton("Close");
+    JButton closeBtn = new JButton(JByteMod.res.getResource("close"));
     closeBtn.addActionListener(e -> {
       this.dispose();
     });

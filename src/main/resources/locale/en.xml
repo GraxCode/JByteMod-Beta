@@ -55,5 +55,22 @@
    <string name="simplify_graph">Simplify Control flow graph</string>
    <string name="remove_redundant">Remove redundant blocks</string>
    <string name="select_code_tab">Select code tab</string>
+   <string name="tools">Tools</string>
+   <string name="clear">Clear</string>
+   <string name="confirm">Confirm</string>
+   <string name="confirm_clear">Are you sure you want to clear that method?</string>
+   <string name="confirm_lines">Are you sure you want to remove all LineNumberNodes?</string>
+   <string name="confirm_dead_code">Are you sure you want to remove unvisited code?</string>
+   <string name="remove_lines">Remove lines</string>
+   <string name="remove_dead_code">Remove unreachable code</string>
+   <string name="add_method">Add method</string>
+   <string name="generate_frames">Generate frames</string>
+   <string name="reload">Reload</string>
+   <string name="close">Close</string>
+   <string name="whole_word">Whole word</string>
+   <string name="find_next">Find next</string>
+   <string name="file">File</string>
+   <string name="java_archive">Java archive</string>
+   <string name="load_rt">It seems like rt.jar hasn't been loaded, would you like to load it now? (This could take some time)</string>
 </resources>
 

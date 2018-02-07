@@ -173,7 +173,7 @@ public class ClassTree extends JTree implements IDropUser {
             if (mn != null) {
               //method selected
               JPopupMenu menu = new JPopupMenu();
-              JMenuItem edit = new JMenuItem("Edit");
+              JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   new InsnEditDialogue(mn, mn).open();
@@ -181,11 +181,11 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               menu.add(edit);
-              JMenu tools = new JMenu("Tools");
-              JMenuItem clear = new JMenuItem("Clear");
+              JMenu tools = new JMenu(JByteMod.res.getResource("tools"));
+              JMenuItem clear = new JMenuItem(JByteMod.res.getResource("clear"));
               clear.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  if (JOptionPane.showConfirmDialog(JByteMod.instance, "Are you sure you want to clear that method?", "Confirm",
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_clear"), JByteMod.res.getResource("confirm"),
                       JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     MethodUtils.clear(mn);
                     jbm.selectMethod(cn, mn);
@@ -194,10 +194,10 @@ public class ClassTree extends JTree implements IDropUser {
               });
               tools.add(clear);
 
-              JMenuItem lines = new JMenuItem("Remove Lines");
+              JMenuItem lines = new JMenuItem(JByteMod.res.getResource("remove_lines"));
               lines.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  if (JOptionPane.showConfirmDialog(JByteMod.instance, "Are you sure you want to remove all LineNumberNodes?", "Confirm",
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_lines"), JByteMod.res.getResource("confirm"),
                       JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     MethodUtils.removeLines(mn);
                     jbm.selectMethod(cn, mn);
@@ -205,10 +205,10 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               tools.add(lines);
-              JMenuItem deadcode = new JMenuItem("Remove Dead Code");
+              JMenuItem deadcode = new JMenuItem(JByteMod.res.getResource("remove_dead_code"));
               deadcode.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  if (JOptionPane.showConfirmDialog(JByteMod.instance, "Are you sure you want to remove unused code?", "Confirm",
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_dead_code"), JByteMod.res.getResource("confirm"),
                       JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     MethodUtils.removeDeadCode(mn);
                     jbm.selectMethod(cn, mn);
@@ -221,7 +221,7 @@ public class ClassTree extends JTree implements IDropUser {
             } else if (cn != null) {
               //class selected
               JPopupMenu menu = new JPopupMenu();
-              JMenuItem insert = new JMenuItem("Add Method");
+              JMenuItem insert = new JMenuItem(JByteMod.res.getResource("add_method"));
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   MethodNode mn = new MethodNode(1, "", "()V", null, null);
@@ -236,7 +236,7 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               menu.add(insert);
-              JMenuItem edit = new JMenuItem("Edit");
+              JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
               edit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   if (new InsnEditDialogue(mn, cn).open()) {
@@ -245,8 +245,8 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               menu.add(edit);
-              JMenu tools = new JMenu("Tools");
-              JMenuItem frames = new JMenuItem("Regenerate Frames");
+              JMenu tools = new JMenu(JByteMod.res.getResource("tools"));
+              JMenuItem frames = new JMenuItem(JByteMod.res.getResource("generate_frames"));
               frames.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   FrameGen.regenerateFrames(jbm, cn);

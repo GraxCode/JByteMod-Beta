@@ -15,8 +15,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import me.grax.jbytemod.JByteMod;
+
 public class ErrorDisplay extends JFrame {
-  private static final String suffix = "\n\nPlease report exceptions on github.";
+  private static final String suffix = "\n\nPlease report exceptions on github.\n\nhttps://github.com/GraxCode/JByteMod-Beta";
 
   public ErrorDisplay(Throwable t) {
     StringWriter sw = new StringWriter();
@@ -46,7 +48,7 @@ public class ErrorDisplay extends JFrame {
     for (int i = 0; i < 4; i++) {
       pageEnd.add(new JPanel());
     }
-    JButton close = new JButton("Close");
+    JButton close = new JButton(JByteMod.res.getResource("close"));
     pageEnd.add(close);
     close.addActionListener(new ActionListener() {
       @Override
