@@ -1,6 +1,7 @@
 package me.grax.jbytemod.ui.lists;
 
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -24,6 +25,7 @@ import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.tools.Tool;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -35,6 +37,7 @@ import org.objectweb.asm.tree.MethodNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JSearch;
 import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.HtmlSelection;
 import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.utils.list.FieldEntry;
 import me.grax.jbytemod.utils.list.InstrEntry;
@@ -75,11 +78,18 @@ public class MyCodeList extends JList<InstrEntry> {
     ActionMap am = getActionMap();
 
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK), "search");
-
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK), "copy");
     am.put("search", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         new JSearch(MyCodeList.this).setVisible(true);
+      }
+    });
+    
+    am.put("copy", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        copyToClipbord();
       }
     });
 
@@ -139,7 +149,39 @@ public class MyCodeList extends JList<InstrEntry> {
       }
     });
     menu.add(add);
+    menu.add(copyText());
     menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+  }
+
+  private JMenuItem copyText() {
+    JMenuItem copy = new JMenuItem(JByteMod.res.getResource("copy_text"));
+    copy.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        copyToClipbord();
+        JByteMod.LOGGER.log("Copied code to clipboard!");
+      }
+    });
+    return copy;
+  }
+
+  protected void copyToClipbord() {
+    StringBuilder sb = new StringBuilder();
+    boolean html = JByteMod.ops.get("copy_formatted").getBoolean();
+    if (html) {
+      for (InstrEntry sel : MyCodeList.this.getSelectedValuesList()) {
+        sb.append(sel.toString());
+        sb.append("<br>");
+      }
+    } else {
+      for (InstrEntry sel : MyCodeList.this.getSelectedValuesList()) {
+        sb.append(sel.toEasyString());
+        sb.append("\n");
+      }
+    }
+    if (sb.length() > 0) {
+      HtmlSelection selection = new HtmlSelection(sb.toString());
+      Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+    }    
   }
 
   protected void rightClickMethod(JByteMod jbm, MethodNode mn, AbstractInsnNode ain, List<InstrEntry> selected) {
@@ -156,6 +198,7 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       });
       menu.add(remove);
+      menu.add(copyText());
       addPopupListener(menu);
       menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
     } else {
@@ -264,6 +307,7 @@ public class MyCodeList extends JList<InstrEntry> {
           MyCodeList.this.loadInstructions(mn);
         }
       });
+      menu.add(copyText());
       menu.add(remove);
       addPopupListener(menu);
       menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());

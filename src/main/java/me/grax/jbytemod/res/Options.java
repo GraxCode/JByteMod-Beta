@@ -19,7 +19,8 @@ public class Options {
 
   public List<Option> bools = new ArrayList<>();
   public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
-      new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
+      new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN),
+      new Option("hints", false, Type.BOOLEAN, "editor_group"), new Option("copy_formatted", false, Type.BOOLEAN, "editor_group"),
       new Option("simplify_graph", true, Type.BOOLEAN, "graph_group"), new Option("remove_redundant", false, Type.BOOLEAN, "graph_group"),
       new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"),
       new Option("use_weblaf", true, Type.BOOLEAN, "style_group"));
@@ -77,7 +78,7 @@ public class Options {
             break;
           }
         }
-        if(!contains) {
+        if (!contains) {
           bools.remove(o);
         }
       }
@@ -103,14 +104,14 @@ public class Options {
 
   public Option get(String name) {
     Option op = find(name);
-    if(op != null) {
+    if (op != null) {
       return op;
     }
     JOptionPane.showMessageDialog(null, "Missing option: " + name + "\nRewriting your config file!");
     this.initWithDefaults(false);
     this.save();
     op = find(name);
-    if(op != null) {
+    if (op != null) {
       return op;
     }
     throw new RuntimeException("Option not found: " + name);
@@ -124,5 +125,5 @@ public class Options {
     }
     return null;
   }
-  
+
 }

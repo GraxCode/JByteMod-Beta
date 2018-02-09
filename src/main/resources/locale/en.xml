@@ -72,5 +72,7 @@
    <string name="file">File</string>
    <string name="java_archive">Java archive</string>
    <string name="load_rt">It seems like rt.jar hasn't been loaded, would you like to load it now? (This could take some time)</string>
+   <string name="copy_text">Copy text</string>
+   <string name="copy_formatted">Copy as formatted</string>
 </resources>
 
