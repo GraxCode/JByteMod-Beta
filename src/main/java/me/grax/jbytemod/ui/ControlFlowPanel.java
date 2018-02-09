@@ -60,7 +60,7 @@ public class ControlFlowPanel extends JPanel {
     graph.setAutoSizeCells(true);
     graph.setHtmlLabels(true);
     setStyles();
-    
+
     JPanel lpad = new JPanel();
     lpad.setBorder(new EmptyBorder(1, 5, 0, 1));
     lpad.setLayout(new GridLayout());
@@ -74,17 +74,23 @@ public class ControlFlowPanel extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        if(node == null) {
+        if (node == null) {
           return;
         }
-        JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
+        File parentDir = new File(System.getProperty("user.home") + File.separator + "Desktop");
+        JFileChooser jfc = new JFileChooser(parentDir);
         jfc.setAcceptAllFileFilterUsed(false);
         jfc.setFileFilter(new FileNameExtensionFilter("Bitmap image file (.bmp)", "bmp"));
         jfc.addChoosableFileFilter(new FileNameExtensionFilter("Portable Network Graphics (.png)", "png"));
+        if (node.name.length() < 32) {
+          jfc.setSelectedFile(new File(parentDir, node.name + ".bmp"));
+        } else {
+          jfc.setSelectedFile(new File(parentDir, "method.bmp"));
+        }
         int result = jfc.showSaveDialog(ControlFlowPanel.this);
         if (result == JFileChooser.APPROVE_OPTION) {
           File output = jfc.getSelectedFile();
-          String type = ((FileNameExtensionFilter)jfc.getFileFilter()).getExtensions()[0];
+          String type = ((FileNameExtensionFilter) jfc.getFileFilter()).getExtensions()[0];
           JByteMod.LOGGER.log("Saving graph as " + type + " file (" + output.getName() + ")");
           BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE, true, null);
           try {
@@ -107,7 +113,7 @@ public class ControlFlowPanel extends JPanel {
     rs.add(reload);
     lpad.add(rs);
     this.add(lpad, BorderLayout.NORTH);
-    
+
     graphComponent = new mxGraphComponent(graph);
     graphComponent.getViewport().setBackground(Color.WHITE);
     graphComponent.setEnabled(false);
@@ -119,11 +125,11 @@ public class ControlFlowPanel extends JPanel {
     inner.add(graphComponent, BorderLayout.CENTER);
     graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
     JScrollPane scp = new JScrollPane(inner);
-    
+
     scp.getVerticalScrollBar().setUnitIncrement(16);
     this.add(scp, BorderLayout.CENTER);
   }
-  
+
   private void setStyles() {
     Map<String, Object> edge = new HashMap<String, Object>();
     edge.put(mxConstants.STYLE_ROUNDED, true);
@@ -137,7 +143,7 @@ public class ControlFlowPanel extends JPanel {
     mxStylesheet edgeStyle = new mxStylesheet();
     edgeStyle.setDefaultEdgeStyle(edge);
     graph.setStylesheet(edgeStyle);
-}
+  }
 
   public MethodNode getNode() {
     return node;
@@ -198,8 +204,7 @@ public class ControlFlowPanel extends JPanel {
       for (AbstractInsnNode ain : b.getNodes()) {
         text += InstrUtils.toString(ain) + "\n";
       }
-      v1 = graph.insertVertex(parent, null, text, 150, 10, 80, 40,
-          "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1;");
+      v1 = graph.insertVertex(parent, null, text, 150, 10, 80, 40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1;");
       graph.updateCellSize(v1); //resize cell
 
       existing.put(b, v1);
