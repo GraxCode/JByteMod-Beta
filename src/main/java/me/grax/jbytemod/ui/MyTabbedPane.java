@@ -48,7 +48,7 @@ public class MyTabbedPane extends JTabbedPane {
     JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
     this.addTab(JByteMod.res.getResource("search"), this.withBorder(search, searchList));
     this.cfp = new ControlFlowPanel();
-    this.addTab(analysis, this.withBorder(new JLabel(JByteMod.res.getResource("ctrl_flow_vis")), cfp));
+    this.addTab(analysis, cfp);
     jbm.setCFP(cfp);
     jbm.setTabbedPane(this);
     ChangeListener changeListener = new ChangeListener() {

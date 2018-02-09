@@ -2,18 +2,31 @@ package me.grax.jbytemod.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
@@ -22,6 +35,7 @@ import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
 import me.grax.jbytemod.analysis.converter.Converter;
 import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.ImageUtils;
 import me.grax.jbytemod.utils.InstrUtils;
 
 public class ControlFlowPanel extends JPanel {
@@ -40,19 +54,74 @@ public class ControlFlowPanel extends JPanel {
   private static final String jumpColorPink = "#8a386d";
 
   public ControlFlowPanel() {
-    this.setBorder(new EmptyBorder(30, 30, 30, 30));
     this.setLayout(new BorderLayout(0, 0));
-    this.setBackground(Color.WHITE);
     graph = new mxGraph();
     graph.setAutoOrigin(true);
     graph.setAutoSizeCells(true);
     graph.setHtmlLabels(true);
     setStyles();
+    
+    JPanel lpad = new JPanel();
+    lpad.setBorder(new EmptyBorder(1, 5, 0, 1));
+    lpad.setLayout(new GridLayout());
+    lpad.add(new JLabel(JByteMod.res.getResource("ctrl_flow_vis")));
+    JPanel rs = new JPanel();
+    rs.setLayout(new GridLayout(1, 5));
+    for (int i = 0; i < 3; i++)
+      rs.add(new JPanel());
+    JButton save = new JButton(JByteMod.res.getResource("save"));
+    save.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if(node == null) {
+          return;
+        }
+        JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
+        jfc.setAcceptAllFileFilterUsed(false);
+        jfc.setFileFilter(new FileNameExtensionFilter("Bitmap image file (.bmp)", "bmp"));
+        jfc.addChoosableFileFilter(new FileNameExtensionFilter("Portable Network Graphics (.png)", "png"));
+        int result = jfc.showSaveDialog(ControlFlowPanel.this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          File output = jfc.getSelectedFile();
+          String type = ((FileNameExtensionFilter)jfc.getFileFilter()).getExtensions()[0];
+          JByteMod.LOGGER.log("Saving graph as " + type + " file (" + output.getName() + ")");
+          BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE, true, null);
+          try {
+            ImageIO.write(ImageUtils.watermark(image), type, output);
+          } catch (IOException e1) {
+            new ErrorDisplay(e1);
+          }
+        }
+      }
+    });
+    rs.add(save);
+    JButton reload = new JButton(JByteMod.res.getResource("reload"));
+    reload.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        generateList();
+      }
+    });
+    rs.add(reload);
+    lpad.add(rs);
+    this.add(lpad, BorderLayout.NORTH);
+    
     graphComponent = new mxGraphComponent(graph);
     graphComponent.getViewport().setBackground(Color.WHITE);
     graphComponent.setEnabled(false);
     graphComponent.setBorder(new EmptyBorder(0, 0, 0, 0));
-    this.add(graphComponent, BorderLayout.CENTER);
+    JPanel inner = new JPanel();
+    inner.setBorder(new EmptyBorder(30, 30, 30, 30));
+    inner.setLayout(new BorderLayout(0, 0));
+    inner.setBackground(Color.WHITE);
+    inner.add(graphComponent, BorderLayout.CENTER);
+    graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
+    JScrollPane scp = new JScrollPane(inner);
+    
+    scp.getVerticalScrollBar().setUnitIncrement(16);
+    this.add(scp, BorderLayout.CENTER);
   }
   
   private void setStyles() {
