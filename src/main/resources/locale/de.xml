@@ -18,7 +18,7 @@
    <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>
    <string name="update_warn">Warning: Wird direkt nach der Bestätigung aktualisiert!</string>
    <string name="save">Speichern</string>
-   <string name="save_as">Speichern als..</string>
+   <string name="save_as">Speichern als...</string>
    <string name="load">Öffnen</string>
    <string name="tree_reload">Tree neu laden</string>
    <string name="collapse_all">Alles zuklappen</string>
@@ -48,7 +48,7 @@
    <string name="move_up">Nach oben rücken</string>
    <string name="move_down">Nach unten rücken</string>
    <string name="url_search">URLs</string>
-   <string name="email_search">Email Adressen</string>
+   <string name="email_search">E-Mail Adressen</string>
    <string name="compute_maxs">COMPUTE_MAXS benutzen</string>
    <string name="hints">Hilfetext</string>
    <string name="select_tree">Tree-Element auswählen</string>
