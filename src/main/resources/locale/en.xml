@@ -18,7 +18,7 @@
    <string name="ref_warn">Warning: References will not be updated!</string>
    <string name="update_warn">Warning: Updated as soon as you click OK!</string>
    <string name="save">Save</string>
-   <string name="save_as">Save As..</string>
+   <string name="save_as">Save As...</string>
    <string name="load">Load</string>
    <string name="tree_reload">Reload Tree</string>
    <string name="collapse_all">Collapse all</string>
