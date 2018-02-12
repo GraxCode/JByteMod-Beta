@@ -127,7 +127,7 @@ public class JByteMod extends JFrame {
       border = new Color(146, 151, 161);
     }
     this.setBounds(100, 100, 1280, 720);
-    this.setTitle("JByteMod 1.5.3");
+    this.setTitle("JByteMod 1.5.4");
     this.setJMenuBar(myMenuBar = new MyMenuBar(this));
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
