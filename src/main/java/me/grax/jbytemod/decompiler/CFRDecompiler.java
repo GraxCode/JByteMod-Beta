@@ -44,22 +44,7 @@ public class CFRDecompiler extends Decompiler {
           if (name.equals(cn.name)) {
             return Pair.make(b, name);
           }
-          JarArchive file = jbm.getFile();
-          if (file.getClasses().containsKey(name)) {
-            ClassWriter cw = new ClassWriter(0);
-            cn.accept(file.getClasses().get(name));
-            return Pair.make(cw.toByteArray(), name);
-          }
-          try {
-            Pair<byte[], String> pair = getSystemClass(name, path);
-            if (pair != null) {
-              return pair;
-            }
-          } catch (Throwable t) {
-            t.printStackTrace();
-          }
-          JByteMod.LOGGER.warn("Unresolved CFR classload: " + name);
-          return getSystemClass("java/lang/Object", "java/lang/Object.class");
+          return null; //cfr loads unnecessary classes
         }
 
         @Override
@@ -68,7 +53,7 @@ public class CFRDecompiler extends Decompiler {
         }
       });
       String decompilation = runner.getDecompilationFor(cn.name);
-      
+      System.gc(); //cfr has a performance bug
       return decompilation.substring(37); //small hack to remove watermark
     } catch (Exception e) {
       e.printStackTrace();
