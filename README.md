@@ -8,7 +8,7 @@ New in 1.4.0: Method graphing features
 ![Screenshot 4](https://i.imgur.com/NdWIxqd.png)
 ![Screenshot 5](https://i.imgur.com/eSUKCHi.png)
 
-JByteMod was originally based on JBytedit (Written in Kotlin) by QMatt
+JByteMod was originally based on JBytedit (Written in Kotlin) by QMatt.
 I decided to recode it after QMatt deleted his account because it wasn't very stable and had almost no features.
 
 ## Libraries

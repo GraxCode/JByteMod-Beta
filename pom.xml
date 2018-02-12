@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>GraxCode</groupId>
    <artifactId>JByteMod</artifactId>
-   <version>1.5.1</version>
+   <version>1.5.4</version>
    <packaging>jar</packaging>
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -11,7 +11,7 @@
       <maven.compiler.target>1.8</maven.compiler.target>
    </properties>
    <build>
-      <sourceDirectory>src</sourceDirectory>
+      <!--<sourceDirectory>src</sourceDirectory>-->
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
