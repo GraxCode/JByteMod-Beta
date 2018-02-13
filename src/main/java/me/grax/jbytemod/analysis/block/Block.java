@@ -21,6 +21,9 @@ public class Block {
 
   private LabelNode label;
 
+  private ArrayList<Block> surroundingBlocks = new ArrayList<>();
+  private int depth;
+
   public Block() {
     super();
   }
@@ -63,6 +66,22 @@ public class Block {
 
   public void setNodes(ArrayList<AbstractInsnNode> nodes) {
     this.nodes = nodes;
+  }
+
+  public ArrayList<Block> getSurroundingBlocks() {
+    return surroundingBlocks;
+  }
+
+  public void setSurroundingBlocks(ArrayList<Block> surroundingBlocks) {
+    this.surroundingBlocks = surroundingBlocks;
+  }
+
+  public int getDepth() {
+    return depth;
+  }
+
+  public void setDepth(int depth) {
+    this.depth = depth;
   }
 
   public boolean endsWithJump() {

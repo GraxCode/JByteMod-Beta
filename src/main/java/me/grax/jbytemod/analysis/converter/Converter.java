@@ -13,10 +13,13 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 import me.grax.jbytemod.analysis.block.Block;
+import me.grax.jbytemod.analysis.utils.BlockUtils;
+import me.lpk.util.OpUtils;
 
 public class Converter implements Opcodes {
 
   private ArrayList<AbstractInsnNode> nodes;
+  private static final boolean DEBUG = false;
 
   public Converter(MethodNode mn) {
     assert (mn.instructions != null && mn.instructions.size() > 0);
@@ -32,6 +35,9 @@ public class Converter implements Opcodes {
     ArrayList<Block> blocks = new ArrayList<>();
     HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
     Block block = null;
+    if (nodes.isEmpty()) {
+      return blocks;
+    }
     //detect block structure & last block insns
     for (AbstractInsnNode ain : nodes) {
       if (block == null) {
@@ -128,21 +134,64 @@ public class Converter implements Opcodes {
         blockAtNext.getInput().add(b);
       }
     }
-    if (simplify) {
+    Block first = correspBlock.get(nodes.get(0));
+    assert (first != null);
+    if (removeRedundant) {
+      ArrayList<Block> visited = new ArrayList<>();
+      removeNonsense(visited, blocks, first);
       for (Block b : new ArrayList<>(blocks)) {
         if (b.getInput().isEmpty()) {
-          simplifyBlock(new ArrayList<>(), blocks, b);
+          removeNonsense(visited, blocks, b);
         }
       }
     }
-    if (removeRedundant) {
+    if (simplify) {
+      ArrayList<Block> visited = new ArrayList<>();
+      simplifyBlock(visited, blocks, first);
       for (Block b : new ArrayList<>(blocks)) {
         if (b.getInput().isEmpty()) {
-          removeNonsense(new ArrayList<>(), blocks, b);
+          simplifyBlock(visited, blocks, b);
+        }
+      }
+    }
+    if (DEBUG ) {
+      ArrayList<Block> visited = new ArrayList<>();
+      calculateDepths(visited, blocks, first, 0);
+      for (Block b : blocks) {
+        if (b.getInput().isEmpty()) {
+          calculateDepths(visited, blocks, b, 0);
         }
       }
     }
     return blocks;
+  }
+
+  private void calculateDepths(ArrayList<Block> visited, ArrayList<Block> blocks, Block b, int depth) {
+    if (visited.contains(b)) {
+      return;
+    }
+    visited.add(b);
+    b.setDepth(depth);
+    if (b.endsWithJump()) {
+      if (b.getOutput().size() > 1) {
+        if (b.getInput().size() <= 1) {
+          //handle if surrounding
+          Block blockAtLabel = b.getOutput().get(0);
+          Block blockAfter = b.getOutput().get(1);
+          calculateDepths(visited, blocks, blockAtLabel, depth);
+          calculateDepths(visited, blocks, blockAfter, depth + 1);
+        } else {
+          //handle while surrounding
+          Block blockAtLabel = b.getOutput().get(0);
+          Block blockAfter = b.getOutput().get(1);
+          calculateDepths(visited, blocks, blockAfter, depth);
+          calculateDepths(visited, blocks, blockAtLabel, depth + 1);
+        }
+      }
+    }
+    for (Block output : b.getOutput()) {
+      calculateDepths(visited, blocks, output, depth);
+    }
   }
 
   private void removeNonsense(ArrayList<Block> visited, ArrayList<Block> blocks, Block b) {
@@ -186,7 +235,7 @@ public class Converter implements Opcodes {
       if (b.getOutput().size() == 1) {
         Block to = b.getOutput().get(0);
         //also optimizes unnecessary gotos
-        if (to.getInput().size() == 1) {
+        if (to.getInput().size() == 1 && !isFirst(to)) {
           assert (to.getInput().get(0) == b);
           b.getNodes().addAll(to.getNodes());
           b.setEndNode(to.getEndNode());
@@ -200,5 +249,13 @@ public class Converter implements Opcodes {
     for (Block output : b.getOutput()) {
       simplifyBlock(simplified, blocks, output);
     }
+  }
+
+  private boolean isFirst(Block to) {
+    LabelNode ln = to.getLabel();
+    if (ln != null && OpUtils.getLabelIndex(ln) == 0) {
+      return true;
+    }
+    return false;
   }
 }

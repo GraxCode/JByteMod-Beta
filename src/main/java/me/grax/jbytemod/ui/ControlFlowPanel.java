@@ -176,9 +176,11 @@ public class ControlFlowPanel extends JPanel {
       graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
       existing.clear();
       if (!cf.isEmpty()) {
+        boolean first = true;
         for (Block b : cf) {
-          if (b.getInput().isEmpty()) {
+          if (b.getInput().isEmpty() || first) {
             addBlock(parent, b);
+            first = false;
           }
         }
       }
