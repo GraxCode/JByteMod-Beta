@@ -25,7 +25,6 @@ import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.tools.Tool;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -85,7 +84,7 @@ public class MyCodeList extends JList<InstrEntry> {
         new JSearch(MyCodeList.this).setVisible(true);
       }
     });
-    
+
     am.put("copy", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -181,7 +180,7 @@ public class MyCodeList extends JList<InstrEntry> {
     if (sb.length() > 0) {
       HtmlSelection selection = new HtmlSelection(sb.toString());
       Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
-    }    
+    }
   }
 
   protected void rightClickMethod(JByteMod jbm, MethodNode mn, AbstractInsnNode ain, List<InstrEntry> selected) {
@@ -266,6 +265,8 @@ public class MyCodeList extends JList<InstrEntry> {
             if (ain instanceof LabelNode) {
               mn.instructions.insert(ain, new LabelNode());
               OpUtils.clearLabelCache();
+            } else if (ain instanceof JumpInsnNode) {
+              mn.instructions.insert(ain, new JumpInsnNode(ain.getOpcode(), ((JumpInsnNode) ain).label));
             } else {
               mn.instructions.insert(ain, ain.clone(new HashMap<>()));
             }
