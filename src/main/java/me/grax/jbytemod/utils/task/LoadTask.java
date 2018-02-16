@@ -34,7 +34,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
 
   public LoadTask(JByteMod jbm, File input, JarArchive ja) {
     try {
-      this.jarSize = countFiles(this.input = new JarFile(input));
+      this.jarSize = countFiles(this.input = new JarFile(input, false));
       JByteMod.LOGGER.log(jarSize + " files to load!");
       this.jbm = jbm;
       this.jpb = jbm.getPP();
