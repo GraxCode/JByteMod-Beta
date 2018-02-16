@@ -22,8 +22,8 @@ import me.grax.jbytemod.utils.ErrorDisplay;
 import me.lpk.util.ASMUtils;
 
 public class JarArchive {
-  private Map<String, ClassNode> classes;
-  private Map<String, byte[]> output;
+  protected Map<String, ClassNode> classes;
+  protected Map<String, byte[]> output;
   private boolean singleEntry;
 
   public JarArchive(Map<String, ClassNode> classes, Map<String, byte[]> output) {

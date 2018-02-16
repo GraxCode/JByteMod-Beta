@@ -11,10 +11,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.logging.Logging;
 
 public class PluginManager {
 
-  private File pluginFolder = new File("plugins");
+  private File pluginFolder = new File(JByteMod.workingDir, "plugins");
 
 
   private final ArrayList<Plugin> plugins = new ArrayList<>();
@@ -23,7 +24,7 @@ public class PluginManager {
     if (pluginFolder.exists() && pluginFolder.isDirectory()) {
       loadPlugins();
     } else {
-      System.err.println("No plugin folder found!");
+      JByteMod.LOGGER.err("No plugin folder found!");
     }
   }
 

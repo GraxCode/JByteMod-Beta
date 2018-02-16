@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -32,6 +33,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.IOUtils;
 
+import com.sun.codemodel.internal.JOp;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
+
 import android.util.Patterns;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.plugin.Plugin;
@@ -39,47 +44,67 @@ import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.attach.AttachUtils;
 
 public class MyMenuBar extends JMenuBar {
 
   private JByteMod jam;
   private File lastFile;
+  private boolean agent;
   private static final Icon searchIcon = new ImageIcon(MyMenuBar.class.getResource("/resources/search.png"));
 
-  public MyMenuBar(JByteMod jam) {
+  public MyMenuBar(JByteMod jam, boolean agent) {
     this.jam = jam;
+    this.agent = agent;
     this.initFileMenu();
   }
 
   private void initFileMenu() {
     JMenu file = new JMenu(JByteMod.res.getResource("file"));
-    JMenuItem save = new JMenuItem(JByteMod.res.getResource("save"));
-    JMenuItem saveas = new JMenuItem(JByteMod.res.getResource("save_as"));
-    JMenuItem load = new JMenuItem(JByteMod.res.getResource("load"));
-    load.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        openLoadDialogue();
-      }
-    });
-    save.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (lastFile != null) {
-          jam.saveFile(lastFile);
-        } else {
+    if (!agent) {
+      JMenuItem save = new JMenuItem(JByteMod.res.getResource("save"));
+      JMenuItem saveas = new JMenuItem(JByteMod.res.getResource("save_as"));
+      JMenuItem load = new JMenuItem(JByteMod.res.getResource("load"));
+      load.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          openLoadDialogue();
+        }
+      });
+      save.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          if (lastFile != null) {
+            jam.saveFile(lastFile);
+          } else {
+            openSaveDialogue();
+          }
+        }
+      });
+      saveas.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
           openSaveDialogue();
         }
-      }
-    });
-    saveas.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        openSaveDialogue();
-      }
-    });
-    save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-    load.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-    file.add(save);
-    file.add(saveas);
-    file.add(load);
+      });
+      save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+      load.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+      file.add(save);
+      file.add(saveas);
+      file.add(load);
+    } else {
+      JMenuItem refresh = new JMenuItem(JByteMod.res.getResource("refresh"));
+      refresh.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          jam.refreshAgentClasses();
+        }
+      });
+      file.add(refresh);
+      JMenuItem apply = new JMenuItem(JByteMod.res.getResource("apply"));
+      apply.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          jam.applyChangesAgent();
+        }
+      });
+      file.add(apply);
+    }
     this.add(file);
 
     JMenu search = new JMenu(JByteMod.res.getResource("search"));
@@ -124,6 +149,15 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     utils.add(accman);
+    JMenuItem attach = new JMenuItem("Attach to Process");
+    attach.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        openProcessSelection();
+      }
+    });
+    utils.add(attach);
     JMenu obf = new JMenu("Obfuscation Analysis");
     utils.add(obf);
     JMenuItem nameobf = new JMenuItem("Name Obfuscation");
@@ -224,6 +258,34 @@ public class MyMenuBar extends JMenuBar {
     this.add(help);
   }
 
+  protected void openProcessSelection() {
+    List<VirtualMachineDescriptor> list = VirtualMachine.list();
+    VirtualMachine vm = null;
+    try {
+      if (list.isEmpty()) {
+        String pid = JOptionPane.showInputDialog("Couldn't find any VM's! Enter your process id.");
+        if (pid != null && !pid.isEmpty()) {
+          vm = AttachUtils.getVirtualMachine(Integer.parseInt(pid));
+        }
+      } else {
+        JProcessSelection gui = new JProcessSelection(list);
+        gui.setVisible(true);
+        if (gui.getPid() != 0) {
+          vm = AttachUtils.getVirtualMachine(gui.getPid());
+        }
+      }
+      if (vm != null) {
+        jam.attachTo(vm);
+      }
+    } catch (Throwable t) {
+      if (t.getMessage() != null) {
+        JOptionPane.showMessageDialog(null, t.getMessage());
+      } else {
+        new ErrorDisplay(t);
+      }
+    }
+  }
+
   private JMenu getSettings() {
     JMenu settings = new JMenu(JByteMod.res.getResource("settings"));
     LanguageRes lr = JByteMod.res;
@@ -246,7 +308,7 @@ public class MyMenuBar extends JMenuBar {
           public void actionPerformed(ActionEvent e) {
             op.setValue(jmi.isSelected());
             o.save();
-            if(op.getName().equals("use_weblaf")) {
+            if (op.getName().equals("use_weblaf")) {
               JByteMod.resetLAF();
               JByteMod.restartGUI();
             }
@@ -275,7 +337,6 @@ public class MyMenuBar extends JMenuBar {
     }
     return settings;
   }
-
 
   protected void searchLDC() {
     final JPanel panel = new JPanel(new BorderLayout(5, 5));

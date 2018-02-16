@@ -50,23 +50,6 @@ public class LibClassWriter extends ClassWriter {
     return common.name;
   }
 
-  private ClassNode toRTNode(String type) throws IOException {
-    if (type == null) {
-      return null;
-    }
-    InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(type + ".class");
-    if (is == null) {
-      return null;
-    }
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    byte[] buffer = new byte[4096];
-    int n;
-    while ((n = is.read(buffer)) > 0) {
-      baos.write(buffer, 0, n);
-    }
-    return ASMUtils.getNode(baos.toByteArray());
-  }
-
   public ClassNode findCommonParent(ClassNode mc1, ClassNode mc2) {
     //are they the same?
     if (mc1.name.equals(mc2.name)) {
@@ -93,8 +76,8 @@ public class LibClassWriter extends ClassWriter {
       return classes.get(name);
     }
     try {
-      //load from rt
-      ClassNode cn = toRTNode(name);
+      //load from runtime
+      ClassNode cn = Loader.classToNode(name);
       if (cn != null) {
         classes.put(name, cn);
         return cn;

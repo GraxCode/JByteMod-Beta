@@ -15,7 +15,7 @@ import me.grax.jbytemod.res.Option.Type;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
 public class Options {
-  private static final File propFile = new File("jbytemod.cfg");
+  private static final File propFile = new File(JByteMod.workingDir, "jbytemod.cfg");
 
   public List<Option> bools = new ArrayList<>();
   public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),

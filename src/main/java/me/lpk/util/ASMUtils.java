@@ -26,6 +26,12 @@ public class ASMUtils {
     return b;
   }
 
+  public static byte[] getNodeBytes0(ClassNode cn) {
+    ClassWriter cw = new ClassWriter(0);
+    cn.accept(cw);
+    byte[] b = cw.toByteArray();
+    return b;
+  }
   /**
    * Gets a ClassNode based on given bytes
    * 

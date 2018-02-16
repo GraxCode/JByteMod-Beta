@@ -13,7 +13,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 
 import me.grax.jbytemod.analysis.block.Block;
-import me.grax.jbytemod.analysis.utils.BlockUtils;
 import me.lpk.util.OpUtils;
 
 public class Converter implements Opcodes {
