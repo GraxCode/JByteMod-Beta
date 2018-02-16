@@ -3,7 +3,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>GraxCode</groupId>
    <artifactId>JByteMod</artifactId>
-   <version>1.5.4</version>
+   <version>1.6.0</version>
    <packaging>jar</packaging>
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,6 +95,22 @@
                      <goal>install-file</goal>
                   </goals>
                </execution>
+               <execution>
+                  <id>install-attach</id>
+                  <phase>clean</phase>
+                  <configuration>
+                     <file>${basedir}/lib/attach-1.7.jar</file>
+                     <repositoryLayout>default</repositoryLayout>
+                     <groupId>com.sun</groupId>
+                     <artifactId>attach</artifactId>
+                     <version>1.7</version>
+                     <packaging>jar</packaging>
+                     <generatePom>true</generatePom>
+                  </configuration>
+                  <goals>
+                     <goal>install-file</goal>
+                  </goals>
+               </execution>
             </executions>
          </plugin>
       </plugins>
@@ -148,6 +164,11 @@
          <groupId>org.benf</groupId>
          <artifactId>reader</artifactId>
          <version>1.2.5</version>
+      </dependency>
+      <dependency>
+         <groupId>com.sun</groupId>
+         <artifactId>attach</artifactId>
+         <version>1.7</version>
       </dependency>
    </dependencies>
 </project>
