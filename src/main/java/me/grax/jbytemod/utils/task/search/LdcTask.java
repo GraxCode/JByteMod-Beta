@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.swing.DefaultListModel;
 import javax.swing.SwingWorker;
 
 import org.objectweb.asm.tree.AbstractInsnNode;

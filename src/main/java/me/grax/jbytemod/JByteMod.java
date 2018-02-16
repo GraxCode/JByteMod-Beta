@@ -7,15 +7,10 @@ import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -51,9 +46,9 @@ import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.asm.FrameGen;
-import me.grax.jbytemod.utils.attach.InjectUtils;
 import me.grax.jbytemod.utils.attach.RuntimeJarArchive;
 import me.grax.jbytemod.utils.gui.LookUtils;
+import me.grax.jbytemod.utils.task.AttachTask;
 import me.grax.jbytemod.utils.task.RetransformTask;
 import me.grax.jbytemod.utils.task.SaveTask;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
@@ -148,7 +143,11 @@ public class JByteMod extends JFrame {
       public void windowClosing(WindowEvent we) {
         if (JOptionPane.showConfirmDialog(JByteMod.this, res.getResource("exit_warn"), res.getResource("is_sure"),
             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-          Runtime.getRuntime().exit(0);
+          if (agent) {
+            dispose();
+          } else {
+            Runtime.getRuntime().exit(0);
+          }
         }
       }
     });
@@ -395,23 +394,11 @@ public class JByteMod extends JFrame {
   public static void resetLAF() {
     lafInit = false;
   }
-  
+
   public void attachTo(VirtualMachine vm) throws Exception {
     if (JOptionPane.showConfirmDialog(JByteMod.this, res.getResource("exit_warn"), res.getResource("is_sure"),
         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-      File temp = File.createTempFile("jvm", ".jar");
-
-      File self = new File(JByteMod.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-      if (self.getAbsolutePath().endsWith(".jar")) {
-        instance.dispose();
-        JOptionPane.showMessageDialog(null, "Injecting... this could take a while.");
-        InjectUtils.copyItself(self, temp);
-        vm.loadAgent(temp.getAbsolutePath(), self.getParent());
-        temp.deleteOnExit();
-      } else {
-        JOptionPane.showMessageDialog(null, "Couldn't find itself as jar!");
-        return;
-      }
+      new AttachTask(this, vm).execute();
     }
   }
 

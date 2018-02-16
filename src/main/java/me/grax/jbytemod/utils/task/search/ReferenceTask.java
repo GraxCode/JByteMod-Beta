@@ -3,7 +3,6 @@ package me.grax.jbytemod.utils.task.search;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.SwingWorker;
 
 import org.objectweb.asm.tree.AbstractInsnNode;

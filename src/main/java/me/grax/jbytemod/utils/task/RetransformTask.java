@@ -1,6 +1,5 @@
 package me.grax.jbytemod.utils.task;
 
-import java.io.File;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
@@ -52,28 +51,26 @@ public class RetransformTask extends SwingWorker<Void, Integer> {
         publish((int) ((i / size) * 80d));
         byte[] originalBytes = original.get(e.getKey());
         byte[] bytes = ASMUtils.getNodeBytes0(e.getValue());
+        //probably not the best solution but whatever
         if (!Arrays.equals(bytes, originalBytes)) {
-          System.out.println("Retransform " + e.getKey());
           definitions.add(new ClassDefinition(ClassLoader.getSystemClassLoader().loadClass(e.getKey().replace('/', '.')), bytes));
           newOriginal.put(e.getKey(), bytes);
         }
         i++;
       }
-      if (definitions.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Nothing to redefine!");
-      } else {
+      if (!definitions.isEmpty()) {
         publish(80);
         ins.redefineClasses(definitions.toArray(new ClassDefinition[0]));
         JByteMod.LOGGER.log("Successfully retransformed " + newOriginal.size() + " classes");
         original.putAll(newOriginal);
-        publish(100);
       }
     } catch (VerifyError v) {
-      JOptionPane.showMessageDialog(null, "VerifyError! Make sure bytecode is valid or restart process with \"-noverify\" as argument");
+      JOptionPane.showMessageDialog(null, JByteMod.res.getResource("verify_error"));
     } catch (Throwable t) {
       new ErrorDisplay(t);
       t.printStackTrace();
     }
+    publish(100);
     return null;
   }
 

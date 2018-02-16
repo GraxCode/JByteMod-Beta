@@ -75,5 +75,8 @@
    <string name="load_rt">rt.jar ist noch nicht geladen, wollen Sie das jetzt tun?</string>
    <string name="copy_text">Text kopieren</string>
    <string name="copy_formatted">Formatiert kopieren</string>
+   <string name="refresh">Neu laden</string>
+   <string name="apply">Änderungen speichern</string>
+   <string name="verify_error">VerifyError! Stelle sicher dass der Bytecode gültig ist oder füge \"-noverify\" zu den Argumenten hinzu</string>
 </resources>
 

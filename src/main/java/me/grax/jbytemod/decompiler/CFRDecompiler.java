@@ -11,10 +11,8 @@ import java.util.HashMap;
 import org.benf.cfr.reader.PluginRunner;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
-import org.objectweb.asm.ClassWriter;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.JarArchive;
 import me.grax.jbytemod.ui.DecompilerPanel;
 
 public class CFRDecompiler extends Decompiler {

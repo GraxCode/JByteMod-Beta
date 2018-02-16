@@ -1,15 +1,12 @@
 package me.grax.jbytemod.utils.asm;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 
-import me.lpk.util.ASMUtils;
 import me.lpk.util.AccessHelper;
 
 public class LibClassWriter extends ClassWriter {

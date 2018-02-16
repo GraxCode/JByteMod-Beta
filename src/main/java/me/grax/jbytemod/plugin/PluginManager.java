@@ -11,7 +11,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.logging.Logging;
 
 public class PluginManager {
 
