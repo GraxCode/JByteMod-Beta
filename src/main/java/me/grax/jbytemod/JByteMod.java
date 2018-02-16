@@ -54,6 +54,7 @@ import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.attach.InjectUtils;
 import me.grax.jbytemod.utils.attach.RuntimeJarArchive;
 import me.grax.jbytemod.utils.gui.LookUtils;
+import me.grax.jbytemod.utils.task.RetransformTask;
 import me.grax.jbytemod.utils.task.SaveTask;
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
 import me.lpk.util.ASMUtils;
@@ -181,84 +182,6 @@ public class JByteMod extends JFrame {
     contentPane.add(pp = new PageEndPanel(), BorderLayout.PAGE_END);
     if (file != null) {
       this.refreshTree();
-    }
-  }
-
-  public void attachTo(VirtualMachine vm) throws Exception {
-    if (JOptionPane.showConfirmDialog(JByteMod.this, res.getResource("exit_warn"), res.getResource("is_sure"),
-        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-      File temp = File.createTempFile("jvm", ".jar");
-
-      File self = new File(JByteMod.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-      if (self.getAbsolutePath().endsWith(".jar")) {
-        instance.dispose();
-        JOptionPane.showMessageDialog(null, "Injecting... this could take a while.");
-        InjectUtils.copyItself(self, temp);
-        vm.loadAgent(temp.getAbsolutePath(), self.getParent());
-        temp.deleteOnExit();
-      } else {
-        JOptionPane.showMessageDialog(null, "Couldn't find itself as jar!");
-        return;
-      }
-    }
-  }
-
-  public static void agentmain(String agentArgs, Instrumentation ins) {
-    if (!ins.isRedefineClassesSupported()) {
-      JOptionPane.showMessageDialog(null, "Class redefinition is disabled, cannot attach!");
-      return;
-    }
-    agentInstrumentation = ins;
-    JOptionPane.showMessageDialog(null, "Successfully attached to process!");
-    workingDir = new File(agentArgs);
-    initialize();
-    if (!lafInit) {
-      LookUtils.setLAF();
-      lafInit = true;
-    }
-    JByteMod.file = new RuntimeJarArchive(ins);
-    JByteMod frame = new JByteMod(true);
-    frame.setTitleSuffix("Agent");
-    instance = frame;
-    frame.setVisible(true);
-  }
-
-  public void refreshAgentClasses() {
-    if (agentInstrumentation == null) {
-      throw new RuntimeException();
-    }
-    this.refreshTree();
-  }
-
-  public void applyChangesAgent() {
-    if (agentInstrumentation == null) {
-      throw new RuntimeException();
-    }
-    try {
-      Map<String, ClassNode> classes = file.getClasses();
-      Map<String, byte[]> original = file.getOutput();
-      Map<String, byte[]> newOriginal = new HashMap<>();
-
-      ArrayList<ClassDefinition> definitions = new ArrayList<>();
-      for (Entry<String, ClassNode> e : classes.entrySet()) {
-        byte[] originalBytes = original.get(e.getKey());
-        byte[] bytes = ASMUtils.getNodeBytes0(e.getValue());
-        if (!Arrays.equals(bytes, originalBytes)) {
-          System.out.println("Retransform " + e.getKey());
-          definitions.add(new ClassDefinition(ClassLoader.getSystemClassLoader().loadClass(e.getKey().replace('/', '.')), bytes));
-          newOriginal.put(e.getKey(), bytes);
-        }
-      }
-      if (definitions.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Nothing to redefine!");
-      } else {
-        agentInstrumentation.redefineClasses(definitions.toArray(new ClassDefinition[0]));
-        JByteMod.LOGGER.log("Successfully retransformed " + newOriginal.size() + " classes");
-        original.putAll(newOriginal);
-      }
-    } catch (Throwable t) {
-      new ErrorDisplay(t);
-      t.printStackTrace();
     }
   }
 
@@ -471,5 +394,58 @@ public class JByteMod extends JFrame {
 
   public static void resetLAF() {
     lafInit = false;
+  }
+  
+  public void attachTo(VirtualMachine vm) throws Exception {
+    if (JOptionPane.showConfirmDialog(JByteMod.this, res.getResource("exit_warn"), res.getResource("is_sure"),
+        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+      File temp = File.createTempFile("jvm", ".jar");
+
+      File self = new File(JByteMod.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+      if (self.getAbsolutePath().endsWith(".jar")) {
+        instance.dispose();
+        JOptionPane.showMessageDialog(null, "Injecting... this could take a while.");
+        InjectUtils.copyItself(self, temp);
+        vm.loadAgent(temp.getAbsolutePath(), self.getParent());
+        temp.deleteOnExit();
+      } else {
+        JOptionPane.showMessageDialog(null, "Couldn't find itself as jar!");
+        return;
+      }
+    }
+  }
+
+  public static void agentmain(String agentArgs, Instrumentation ins) {
+    if (!ins.isRedefineClassesSupported()) {
+      JOptionPane.showMessageDialog(null, "Class redefinition is disabled, cannot attach!");
+      return;
+    }
+    agentInstrumentation = ins;
+    JOptionPane.showMessageDialog(null, "Successfully attached to process!");
+    workingDir = new File(agentArgs);
+    initialize();
+    if (!lafInit) {
+      LookUtils.setLAF();
+      lafInit = true;
+    }
+    JByteMod.file = new RuntimeJarArchive(ins);
+    JByteMod frame = new JByteMod(true);
+    frame.setTitleSuffix("Agent");
+    instance = frame;
+    frame.setVisible(true);
+  }
+
+  public void refreshAgentClasses() {
+    if (agentInstrumentation == null) {
+      throw new RuntimeException();
+    }
+    this.refreshTree();
+  }
+
+  public void applyChangesAgent() {
+    if (agentInstrumentation == null) {
+      throw new RuntimeException();
+    }
+    new RetransformTask(this, agentInstrumentation, file).execute();
   }
 }
