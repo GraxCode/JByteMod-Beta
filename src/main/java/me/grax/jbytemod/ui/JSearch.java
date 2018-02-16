@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -19,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.utils.list.InstrEntry;
+import me.grax.jbytemod.utils.list.LazyListModel;
 
 public class JSearch extends JDialog implements ActionListener {
 
@@ -80,14 +80,14 @@ public class JSearch extends JDialog implements ActionListener {
       key = key.toLowerCase();
     }
     if (!key.isEmpty()) {
-      DefaultListModel<InstrEntry> model = (DefaultListModel<InstrEntry>) list.getModel();
+      LazyListModel<InstrEntry> model = (LazyListModel<InstrEntry>) list.getModel();
       if (!searchNextFrom(list.getSelectedIndex() + 1, mcase, key, model)) {
         searchNextFrom(0, mcase, key, model);
       }
     }
   }
 
-  private boolean searchNextFrom(int index, boolean mcase, String key, DefaultListModel<InstrEntry> model) {
+  private boolean searchNextFrom(int index, boolean mcase, String key, LazyListModel<InstrEntry> model) {
     for (int i = index; i < model.getSize(); i++) {
       InstrEntry entry = model.getElementAt(i);
       String easy = entry.toEasyString();

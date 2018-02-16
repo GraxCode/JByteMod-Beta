@@ -408,7 +408,6 @@ public class JByteMod extends JFrame {
       return;
     }
     agentInstrumentation = ins;
-    JOptionPane.showMessageDialog(null, "Successfully attached to process!");
     workingDir = new File(agentArgs);
     initialize();
     if (!lafInit) {
