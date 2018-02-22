@@ -124,11 +124,15 @@ public class InsnEditDialogue extends ClassDialogue {
       rightInput.add(ldctype);
       leftText.add(new JLabel("Ldc Value: "));
       JTextField cst = new JTextField(ldc.cst.toString());
-      rightInput.add(SwingUtils.withButton(cst, "...", e -> {
-        JLDCEditor editor = new JLDCEditor(cst.getText());
-        editor.setVisible(true);
-        cst.setText(editor.getText());
-      }));
+      if (ldc.cst instanceof String) {
+        rightInput.add(SwingUtils.withButton(cst, "...", e -> {
+          JLDCEditor editor = new JLDCEditor(cst.getText());
+          editor.setVisible(true);
+          cst.setText(editor.getText());
+        }));
+      } else {
+        rightInput.add(cst);
+      }
       mainPanel.add(leftText, BorderLayout.WEST);
       mainPanel.add(rightInput, BorderLayout.CENTER);
 
