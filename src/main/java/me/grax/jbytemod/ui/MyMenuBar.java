@@ -17,6 +17,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,6 +33,10 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.IOUtils;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
@@ -43,7 +48,9 @@ import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.attach.AttachUtils;
+import me.grax.jbytemod.utils.list.SearchEntry;
 
 public class MyMenuBar extends JMenuBar {
 
@@ -137,6 +144,16 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(method);
+    JMenuItem replace = new JMenuItem("Replace LDC");
+    replace.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        replaceLDC();
+      }
+    });
+
+    search.add(replace);
     this.add(search);
     JMenu utils = new JMenu(JByteMod.res.getResource("utils"));
     JMenuItem accman = new JMenuItem("Access Helper");
@@ -357,6 +374,92 @@ public class MyMenuBar extends JMenuBar {
     if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
         searchIcon) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
       jam.getSearchList().searchForConstant(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
+    }
+  }
+
+  protected void replaceLDC() {
+    final JPanel panel = new JPanel(new BorderLayout(5, 5));
+    final JPanel input = new JPanel(new GridLayout(0, 1));
+    final JPanel labels = new JPanel(new GridLayout(0, 1));
+    panel.add(labels, "West");
+    panel.add(input, "Center");
+    panel.add(new JLabel(JByteMod.res.getResource("big_string_warn")), "South");
+    labels.add(new JLabel("Find: "));
+    JTextField find = new JTextField();
+    input.add(find);
+    labels.add(new JLabel("Replace with: "));
+    JTextField with = new JTextField();
+    input.add(with);
+    JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long" });
+    ldctype.setSelectedIndex(0);
+    labels.add(new JLabel("Ldc Type: "));
+    input.add(ldctype);
+    JCheckBox exact = new JCheckBox(JByteMod.res.getResource("exact"));
+    JCheckBox cases = new JCheckBox(JByteMod.res.getResource("case_sens"));
+    labels.add(exact);
+    input.add(cases);
+    if (JOptionPane.showConfirmDialog(this.jam, panel, "Replace LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+        searchIcon) == JOptionPane.OK_OPTION && !find.getText().isEmpty()) {
+      int expectedType = ldctype.getSelectedIndex();
+      boolean equal = exact.isSelected();
+      boolean ignoreCase = !cases.isSelected();
+      String findCst = find.getText();
+      if(ignoreCase) {
+        findCst = findCst.toLowerCase();
+      }
+      String replaceWith = with.getText();
+      int i = 0;
+      for (ClassNode cn : jam.getFile().getClasses().values()) {
+        for (MethodNode mn : cn.methods) {
+          for (AbstractInsnNode ain : mn.instructions) {
+            if (ain.getType() == AbstractInsnNode.LDC_INSN) {
+              LdcInsnNode lin = (LdcInsnNode) ain;
+              Object cst = lin.cst;
+              int type;
+              if (cst instanceof String) {
+                type = 0;
+              } else if (cst instanceof Float) {
+                type = 1;
+              } else if (cst instanceof Double) {
+                type = 2;
+              } else if (cst instanceof Long) {
+                type = 3;
+              } else if (cst instanceof Integer) {
+                type = 4;
+              } else {
+                type = -1;
+              }
+              String cstStr = cst.toString();
+              if(ignoreCase) {
+                cstStr = cstStr.toLowerCase();
+              }
+              if (type == expectedType) {
+                if (equal ? cstStr.equals(findCst) : cstStr.contains(findCst)) {
+                  switch (type) {
+                  case 0:
+                    lin.cst = replaceWith;
+                    break;
+                  case 1:
+                    lin.cst = Float.parseFloat(replaceWith);
+                    break;
+                  case 2:
+                    lin.cst = Double.parseDouble(replaceWith);
+                    break;
+                  case 3:
+                    lin.cst = Long.parseLong(replaceWith);
+                    break;
+                  case 4:
+                    lin.cst = Integer.parseInt(replaceWith);
+                    break;
+                  }
+                  i++;
+                }
+              }
+            }
+          }
+        }
+      }
+      JByteMod.LOGGER.log(i + " ldc's replaced");
     }
   }
 
