@@ -39,6 +39,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.ui.JLDCEditor;
 import me.grax.jbytemod.utils.InstrUtils;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.lpk.util.OpUtils;
@@ -123,8 +124,11 @@ public class InsnEditDialogue extends ClassDialogue {
       rightInput.add(ldctype);
       leftText.add(new JLabel("Ldc Value: "));
       JTextField cst = new JTextField(ldc.cst.toString());
-      rightInput.add(cst);
-
+      rightInput.add(SwingUtils.withButton(cst, "...", e -> {
+        JLDCEditor editor = new JLDCEditor(cst.getText());
+        editor.setVisible(true);
+        cst.setText(editor.getText());
+      }));
       mainPanel.add(leftText, BorderLayout.WEST);
       mainPanel.add(rightInput, BorderLayout.CENTER);
 
@@ -174,7 +178,6 @@ public class InsnEditDialogue extends ClassDialogue {
         //only works because i created constructors for those nodes
         Class<?> node = Class.forName("org.objectweb.asm.tree" + "." + clazz.getSelectedItem().toString());
         AbstractInsnNode newnode = (AbstractInsnNode) node.getConstructor().newInstance();
-        //TODO initialize some values
         //we need no edit for LabelNode
         if (!hasSettings(newnode) || new InsnEditDialogue(mn, newnode).open()) {
           if (ain != null) {
