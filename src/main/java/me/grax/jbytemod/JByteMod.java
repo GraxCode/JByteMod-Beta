@@ -95,7 +95,7 @@ public class JByteMod extends JFrame {
   public static Color border;
   private PluginManager pluginManager;
   
-  private static final String jbytemod = "JByteMod 1.6.0";
+  private static final String jbytemod = "JByteMod 1.6.1";
 
   static {
     try {
@@ -118,7 +118,7 @@ public class JByteMod extends JFrame {
     org.apache.commons.cli.Options options = new org.apache.commons.cli.Options();
     options.addOption("f", "file", true, "File to open");
     options.addOption("d", "dir", true, "Working directory");
-    options.addOption("c", "config", true, "Config file path");
+    options.addOption("c", "config", true, "Config file name");
     options.addOption("?", "help", false, "Prints this help");
 
     CommandLineParser parser = new DefaultParser();

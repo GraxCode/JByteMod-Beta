@@ -11,6 +11,15 @@ New in 1.4.0: Method graphing features
 JByteMod was originally based on JBytedit (Written in Kotlin) by QMatt.
 I decided to recode it after QMatt deleted his account because it wasn't very stable and had almost no features.
 
+## CLI
+| Argument | Description |
+| --- | --- |
+| --help | Displays help |
+| --file | File to open (.jar / .class) |
+| --dir | Working directory |
+| --config | Config file name |
+
+
 ## Libraries
 - Apache Commons IO
 - Objectweb ASM
