@@ -15,7 +15,7 @@ import me.grax.jbytemod.res.Option.Type;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
 public class Options {
-  private static final File propFile = new File(JByteMod.workingDir, "jbytemod.cfg");
+  private static final File propFile = new File(JByteMod.workingDir, JByteMod.configPath);
 
   public List<Option> bools = new ArrayList<>();
   public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
@@ -41,7 +41,7 @@ public class Options {
         for (int i = 0; i < bools.size(); i++) {
           Option o1 = bools.get(i);
           Option o2 = defaults.get(i);
-          if (o1 == null || o2 == null || !o1.getName().equals(o2.getName())) {
+          if (o1 == null || o2 == null || find(o2.getName()) == null || findDefault(o1.getName()) == null) {
             JByteMod.LOGGER.warn("Option file not matching defaults, maybe from old version?");
             this.initWithDefaults(true);
             this.save();
@@ -57,7 +57,7 @@ public class Options {
         e.printStackTrace();
       }
     } else {
-      JByteMod.LOGGER.warn("Property File does not exist, creating...");
+      JByteMod.LOGGER.warn("Property File \"" + propFile.getName() + "\" does not exist, creating...");
       this.initWithDefaults(false);
       this.save();
     }
@@ -71,14 +71,7 @@ public class Options {
         }
       }
       for (Option o : new ArrayList<>(bools)) {
-        boolean contains = false;
-        for (Option def : defaults) {
-          if (def.getName().equalsIgnoreCase(o.getName())) {
-            contains = true;
-            break;
-          }
-        }
-        if (!contains) {
+        if (findDefault(o.getName()) == null) {
           bools.remove(o);
         }
       }
@@ -125,5 +118,12 @@ public class Options {
     }
     return null;
   }
-
+  private Option findDefault(String name) {
+    for (Option o : defaults) {
+      if (o.getName().equalsIgnoreCase(name)) {
+        return o;
+      }
+    }
+    return null;
+  }
 }

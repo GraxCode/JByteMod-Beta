@@ -22,6 +22,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -45,6 +49,7 @@ import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
 import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.FileUtils;
 import me.grax.jbytemod.utils.asm.FrameGen;
 import me.grax.jbytemod.utils.attach.RuntimeJarArchive;
 import me.grax.jbytemod.utils.gui.LookUtils;
@@ -58,6 +63,7 @@ import me.lpk.util.OpUtils;
 public class JByteMod extends JFrame {
 
   public static File workingDir = new File(".");
+  public static String configPath = "jbytemod.cfg";
   public static Logging LOGGER;
   public static LanguageRes res;
   public static Options ops;
@@ -88,6 +94,7 @@ public class JByteMod extends JFrame {
   public static JByteMod instance;
   public static Color border;
   private PluginManager pluginManager;
+  
   private static final String jbytemod = "JByteMod 1.6.0";
 
   static {
@@ -108,8 +115,36 @@ public class JByteMod extends JFrame {
    * Launch the application.
    */
   public static void main(String[] args) {
-    if (args.length > 0) {
-      workingDir = new File(args[0]);
+    org.apache.commons.cli.Options options = new org.apache.commons.cli.Options();
+    options.addOption("f", "file", true, "File to open");
+    options.addOption("d", "dir", true, "Working directory");
+    options.addOption("c", "config", true, "Config file path");
+    options.addOption("?", "help", false, "Prints this help");
+
+    CommandLineParser parser = new DefaultParser();
+    CommandLine line;
+    try {
+      line = parser.parse(options, args);
+    } catch (org.apache.commons.cli.ParseException e) {
+      e.printStackTrace();
+      throw new RuntimeException("An error occurred while parsing the commandline ");
+    }
+    if (line.hasOption("help")) {
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp(jbytemod, options);
+      return;
+    }
+    if (line.hasOption("d")) {
+      workingDir = new File(line.getOptionValue("d"));
+      if (!(workingDir.exists() && workingDir.isDirectory())) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp(jbytemod, options);
+        return;
+      }
+      JByteMod.LOGGER.err("Specified working dir set");
+    }
+    if (line.hasOption("c")) {
+      configPath = line.getOptionValue("c");
     }
     initialize();
     EventQueue.invokeLater(new Runnable() {
@@ -123,6 +158,15 @@ public class JByteMod extends JFrame {
           JByteMod frame = new JByteMod(false);
           instance = frame;
           frame.setVisible(true);
+          if (line.hasOption("f")) {
+            File input = new File(line.getOptionValue("f"));
+            if (FileUtils.exists(input) && FileUtils.isType(input, ".jar", ".class")) {
+              frame.loadFile(input);
+              JByteMod.LOGGER.log("Specified file loaded");
+            } else {
+              JByteMod.LOGGER.err("Specified file not found");
+            }
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }

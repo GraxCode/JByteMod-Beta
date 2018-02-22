@@ -49,6 +49,7 @@
    <string name="move_down">Move down</string>
    <string name="url_search">URLs</string>
    <string name="email_search">Email addresses</string>
+   <string name="compute_maxs">Use COMPUTE_MAXS</string>
    <string name="hints">Hints</string>
    <string name="select_tree">Select tree entry</string>
    <string name="use_weblaf">Use WebLaF (Needs restart)</string>
