@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
+import com.alee.managers.notification.NotificationManager;
+
 import me.grax.jbytemod.JByteMod;
 
 public class Logging extends PrintStream {
@@ -19,6 +21,11 @@ public class Logging extends PrintStream {
 
   public void log(String text) {
     logConsole(getPrefix(Level.INFO), text);
+  }
+
+  public void logNotification(String text) {
+    logConsole(getPrefix(Level.INFO), text);
+    NotificationManager.showNotification(text);
   }
 
   public void warn(String text) {
@@ -64,18 +71,15 @@ public class Logging extends PrintStream {
 
     @Override
     public void run() {
-      if (JByteMod.instance == null) {
-        return;
+      JByteMod inst = JByteMod.instance;
+      if (inst != null) {
+        inst.getPP().setTip(text);
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException e) {
+        }
+        inst.getPP().setTip(null);
       }
-      JByteMod.instance.getPP().setTip(text);
-      try {
-        Thread.sleep(2000);
-      } catch (InterruptedException e) {
-      }
-      if (JByteMod.instance == null) {
-        return;
-      }
-      JByteMod.instance.getPP().setTip(null);
     }
   }
 }

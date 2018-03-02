@@ -29,36 +29,42 @@ public class SaveTask extends SwingWorker<Void, Integer> {
 
   @Override
   protected Void doInBackground() throws Exception {
-    Map<String, ClassNode> classes = this.file.getClasses();
-    Map<String, byte[]> outputBytes = this.file.getOutput();
-    int flags = JByteMod.ops.get("compute_maxs").getBoolean() ? 1 : 0;
-    JByteMod.LOGGER.log("Writing..");
-    if (this.file.isSingleEntry()) {
-      ClassNode node = classes.values().iterator().next();
-      ClassWriter writer = new ClassWriter(flags);
-      node.accept(writer);
+    try {
+      Map<String, ClassNode> classes = this.file.getClasses();
+      Map<String, byte[]> outputBytes = this.file.getOutput();
+      int flags = JByteMod.ops.get("compute_maxs").getBoolean() ? 1 : 0;
+      JByteMod.LOGGER.log("Writing..");
+      if (this.file.isSingleEntry()) {
+        ClassNode node = classes.values().iterator().next();
+        ClassWriter writer = new ClassWriter(flags);
+        node.accept(writer);
+        publish(50);
+        JByteMod.LOGGER.log("Saving..");
+        Files.write(this.output.toPath(), writer.toByteArray());
+        publish(100);
+        JByteMod.LOGGER.log("Saving successful!");
+        return null;
+      }
+
+      publish(0);
+      double size = classes.keySet().size();
+      double i = 0;
+      for (String s : classes.keySet()) {
+        ClassNode node = classes.get(s);
+        ClassWriter writer = new ClassWriter(flags);
+        node.accept(writer);
+        outputBytes.put(s, writer.toByteArray());
+        publish((int) ((i++ / size) * 50d));
+      }
       publish(50);
       JByteMod.LOGGER.log("Saving..");
-      Files.write(this.output.toPath(), writer.toByteArray());
-      publish(100);
-      JByteMod.LOGGER.log("Done!");
-      return null;
+      JarUtils.saveAsJar(outputBytes, output.getAbsolutePath());
+      JByteMod.LOGGER.log("Saving successful!");
+    } catch (Exception e) {
+      e.printStackTrace();
+      JByteMod.LOGGER.log("Saving failed!");
     }
-    publish(0);
-    double size = classes.keySet().size();
-    double i = 0;
-    for (String s : classes.keySet()) {
-      ClassNode node = classes.get(s);
-      ClassWriter writer = new ClassWriter(flags);
-      node.accept(writer);
-      outputBytes.put(s, writer.toByteArray());
-      publish((int) ((i++ / size) * 50d));
-    }
-    publish(50);
-    JByteMod.LOGGER.log("Saving..");
-    JarUtils.saveAsJar(outputBytes, output.getAbsolutePath());
     publish(100);
-    JByteMod.LOGGER.log("Done!");
     return null;
   }
 
