@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
    <string name="exit_warn">Wollen Sie JByteMod wirklich schließen? Alle Änderungen werden nicht gespeichert.</string>
-   <string name="is_sure">Sind sie sich sicher?</string>
-   <string name="jar_warn">Andere Dateien als .jar werden noch nicht unterstützt, bitte wählen Sie ein Java-Archiv.</string>
+   <string name="is_sure">Sind Sie sich sicher?</string>
+   <string name="jar_warn">Andere Dateien als JAR-Dateien werden noch nicht unterstützt, bitte wählen Sie ein Java Archive.</string>
    <string name="about">Über</string>
    <string name="sort_methods">Methoden sortieren</string>
    <string name="use_rt">rt.jar statt dynamischen Classloading</string>
@@ -24,7 +24,7 @@
    <string name="collapse_all">Alles zuklappen</string>
    <string name="about">Über</string>
    <string name="licenses">Lizenzen</string>
-   <string name="java_archive">Java Archiv</string>
+   <string name="java_archive">Java Archive</string>
    <string name="settings">Einstellungen</string>
    <string name="search">Suchen</string>
    <string name="search_results">Suchergebnisse</string>
@@ -59,11 +59,11 @@
    <string name="tools">Tools</string>
    <string name="clear">Leeren</string>
    <string name="confirm">Bestätigen</string>
-   <string name="confirm_clear">Wollen Sie die Method wirklich leeren?</string>
+   <string name="confirm_clear">Wollen Sie die Methode wirklich leeren?</string>
    <string name="confirm_lines">Wollen Sie wirklich alle LineNumberNodes entfernen?</string>
    <string name="confirm_dead_code">Wollen Sie wirklich unbenutzen Code entfernen?</string>
    <string name="remove_lines">Liniennummern entfernen</string>
-   <string name="remove_dead_code">Unerreichbaren code entfernen</string>
+   <string name="remove_dead_code">Unerreichbaren Code entfernen</string>
    <string name="add_method">MethodNode hinzufügen</string>
    <string name="generate_frames">Frames generieren</string>
    <string name="reload">Aktualisieren</string>
@@ -71,7 +71,6 @@
    <string name="whole_word">Ganzes Wort</string>
    <string name="find_next">Suchen</string>
    <string name="file">Datei</string>
-   <string name="java_archive">Java Archiv</string>
    <string name="load_rt">rt.jar ist noch nicht geladen, wollen Sie das jetzt tun?</string>
    <string name="copy_text">Text kopieren</string>
    <string name="copy_formatted">Formatiert kopieren</string>
