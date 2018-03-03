@@ -47,6 +47,7 @@ import me.lpk.util.OpUtils;
 public class MyCodeList extends JList<InstrEntry> {
   private JLabel editor;
   private AdressList adressList;
+  private ErrorList errorList;
   private MethodNode currentMethod;
   private ClassNode currentClass;
 
@@ -382,6 +383,9 @@ public class MyCodeList extends JList<InstrEntry> {
     if (adressList != null) {
       adressList.updateAdr();
     }
+    if (errorList != null) {
+      errorList.updateErrors();
+    }
     return true;
   }
 
@@ -405,7 +409,13 @@ public class MyCodeList extends JList<InstrEntry> {
     if (adressList != null) {
       adressList.updateAdr();
     }
+    if (errorList != null) {
+      errorList.updateErrors();
+    }
     return true;
   }
 
+  public void setErrorList(ErrorList errorList) {
+    this.errorList = errorList;
+  }
 }
