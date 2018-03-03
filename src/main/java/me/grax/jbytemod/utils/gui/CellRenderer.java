@@ -7,20 +7,20 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.utils.tree.SortedTreeNode;
 import me.lpk.util.AccessHelper;
 
 public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
-  private ImageIcon pack, java, file;
+  private ImageIcon pack, clazz, enu, itf, file;
   private ImageIcon mpri, mpro, mpub, mdef; //method access
   private ImageIcon abs, fin, nat, stat, syn; //general access
 
@@ -28,8 +28,11 @@ public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
 
   public CellRenderer() {
     this.pack = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/package.png")));
-    this.java = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/java.png")));
     this.file = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/file.png")));
+
+    this.clazz = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/java.png")));
+    this.enu = combine(clazz, new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/classtype/enum.png"))));
+    this.itf = combine(clazz, new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/classtype/interface.png"))));
 
     this.mpri = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/method/methpri.png")));
     this.mpro = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/method/methpro.png")));
@@ -56,16 +59,28 @@ public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
     if (n.getChildCount() > 0 && !this.getFileName(n).endsWith(".jar") && !this.getFileName(n).endsWith(".class")) {
       this.setIcon(this.pack);
     } else if (this.getFileName(n).endsWith(".class")) {
-      this.setIcon(this.java);
+      SortedTreeNode stn = (SortedTreeNode) n;
+      ClassNode cn = stn.getCn();
+      if (cn != null) {
+        if (AccessHelper.isInterface(cn.access)) {
+          this.setIcon(this.itf);
+        } else if (AccessHelper.isEnum(cn.access)) {
+          this.setIcon(this.enu);
+        } else {
+          this.setIcon(this.clazz);
+        }
+      }
     } else if (n.getParent() != null && this.getFileName((DefaultMutableTreeNode) n.getParent()).endsWith(".class")) {
       SortedTreeNode stn = (SortedTreeNode) n;
       MethodNode mn = stn.getMn();
       if (mn != null) {
+        ImageIcon icon;
         if (methodIcons.containsKey(mn.access)) {
-          this.setIcon(methodIcons.get(mn.access));
+          icon = methodIcons.get(mn.access);
         } else {
-          this.setIcon(generateIcon(mn.access));
+          icon = generateIcon(mn.access);
         }
+        this.setIcon(icon);
       } else {
         throw new IllegalArgumentException();
       }
@@ -75,7 +90,7 @@ public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
     return this;
   }
 
-  private Icon generateIcon(int access) {
+  private ImageIcon generateIcon(int access) {
     ImageIcon template = null;
     if (AccessHelper.isPublic(access)) {
       template = this.mpub;
@@ -87,27 +102,27 @@ public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
       template = this.mdef;
     }
     if (AccessHelper.isAbstract(access)) {
-      template = combine(template, abs, true);
+      template = combineAccess(template, abs, true);
     } else {
       boolean scndRight = true;
       if (AccessHelper.isFinal(access)) {
-        template = combine(template, fin, true);
+        template = combineAccess(template, fin, true);
         scndRight = false;
       } else if (AccessHelper.isNative(access)) { //do not allow triples
-        template = combine(template, nat, true);
+        template = combineAccess(template, nat, true);
         scndRight = false;
       }
       if (AccessHelper.isStatic(access)) {
-        template = combine(template, stat, scndRight);
+        template = combineAccess(template, stat, scndRight);
       } else if (AccessHelper.isSynthetic(access)) {
-        template = combine(template, syn, scndRight);
+        template = combineAccess(template, syn, scndRight);
       }
     }
     methodIcons.put(access, template);
     return template;
   }
 
-  private static ImageIcon combine(ImageIcon icon1, ImageIcon icon2, boolean right) {
+  private static ImageIcon combineAccess(ImageIcon icon1, ImageIcon icon2, boolean right) {
     Image img1 = icon1.getImage();
     Image img2 = icon2.getImage();
 
@@ -116,7 +131,22 @@ public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
     BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2 = image.createGraphics();
     g2.drawImage(img1, 0, 0, null);
-    g2.drawImage(img2, right? w / 4 : w / -4, h / -4, null);
+    g2.drawImage(img2, right ? w / 4 : w / -4, h / -4, null);
+    g2.dispose();
+
+    return new ImageIcon(image);
+  }
+
+  private static ImageIcon combine(ImageIcon icon1, ImageIcon icon2) {
+    Image img1 = icon1.getImage();
+    Image img2 = icon2.getImage();
+
+    int w = icon1.getIconWidth();
+    int h = icon1.getIconHeight();
+    BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g2 = image.createGraphics();
+    g2.drawImage(img1, 0, 0, null);
+    g2.drawImage(img2, 0, 0, null);
     g2.dispose();
 
     return new ImageIcon(image);
