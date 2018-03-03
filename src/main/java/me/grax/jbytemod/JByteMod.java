@@ -95,7 +95,7 @@ public class JByteMod extends JFrame {
   public static Color border;
   private PluginManager pluginManager;
   
-  private static final String jbytemod = "JByteMod 1.6.1";
+  private static final String jbytemod = "JByteMod 1.6.2";
 
   static {
     try {
@@ -146,7 +146,7 @@ public class JByteMod extends JFrame {
     if (line.hasOption("c")) {
       configPath = line.getOptionValue("c");
     }
-    initialize();
+    initialize(); 
     EventQueue.invokeLater(new Runnable() {
 
       public void run() {
