@@ -46,8 +46,9 @@ public class LanguageRes {
         }
       }
     } catch (Exception e) {
-      new ErrorDisplay(e);
       JByteMod.LOGGER.err("Failed to load resources: " + e.getMessage());
+      e.printStackTrace();
+      new ErrorDisplay(e);
     }
   }
 
