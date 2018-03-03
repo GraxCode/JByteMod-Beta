@@ -31,6 +31,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
   private int jarSize; //including directories
   private int loaded;
   private JarArchive ja;
+  private long maxMem;
 
   public LoadTask(JByteMod jbm, File input, JarArchive ja) {
     try {
@@ -39,6 +40,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
       this.jbm = jbm;
       this.jpb = jbm.getPP();
       this.ja = ja;
+      this.maxMem = Runtime.getRuntime().maxMemory();
     } catch (IOException e) {
       new ErrorDisplay(e);
     }
@@ -66,6 +68,11 @@ public class LoadTask extends SwingWorker<Void, Integer> {
    * loads both classes and other files at the same time
    */
   public void loadFiles(JarFile jar) throws IOException {
+    long mem = Runtime.getRuntime().totalMemory();
+    if(mem / (double) maxMem > 0.75) {
+      JByteMod.LOGGER.warn("Memory usage is high: " + Math.round((mem / (double) maxMem * 100d)) + "%");
+    }
+    System.gc();
     Map<String, ClassNode> classes = new HashMap<String, ClassNode>();
     Map<String, byte[]> otherFiles = new HashMap<String, byte[]>();
 
@@ -78,6 +85,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
   }
 
   private void readJar(JarFile jar, JarEntry en, Map<String, ClassNode> classes, Map<String, byte[]> otherFiles) {
+        long ms = System.currentTimeMillis();
     publish((int) (((float) loaded++ / (float) jarSize) * 100f));
     String name = en.getName();
     try (InputStream jis = jar.getInputStream(en)) {
@@ -101,6 +109,13 @@ public class LoadTask extends SwingWorker<Void, Integer> {
       } else if (!en.isDirectory()) {
         byte[] bytes = IOUtils.toByteArray(jis);
         otherFiles.put(name, bytes);
+      }
+      long timeDif = System.currentTimeMillis() - ms;
+      if (timeDif > 200 && Runtime.getRuntime().totalMemory() / (double) maxMem > 0.95) { //if loading class takes more than 200ms and memory is full stop
+        JByteMod.LOGGER.logNotification("Failed loading file: Memory full!");
+        publish(100);
+        this.cancel(true);
+        return;
       }
     } catch (Exception e) {
       e.printStackTrace();

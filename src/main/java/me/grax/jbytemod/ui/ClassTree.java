@@ -82,34 +82,35 @@ public class ClassTree extends JTree implements IDropUser {
     tm.reload();
 
     preloadMap = new HashMap<>();
-    for (ClassNode c : jar.getClasses().values()) {
-      String name = c.name;
-      String[] path = name.split("/");
-      int i = 0;
-      int slashIndex = 0;
-      SortedTreeNode prev = root;
-      while (true) {
-        slashIndex = name.indexOf("/", slashIndex + 1);
-        if (slashIndex == -1) {
-          break;
+    if (jar.getClasses() != null)
+      for (ClassNode c : jar.getClasses().values()) {
+        String name = c.name;
+        String[] path = name.split("/");
+        int i = 0;
+        int slashIndex = 0;
+        SortedTreeNode prev = root;
+        while (true) {
+          slashIndex = name.indexOf("/", slashIndex + 1);
+          if (slashIndex == -1) {
+            break;
+          }
+          String p = name.substring(0, slashIndex);
+          if (preloadMap.containsKey(p)) {
+            prev = preloadMap.get(p);
+          } else {
+            SortedTreeNode stn = new SortedTreeNode(path[i]);
+            prev.add(stn);
+            prev = stn;
+            preloadMap.put(p, prev);
+          }
+          i++;
         }
-        String p = name.substring(0, slashIndex);
-        if (preloadMap.containsKey(p)) {
-          prev = preloadMap.get(p);
-        } else {
-          SortedTreeNode stn = new SortedTreeNode(path[i]);
-          prev.add(stn);
-          prev = stn;
-          preloadMap.put(p, prev);
+        SortedTreeNode clazz = new SortedTreeNode(c);
+        prev.add(clazz);
+        for (MethodNode m : c.methods) {
+          clazz.add(new SortedTreeNode(c, m));
         }
-        i++;
       }
-      SortedTreeNode clazz = new SortedTreeNode(c);
-      prev.add(clazz);
-      for (MethodNode m : c.methods) {
-        clazz.add(new SortedTreeNode(c, m));
-      }
-    }
     boolean sort = JByteMod.ops.get("sort_methods").getBoolean();
     sort(tm, root, sort);
     tm.reload();
@@ -208,8 +209,8 @@ public class ClassTree extends JTree implements IDropUser {
               JMenuItem deadcode = new JMenuItem(JByteMod.res.getResource("remove_dead_code"));
               deadcode.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_dead_code"), JByteMod.res.getResource("confirm"),
-                      JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_dead_code"),
+                      JByteMod.res.getResource("confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     MethodUtils.removeDeadCode(mn);
                     jbm.selectMethod(cn, mn);
                   }
