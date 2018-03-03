@@ -2,8 +2,8 @@
 <resources>
    <string name="exit_warn">Вы уверены, что хотите выйти? Все несохраненные изменения будут потеряны!</string>
    <string name="is_sure">Вы уверены?</string>
-   <string name="jar_warn">Неизвестный формат файла. Поддерживаются только файлы с расширением \".jar\".</string>
-   <string name="about">Информация</string>
+   <string name="jar_warn">Неизвестный формат файла. Поддерживаются только JAR-Архивы.</string>
+   <string name="about">О программе</string>
    <string name="sort_methods">Сортировать методы</string>
    <string name="use_rt">Использовать rt.jar вместо динамической загрузки</string>
    <string name="primary_color">Основной цвет</string>
@@ -16,18 +16,18 @@
    <string name="big_jar_warn">Внимание: Данное действие может занять много времени для больших архивов!</string>
    <string name="big_string_warn">Внимание: Данное действие может занять много времени на больших переменных!</string>
    <string name="ref_warn">Внимание: Ссылки не будут обновлены!</string>
-   <string name="update_warn">Внимание: Значние будет обновлено, когда вы нажмете OK.</string>
+   <string name="update_warn">Внимание: Значение будет обновлено, когда вы нажмете OK.</string>
    <string name="save">Сохранить</string>
    <string name="save_as">Сохранить как...</string>
    <string name="load">Открыть</string>
    <string name="tree_reload">Перезагрузить дерево</string>
    <string name="collapse_all">Свернуть всё</string>
-   <string name="about">Информация</string>
+   <string name="about">О программе</string>
    <string name="licenses">Лицензии</string>
    <string name="java_archive">Архив Java</string>
    <string name="settings">Настройки</string>
    <string name="search">Поиск</string>
-   <string name="search_results">Результаты Поиска</string>
+   <string name="search_results">Результаты поиска</string>
    <string name="analysis">Анализ</string>
    <string name="ctrl_flow_vis">Визуализация методов</string>
    <string name="exact">Точное слово</string>
@@ -49,12 +49,12 @@
    <string name="move_down">Перестить вниз</string>
    <string name="url_search">Ссылки</string>
    <string name="email_search">Почтовые адреса</string>
-   <string name="compute_maxs">Используйте COMPUTE_MAXS</string>
+   <string name="compute_maxs">Использовать COMPUTE_MAXS</string>
    <string name="hints">Подсказки</string>
    <string name="select_tree">Выбрать элемент дерева</string>
    <string name="use_weblaf">Использовать WebLaF (Требуется перезагрузка)</string>
-   <string name="simplify_graph">Упростить график</string>
-   <string name="remove_redundant">Удалить избыточные блоки</string>
+   <string name="simplify_graph">Упростить графики</string>
+   <string name="remove_redundant">Удалять избыточные блоки</string>
    <string name="select_code_tab">Выбрать вкладку с кодом</string>
    <string name="tools">Инструменты</string>
    <string name="clear">Очистить</string>
@@ -62,7 +62,7 @@
    <string name="confirm_clear">Вы точно хотите очистить данный метод?</string>
    <string name="confirm_lines">Вы точно хотите очистить LineNumberNodes?</string>
    <string name="confirm_dead_code">Вы точно хотите удалить мёртвый код?</string>
-   <string name="remove_lines">Удалить линии</string>
+   <string name="remove_lines">Удалить LineNumberNodes</string>
    <string name="remove_dead_code">Удалить мёртвый код</string>
    <string name="add_method">Добавить метод</string>
    <string name="generate_frames">Сгенерировать фреймы</string>
@@ -74,7 +74,7 @@
    <string name="java_archive">Архив Java</string>
    <string name="load_rt">Похоже на то, что rt.jar не был загружен. Хотите ли вы загрузить его сейчас? (займет некоторое время)</string>
    <string name="copy_text">Скопировать текст</string>
-   <string name="copy_formatted">Скопировать форматирование</string>
+   <string name="copy_formatted">Скопировать, как форматированно</string>
    <string name="refresh">Обновить</string>
    <string name="apply">Применить изменения</string>
    <string name="verify_error">Ошибка верификации классов! Убедитесь в том, что байткод правильный и добавлен ли \"-noverify\" в качестве аргумента.</string>
