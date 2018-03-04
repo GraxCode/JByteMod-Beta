@@ -3,10 +3,12 @@ package me.grax.jbytemod.ui;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+
+import com.alee.global.StyleConstants;
+import com.alee.laf.button.WebButton;
 
 import me.grax.jbytemod.JByteMod;
 
@@ -53,13 +55,12 @@ public class MyToolBar extends JToolBar {
   }
 
   protected JButton makeNavigationButton(String action, ImageIcon i, ActionListener a) {
-    JButton button = new JButton();
+    JButton button = WebButton.createIconWebButton(i, StyleConstants.smallRound, true);
     button.setToolTipText(action);
     button.addActionListener(a);
     button.setFocusable(false);
     button.setBorderPainted(false);
     button.setRolloverEnabled(false);
-    button.setIcon(i);
     return button;
   }
 }
