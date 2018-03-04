@@ -54,13 +54,13 @@ import me.grax.jbytemod.utils.list.SearchEntry;
 
 public class MyMenuBar extends JMenuBar {
 
-  private JByteMod jam;
+  private JByteMod jbm;
   private File lastFile;
   private boolean agent;
   private static final Icon searchIcon = new ImageIcon(MyMenuBar.class.getResource("/resources/search.png"));
 
   public MyMenuBar(JByteMod jam, boolean agent) {
-    this.jam = jam;
+    this.jbm = jam;
     this.agent = agent;
     this.initFileMenu();
   }
@@ -79,7 +79,7 @@ public class MyMenuBar extends JMenuBar {
       save.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           if (lastFile != null) {
-            jam.saveFile(lastFile);
+            jbm.saveFile(lastFile);
           } else {
             openSaveDialogue();
           }
@@ -99,14 +99,14 @@ public class MyMenuBar extends JMenuBar {
       JMenuItem refresh = new JMenuItem(JByteMod.res.getResource("refresh"));
       refresh.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          jam.refreshAgentClasses();
+          jbm.refreshAgentClasses();
         }
       });
       file.add(refresh);
       JMenuItem apply = new JMenuItem(JByteMod.res.getResource("apply"));
       apply.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          jam.applyChangesAgent();
+          jbm.applyChangesAgent();
         }
       });
       file.add(apply);
@@ -181,8 +181,8 @@ public class MyMenuBar extends JMenuBar {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (jam.getFile() != null)
-          new JNameObfAnalysis(jam.getFile().getClasses()).setVisible(true);
+        if (jbm.getFile() != null)
+          new JNameObfAnalysis(jbm.getFile().getClasses()).setVisible(true);
       }
     });
     obf.add(nameobf);
@@ -191,8 +191,8 @@ public class MyMenuBar extends JMenuBar {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (jam.getFile() != null)
-          new JMethodObfAnalysis(jam.getFile().getClasses()).setVisible(true);
+        if (jbm.getFile() != null)
+          new JMethodObfAnalysis(jbm.getFile().getClasses()).setVisible(true);
       }
     });
     obf.add(methodobf);
@@ -204,7 +204,7 @@ public class MyMenuBar extends JMenuBar {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        jam.getJarTree().refreshTree(jam.getFile());
+        jbm.getJarTree().refreshTree(jbm.getFile());
       }
     });
     tree.add(rltree);
@@ -213,7 +213,7 @@ public class MyMenuBar extends JMenuBar {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        jam.getJarTree().collapseAll();
+        jbm.getJarTree().collapseAll();
       }
     });
     tree.add(collapse);
@@ -224,7 +224,7 @@ public class MyMenuBar extends JMenuBar {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        jam.getSearchList().searchForPatternRegex(Patterns.AUTOLINK_WEB_URL);
+        jbm.getSearchList().searchForPatternRegex(Patterns.AUTOLINK_WEB_URL);
       }
     });
     searchUtils.add(url);
@@ -233,7 +233,7 @@ public class MyMenuBar extends JMenuBar {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        jam.getSearchList().searchForPatternRegex(Patterns.EMAIL_ADDRESS);
+        jbm.getSearchList().searchForPatternRegex(Patterns.EMAIL_ADDRESS);
       }
     });
     searchUtils.add(email);
@@ -245,7 +245,7 @@ public class MyMenuBar extends JMenuBar {
       @Override
       public void actionPerformed(ActionEvent e) {
         try {
-          new JAboutFrame(jam).setVisible(true);
+          new JAboutFrame(jbm).setVisible(true);
         } catch (Exception ex) {
           new ErrorDisplay(ex);
         }
@@ -291,7 +291,7 @@ public class MyMenuBar extends JMenuBar {
         }
       }
       if (vm != null) {
-        jam.attachTo(vm);
+        jbm.attachTo(vm);
       }
     } catch (Throwable t) {
       if (t.getMessage() != null) {
@@ -371,9 +371,9 @@ public class MyMenuBar extends JMenuBar {
     labels.add(regex);
     input.add(snstv);
     input.add(new JPanel());
-    if (JOptionPane.showConfirmDialog(this.jam, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+    if (JOptionPane.showConfirmDialog(this.jbm, panel, "Search LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
         searchIcon) == JOptionPane.OK_OPTION && !cst.getText().isEmpty()) {
-      jam.getSearchList().searchForConstant(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
+      jbm.getSearchList().searchForConstant(cst.getText(), exact.isSelected(), snstv.isSelected(), regex.isSelected());
     }
   }
 
@@ -398,18 +398,18 @@ public class MyMenuBar extends JMenuBar {
     JCheckBox cases = new JCheckBox(JByteMod.res.getResource("case_sens"));
     labels.add(exact);
     input.add(cases);
-    if (JOptionPane.showConfirmDialog(this.jam, panel, "Replace LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+    if (JOptionPane.showConfirmDialog(this.jbm, panel, "Replace LDC", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
         searchIcon) == JOptionPane.OK_OPTION && !find.getText().isEmpty()) {
       int expectedType = ldctype.getSelectedIndex();
       boolean equal = exact.isSelected();
       boolean ignoreCase = !cases.isSelected();
       String findCst = find.getText();
-      if(ignoreCase) {
+      if (ignoreCase) {
         findCst = findCst.toLowerCase();
       }
       String replaceWith = with.getText();
       int i = 0;
-      for (ClassNode cn : jam.getFile().getClasses().values()) {
+      for (ClassNode cn : jbm.getFile().getClasses().values()) {
         for (MethodNode mn : cn.methods) {
           for (AbstractInsnNode ain : mn.instructions) {
             if (ain.getType() == AbstractInsnNode.LDC_INSN) {
@@ -430,7 +430,7 @@ public class MyMenuBar extends JMenuBar {
                 type = -1;
               }
               String cstStr = cst.toString();
-              if(ignoreCase) {
+              if (ignoreCase) {
                 cstStr = cstStr.toLowerCase();
               }
               if (type == expectedType) {
@@ -484,7 +484,7 @@ public class MyMenuBar extends JMenuBar {
     input.add(new JPanel());
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search FieldInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
         searchIcon) == JOptionPane.OK_OPTION && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
-      jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), true);
+      jbm.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), true);
     }
   }
 
@@ -509,13 +509,13 @@ public class MyMenuBar extends JMenuBar {
     input.add(new JPanel());
     if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Search MethodInsnNode", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
         searchIcon) == JOptionPane.OK_OPTION && !(name.getText().isEmpty() && owner.getText().isEmpty() && desc.getText().isEmpty())) {
-      jam.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), false);
+      jbm.getSearchList().searchForFMInsn(owner.getText(), name.getText(), desc.getText(), exact.isSelected(), false);
     }
   }
 
   protected void openSaveDialogue() {
-    if (jam.getFile() != null) {
-      boolean isClass = jam.getFile().isSingleEntry();
+    if (jbm.getFile() != null) {
+      boolean isClass = jbm.getFile().isSingleEntry();
       JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
       jfc.setAcceptAllFileFilterUsed(false);
       jfc.setFileFilter(new FileNameExtensionFilter(isClass ? "Java Class (*.class)" : "Java Package (*.jar)", isClass ? "class" : "jar"));
@@ -524,7 +524,7 @@ public class MyMenuBar extends JMenuBar {
         File output = jfc.getSelectedFile();
         this.lastFile = output;
         JByteMod.LOGGER.log("Selected output file: " + output.getAbsolutePath());
-        jam.saveFile(output);
+        jbm.saveFile(output);
       }
     }
   }
@@ -537,7 +537,7 @@ public class MyMenuBar extends JMenuBar {
     if (result == JFileChooser.APPROVE_OPTION) {
       File input = jfc.getSelectedFile();
       JByteMod.LOGGER.log("Selected input file: " + input.getAbsolutePath());
-      jam.loadFile(input);
+      jbm.loadFile(input);
     }
   }
 
@@ -554,5 +554,17 @@ public class MyMenuBar extends JMenuBar {
       }
       this.add(pluginMenu);
     }
+  }
+
+  public boolean isAgent() {
+    return agent;
+  }
+
+  public File getLastFile() {
+    return lastFile;
+  }
+
+  public void setLastFile(File lastFile) {
+    this.lastFile = lastFile;
   }
 }

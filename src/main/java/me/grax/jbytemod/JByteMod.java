@@ -43,6 +43,7 @@ import me.grax.jbytemod.ui.InfoPanel;
 import me.grax.jbytemod.ui.MyMenuBar;
 import me.grax.jbytemod.ui.MySplitPane;
 import me.grax.jbytemod.ui.MyTabbedPane;
+import me.grax.jbytemod.ui.MyToolBar;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
@@ -205,7 +206,7 @@ public class JByteMod extends JFrame {
     this.jarTree = new ClassTree(this);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-    contentPane.setLayout(new BorderLayout(0, 0));
+    contentPane.setLayout(new BorderLayout(5, 5));
     this.setContentPane(contentPane);
     this.setTCBList(new TCBList());
     this.setLVPList(new LVPList());
@@ -223,6 +224,7 @@ public class JByteMod extends JFrame {
     border.add(b2);
     contentPane.add(border, BorderLayout.CENTER);
     contentPane.add(pp = new PageEndPanel(), BorderLayout.PAGE_END);
+    contentPane.add(new MyToolBar(this), BorderLayout.PAGE_START);
     if (file != null) {
       this.refreshTree();
     }
