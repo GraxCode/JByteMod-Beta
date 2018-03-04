@@ -22,13 +22,9 @@ public class MyCodeEditor extends JPanel {
     p.setLayout(new BorderLayout());
     p.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, JByteMod.border));
     p.add(new AdressList(cl), BorderLayout.CENTER);
-    JPanel west = new JPanel();
-    west.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, JByteMod.border));
-    west.setLayout(new BorderLayout(0, 0));
-    west.add(new ErrorList(jbm, cl), BorderLayout.CENTER);
-    p.add(west, BorderLayout.WEST);
-    
     this.add(p, BorderLayout.WEST);
+    this.add(new ErrorList(jbm, cl), BorderLayout.EAST);
+
   }
 
   public MyCodeList getEditor() {

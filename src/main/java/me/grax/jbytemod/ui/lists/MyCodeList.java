@@ -73,7 +73,6 @@ public class MyCodeList extends JList<InstrEntry> {
         }
       }
     });
-
     InputMap im = getInputMap(WHEN_FOCUSED);
     ActionMap am = getActionMap();
 
@@ -109,6 +108,7 @@ public class MyCodeList extends JList<InstrEntry> {
       }
     });
     this.setPrototypeCellValue(new PrototypeEntry());
+    this.setFixedCellWidth(-1);
   }
 
   protected void rightClickField(JByteMod jbm, FieldEntry fle) {

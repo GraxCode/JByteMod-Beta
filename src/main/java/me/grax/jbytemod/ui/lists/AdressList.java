@@ -5,7 +5,9 @@ import java.awt.Font;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
+import javax.swing.plaf.basic.BasicListUI;
 
+import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.grax.jbytemod.utils.list.InstrEntry;
 import me.grax.jbytemod.utils.list.LazyListModel;
 
@@ -24,6 +26,9 @@ public class AdressList extends JList<String> {
         super.setSelectionInterval(-1, -1);
       }
     });
+    System.out.println(this.getUI().getClass().getName());
+    this.setPrototypeCellValue("0000");
+    SwingUtils.disableRollover(this);
   }
 
   public void updateAdr() {
