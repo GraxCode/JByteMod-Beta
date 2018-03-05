@@ -27,48 +27,16 @@ import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.lists.SearchList;
 
 public class MyTabbedPane extends JTabbedPane {
-  private DecompilerTab dt;
-  private ControlFlowPanel cfp;
-  private boolean classSelected = false;
-  private static String analysis = JByteMod.res.getResource("analysis");
+  private MyEditorTab editorTab;
 
   public MyTabbedPane(JByteMod jbm) {
-    JLabel editor = new JLabel("Editor");
-    MyCodeEditor list = new MyCodeEditor(jbm, editor);
-    jbm.setCodeList(list.getEditor());
-    this.addTab("Code", this.withBorder(editor, list));
-    InfoPanel sp = new InfoPanel(jbm);
-    jbm.setSP(sp);
-    this.addTab("Info", this.withBorder(new JLabel(JByteMod.res.getResource("settings")), sp));
-    String decompiler = "Decompiler";
-    this.dt = new DecompilerTab(jbm);
-    this.addTab(decompiler, dt);
+    this.editorTab = new MyEditorTab(jbm);
+    this.addTab("Editor", editorTab);
     SearchList searchList = new SearchList(jbm);
     jbm.setSearchlist(searchList);
     JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
     this.addTab(JByteMod.res.getResource("search"), this.withBorder(search, searchList));
-    this.cfp = new ControlFlowPanel();
-    this.addTab(analysis, cfp);
-    jbm.setCFP(cfp);
     jbm.setTabbedPane(this);
-    ChangeListener changeListener = new ChangeListener() {
-      public void stateChanged(ChangeEvent changeEvent) {
-        JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-        int index = sourceTabbedPane.getSelectedIndex();
-        if (sourceTabbedPane.getTitleAt(index).equals(decompiler)) {
-          dt.decompile(jbm.getCurrentNode(), false);
-        }
-        if (sourceTabbedPane.getTitleAt(index).equals(analysis)) {
-          if (!classSelected) {
-            cfp.generateList();
-          } else {
-            cfp.clear();
-          }
-        }
-      }
-
-    };
-    this.addChangeListener(changeListener);
     this.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent me) {
@@ -105,14 +73,7 @@ public class MyTabbedPane extends JTabbedPane {
   }
 
   public void selectClass(ClassNode cn) {
-    int index = this.getSelectedIndex();
-    if (this.getTitleAt(index).equals("Decompiler")) {
-      dt.decompile(cn, false);
-    }
-    if (this.getTitleAt(index).equals(analysis)) {
-      cfp.clear();
-    }
-    this.classSelected = true;
+    this.editorTab.selectClass(cn);
   }
 
   private JPanel withBorder(JLabel label, Component c) {
@@ -130,14 +91,7 @@ public class MyTabbedPane extends JTabbedPane {
   }
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
-    int index = this.getSelectedIndex();
-    if (this.getTitleAt(index).equals("Decompiler")) {
-      dt.decompile(cn, false);
-    }
-    if (this.getTitleAt(index).equals(analysis)) {
-      cfp.generateList();
-    }
-    this.classSelected = false;
+    this.editorTab.selectMethod(cn, mn);
   }
   @Override
   public Dimension getMinimumSize() {
