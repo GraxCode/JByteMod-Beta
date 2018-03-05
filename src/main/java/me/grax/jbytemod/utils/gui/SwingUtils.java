@@ -22,11 +22,12 @@ public class SwingUtils {
     return jp;
   }
 
-  public static void disableRollover(JList<?> jl) {
+  public static void disableSelection(JList<?> jl) {
     ListUI ui = (ListUI) jl.getUI();
     if(ui instanceof WebListUI) {
       WebListUI wlui = (WebListUI) ui;
       wlui.setHighlightRolloverCell(false);
+      wlui.setDecorateSelection(false);
     }
     
   }

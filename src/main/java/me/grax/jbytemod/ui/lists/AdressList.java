@@ -26,9 +26,8 @@ public class AdressList extends JList<String> {
         super.setSelectionInterval(-1, -1);
       }
     });
-    System.out.println(this.getUI().getClass().getName());
     this.setPrototypeCellValue("0000");
-    SwingUtils.disableRollover(this);
+    SwingUtils.disableSelection(this);
   }
 
   public void updateAdr() {
