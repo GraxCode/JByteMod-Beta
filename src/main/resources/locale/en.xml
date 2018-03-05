@@ -55,7 +55,7 @@
    <string name="use_weblaf">Use WebLaF (Needs restart)</string>
    <string name="simplify_graph">Simplify Control flow graph</string>
    <string name="remove_redundant">Remove redundant blocks</string>
-   <string name="select_code_tab">Select code tab</string>
+   <string name="select_code_tab">Select editor tab automatically</string>
    <string name="tools">Tools</string>
    <string name="clear">Clear</string>
    <string name="confirm">Confirm</string>
@@ -78,5 +78,7 @@
    <string name="refresh">Refresh</string>
    <string name="apply">Apply changes</string>
    <string name="verify_error">VerifyError! Make sure bytecode is valid or restart process with \"-noverify\" as argument</string>
+   <string name="memory_warning">Memory warning at loading</string>
+   <string name="memory_full">Failed loading file: Memory full</string>
 </resources>
 

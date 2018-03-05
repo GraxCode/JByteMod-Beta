@@ -55,7 +55,7 @@
    <string name="use_weblaf">WebLaF benutzen (Neustart notwendig)</string>
    <string name="simplify_graph">Control Flow Graph vereinfachen</string>
    <string name="remove_redundant">Überzählige Blöcke entfernen</string>
-   <string name="select_code_tab">Reiter "Code" automatisch auswählen</string>
+   <string name="select_code_tab">Reiter "Editor" automatisch auswählen</string>
    <string name="tools">Tools</string>
    <string name="clear">Leeren</string>
    <string name="confirm">Bestätigen</string>
@@ -77,5 +77,7 @@
    <string name="refresh">Neu laden</string>
    <string name="apply">Änderungen speichern</string>
    <string name="verify_error">VerifyError! Stelle sicher dass der Bytecode gültig ist oder füge \"-noverify\" zu den Argumenten hinzu</string>
+   <string name="memory_warning">Stoppe zu laden falls Memory voll</string>
+   <string name="memory_full">Laden fehlgeschlagen: Memory voll</string>
 </resources>
 

@@ -36,6 +36,7 @@ public class MyTabbedPane extends JTabbedPane {
     jbm.setSearchlist(searchList);
     JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
     this.addTab(JByteMod.res.getResource("search"), this.withBorder(search, searchList));
+    this.addTab("Opcodes", this.withBorder(new JLabel("Opcodes"), new OpcodeTable()));
     jbm.setTabbedPane(this);
     this.addMouseListener(new MouseAdapter() {
       @Override

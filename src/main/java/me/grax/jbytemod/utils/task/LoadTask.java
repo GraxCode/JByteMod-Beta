@@ -32,6 +32,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
   private int loaded;
   private JarArchive ja;
   private long maxMem;
+  private boolean memoryWarning;
 
   public LoadTask(JByteMod jbm, File input, JarArchive ja) {
     try {
@@ -41,6 +42,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
       this.jpb = jbm.getPP();
       this.ja = ja;
       this.maxMem = Runtime.getRuntime().maxMemory();
+      this.memoryWarning = JByteMod.ops.get("memory_warning").getBoolean();
     } catch (IOException e) {
       new ErrorDisplay(e);
     }
@@ -69,7 +71,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
    */
   public void loadFiles(JarFile jar) throws IOException {
     long mem = Runtime.getRuntime().totalMemory();
-    if(mem / (double) maxMem > 0.75) {
+    if (mem / (double) maxMem > 0.75) {
       JByteMod.LOGGER.warn("Memory usage is high: " + Math.round((mem / (double) maxMem * 100d)) + "%");
     }
     System.gc();
@@ -85,7 +87,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
   }
 
   private void readJar(JarFile jar, JarEntry en, Map<String, ClassNode> classes, Map<String, byte[]> otherFiles) {
-        long ms = System.currentTimeMillis();
+    long ms = System.currentTimeMillis();
     publish((int) (((float) loaded++ / (float) jarSize) * 100f));
     String name = en.getName();
     try (InputStream jis = jar.getInputStream(en)) {
@@ -110,12 +112,14 @@ public class LoadTask extends SwingWorker<Void, Integer> {
         byte[] bytes = IOUtils.toByteArray(jis);
         otherFiles.put(name, bytes);
       }
-      long timeDif = System.currentTimeMillis() - ms;
-      if (timeDif > 200 && Runtime.getRuntime().totalMemory() / (double) maxMem > 0.95) { //if loading class takes more than 200ms and memory is full stop
-        JByteMod.LOGGER.logNotification("Failed loading file: Memory full!");
-        publish(100);
-        this.cancel(true);
-        return;
+      if (memoryWarning) {
+        long timeDif = System.currentTimeMillis() - ms;
+        if (timeDif > 200 && Runtime.getRuntime().totalMemory() / (double) maxMem > 0.95) { //if loading class takes more than 200ms and memory is full stop
+          JByteMod.LOGGER.logNotification(JByteMod.res.getResource("memory_full"));
+          publish(100);
+          this.cancel(true);
+          return;
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();

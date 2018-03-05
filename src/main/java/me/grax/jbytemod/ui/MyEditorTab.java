@@ -37,7 +37,7 @@ public class MyEditorTab extends JPanel {
   public MyEditorTab(JByteMod jbm) {
     setLayout(new BorderLayout());
     this.center = new JPanel();
-    center.setLayout(new BorderLayout());
+    center.setLayout(new GridLayout());
     this.label = new JLabel("Test");
 
     this.codeEditor = new MyCodeEditor(jbm, label);

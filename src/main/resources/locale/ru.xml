@@ -55,7 +55,7 @@
    <string name="use_weblaf">Использовать WebLaF (Требуется перезагрузка)</string>
    <string name="simplify_graph">Упростить графики</string>
    <string name="remove_redundant">Удалять избыточные блоки</string>
-   <string name="select_code_tab">Выбрать вкладку с кодом</string>
+   <string name="select_code_tab">Выбрать вкладку с кодом</string> <!-- TODO: UPDATE -->
    <string name="tools">Инструменты</string>
    <string name="clear">Очистить</string>
    <string name="confirm">Подтверждение</string>
@@ -78,4 +78,8 @@
    <string name="refresh">Обновить</string>
    <string name="apply">Применить изменения</string>
    <string name="verify_error">Ошибка верификации классов! Убедитесь в том, что байткод правильный и добавлен ли \"-noverify\" в качестве аргумента.</string>
+	<!-- 
+	<string name="memory_warning">Memory warning at loading</string>
+	<string name="memory_full">Failed loading file: Memory full</string> 
+	-->
 </resources>
