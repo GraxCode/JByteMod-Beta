@@ -29,9 +29,9 @@ public class MyEditorTab extends JPanel {
   private JPanel center;
   private WebBreadcrumbToggleButton decompilerBtn;
   private WebBreadcrumbToggleButton analysisBtn;
-  
+
   private boolean classSelected = false;
-  
+
   private static String analysisText = JByteMod.res.getResource("analysis");
 
   public MyEditorTab(JByteMod jbm) {
@@ -59,37 +59,45 @@ public class MyEditorTab extends JPanel {
     WebBreadcrumbToggleButton codeBtn = new WebBreadcrumbToggleButton("Code");
     codeBtn.setSelected(true);
     codeBtn.addActionListener(e -> {
-      center.removeAll();
-      center.add(code);
-      center.revalidate();
-      repaint();
+      if (center.getComponent(0) != code) {
+        center.removeAll();
+        center.add(code);
+        center.revalidate();
+        repaint();
+      }
     });
     WebBreadcrumbToggleButton infoBtn = new WebBreadcrumbToggleButton("Info");
     infoBtn.addActionListener(e -> {
-      center.removeAll();
-      center.add(info);
-      center.revalidate();
-      repaint();
+      if (center.getComponent(0) != info) {
+        center.removeAll();
+        center.add(info);
+        center.revalidate();
+        repaint();
+      }
     });
     decompilerBtn = new WebBreadcrumbToggleButton("Decompiler");
     decompilerBtn.addActionListener(e -> {
-      center.removeAll();
-      center.add(decompiler);
-      center.revalidate();
-      repaint();
-      decompiler.decompile(jbm.getCurrentNode(), false);
+      if (center.getComponent(0) != decompiler) {
+        center.removeAll();
+        center.add(decompiler);
+        center.revalidate();
+        repaint();
+        decompiler.decompile(jbm.getCurrentNode(), false);
+      }
     });
     analysisBtn = new WebBreadcrumbToggleButton(analysisText);
     analysisBtn.addActionListener(e -> {
-      center.removeAll();
-      center.add(analysis);
-      if (!classSelected) {
-        analysis.generateList();
-      } else {
-        analysis.clear();
+      if (center.getComponent(0) != analysis) {
+        center.removeAll();
+        center.add(analysis);
+        if (!classSelected) {
+          analysis.generateList();
+        } else {
+          analysis.clear();
+        }
+        center.revalidate();
+        repaint();
       }
-      center.revalidate();
-      repaint();
     });
     selector.add(codeBtn);
     selector.add(infoBtn);
