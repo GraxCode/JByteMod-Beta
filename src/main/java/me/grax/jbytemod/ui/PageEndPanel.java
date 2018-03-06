@@ -10,11 +10,14 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.alee.extended.statusbar.WebMemoryBar;
+
 public class PageEndPanel extends JPanel {
 
   private JProgressBar pb;
   private JLabel percent;
   private JLabel label;
+  private WebMemoryBar memoryBar;
   private static final String copyright = "\u00A9 GraxCode 2016 - 2018";
 
   public PageEndPanel() {
@@ -30,16 +33,19 @@ public class PageEndPanel extends JPanel {
         }
       }
     };
-    this.setLayout(new GridLayout(1, 4));
+    this.setLayout(new GridLayout(1, 4, 10, 10));
     this.setBorder(new EmptyBorder(3, 0, 0, 0));
     this.add(pb);
     this.add(percent = new JLabel());
     percent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
-    this.add(new JPanel());
     label = new JLabel(copyright);
     label.setHorizontalAlignment(SwingConstants.RIGHT);
     label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
     this.add(label);
+    memoryBar = new WebMemoryBar();
+    memoryBar.setShowMaximumMemory(false);
+    this.add(memoryBar);
+    
   }
 
   public void setValue(int n) {

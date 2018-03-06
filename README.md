@@ -2,7 +2,7 @@
 JByteMod is a multifunctional bytecode editor with syntax highlighting and live decompiling.
 New in 1.4.0: Method graphing features
 
-![Screenshot 1](https://i.imgur.com/Wwoe7mN.png)
+![Screenshot 1](https://i.imgur.com/9RUqMYC.png)
 ![Screenshot 2](https://i.imgur.com/Cjj1Dh0.png)
 ![Screenshot 3](https://i.imgur.com/0x21dMo.png)
 ![Screenshot 4](https://i.imgur.com/NdWIxqd.png)
