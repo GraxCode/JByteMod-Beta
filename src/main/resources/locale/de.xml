@@ -77,7 +77,8 @@
    <string name="refresh">Neu laden</string>
    <string name="apply">Änderungen speichern</string>
    <string name="verify_error">VerifyError! Stelle sicher dass der Bytecode gültig ist oder füge \"-noverify\" zu den Argumenten hinzu</string>
-   <string name="memory_warning">Stoppe zu laden falls Memory voll</string>
+   <string name="memory_warning">Stoppe den Ladevorgang falls Memory voll</string>
    <string name="memory_full">Laden fehlgeschlagen: Memory voll</string>
+   <string name="analyze_errors">Fehler im Bytecode anzeigen</string>
 </resources>
 

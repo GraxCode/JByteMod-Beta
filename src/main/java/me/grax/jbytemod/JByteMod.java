@@ -96,7 +96,7 @@ public class JByteMod extends JFrame {
   public static Color border;
   private PluginManager pluginManager;
   
-  private static final String jbytemod = "JByteMod 1.6.2";
+  private static final String jbytemod = "JByteMod 1.7.0";
 
   static {
     try {
@@ -325,6 +325,7 @@ public class JByteMod extends JFrame {
       tabbedPane.setSelectedIndex(0);
     }
     this.currentNode = cn;
+    this.currentMethod = null;
     sp.selectClass(cn);
     clist.loadFields(cn);
     tabbedPane.selectClass(cn);

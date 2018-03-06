@@ -192,6 +192,7 @@ public class ControlFlowPanel extends JPanel {
     } finally {
       graph.getModel().endUpdate();
     }
+    this.revalidate();
     this.repaint();
   }
 

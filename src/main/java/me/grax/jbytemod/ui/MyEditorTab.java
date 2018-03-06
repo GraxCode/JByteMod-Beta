@@ -83,13 +83,13 @@ public class MyEditorTab extends JPanel {
     analysisBtn.addActionListener(e -> {
       center.removeAll();
       center.add(analysis);
-      center.revalidate();
-      repaint();
       if (!classSelected) {
         analysis.generateList();
       } else {
         analysis.clear();
       }
+      center.revalidate();
+      repaint();
     });
     selector.add(codeBtn);
     selector.add(infoBtn);

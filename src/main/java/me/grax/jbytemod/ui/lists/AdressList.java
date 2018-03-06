@@ -5,7 +5,6 @@ import java.awt.Font;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JList;
-import javax.swing.plaf.basic.BasicListUI;
 
 import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.grax.jbytemod.utils.list.InstrEntry;

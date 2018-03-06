@@ -19,8 +19,9 @@ public class Options {
 
   public List<Option> bools = new ArrayList<>();
   public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
-      new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN),new Option("memory_warning", true, Type.BOOLEAN),
-      new Option("hints", false, Type.BOOLEAN, "editor_group"), new Option("copy_formatted", false, Type.BOOLEAN, "editor_group"),
+      new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN),
+      new Option("memory_warning", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
+      new Option("copy_formatted", false, Type.BOOLEAN, "editor_group"), new Option("analyze_errors", true, Type.BOOLEAN, "editor_group"),
       new Option("simplify_graph", true, Type.BOOLEAN, "graph_group"), new Option("remove_redundant", false, Type.BOOLEAN, "graph_group"),
       new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"),
       new Option("use_weblaf", true, Type.BOOLEAN, "style_group"));
@@ -118,6 +119,7 @@ public class Options {
     }
     return null;
   }
+
   private Option findDefault(String name) {
     for (Option o : defaults) {
       if (o.getName().equalsIgnoreCase(name)) {
