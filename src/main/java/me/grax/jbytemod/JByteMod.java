@@ -8,6 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -110,6 +112,14 @@ public class JByteMod extends JFrame {
     LOGGER = new Logging();
     res = new LanguageRes();
     ops = new Options();
+    try {
+    System.setProperty("file.encoding","UTF-8");
+    Field charset = Charset.class.getDeclaredField("defaultCharset");
+    charset.setAccessible(true);
+    charset.set(null,null);
+    } catch(Throwable t) {
+      JByteMod.LOGGER.err("Failed to set encoding to UTF-8 (" + t.getMessage() + ")");
+    }
   }
 
   /**
