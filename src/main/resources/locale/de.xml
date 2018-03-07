@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-   <string name="exit_warn">Wollen Sie JByteMod wirklich schließen? Alle Änderungen werden nicht gespeichert.</string>
+   <string name="exit_warn">Wollen Sie JByteMod wirklich schließen? Alle Änderungen werden verloren gehen.</string>
    <string name="is_sure">Sind Sie sich sicher?</string>
    <string name="jar_warn">Andere Dateien als JAR-Dateien werden noch nicht unterstützt, bitte wählen Sie ein Java Archive.</string>
    <string name="about">Über</string>
@@ -13,10 +13,10 @@
    <string name="editor_group">Editor</string>
    <string name="style_group">Style</string>
    <string name="graph_group">Graph</string>
-   <string name="big_jar_warn">Warnung: Dies könnte bei großen .jar Dateien etwas dauern!</string>
+   <string name="big_jar_warn">Warnung: Dies könnte bei großen JAR-Dateien etwas dauern!</string>
    <string name="big_string_warn">Warnung: Dies könnte bei kurzen Strings etwas dauern!</string>
    <string name="ref_warn">Warnung: Referenzen werden nicht aktualisiert!</string>
-   <string name="update_warn">Warning: Wird direkt nach der Bestätigung aktualisiert!</string>
+   <string name="update_warn">Warnung: Wird direkt nach der Bestätigung aktualisiert!</string>
    <string name="save">Speichern</string>
    <string name="save_as">Speichern als...</string>
    <string name="load">Öffnen</string>
@@ -61,7 +61,7 @@
    <string name="confirm">Bestätigen</string>
    <string name="confirm_clear">Wollen Sie die Methode wirklich leeren?</string>
    <string name="confirm_lines">Wollen Sie wirklich alle LineNumberNodes entfernen?</string>
-   <string name="confirm_dead_code">Wollen Sie wirklich unbenutzen Code entfernen?</string>
+   <string name="confirm_dead_code">Wollen Sie wirklich den unerreichbaren Code entfernen?</string>
    <string name="remove_lines">Liniennummern entfernen</string>
    <string name="remove_dead_code">Unerreichbaren Code entfernen</string>
    <string name="add_method">MethodNode hinzufügen</string>
@@ -76,9 +76,9 @@
    <string name="copy_formatted">Formatiert kopieren</string>
    <string name="refresh">Neu laden</string>
    <string name="apply">Änderungen speichern</string>
-   <string name="verify_error">VerifyError! Stelle sicher dass der Bytecode gültig ist oder füge \"-noverify\" zu den Argumenten hinzu</string>
-   <string name="memory_warning">Stoppe den Ladevorgang falls Memory voll</string>
-   <string name="memory_full">Laden fehlgeschlagen: Memory voll</string>
+   <string name="verify_error">VerifyError! Stellen Sie sicher, dass der Bytecode gültig ist, oder füge \"-noverify\" zu den Argumenten hinzu</string>
+   <string name="memory_warning">Ladevorgang stoppen, falls der Speicher voll ist</string>
+   <string name="memory_full">Laden fehlgeschlagen: Speicher voll</string>
    <string name="analyze_errors">Fehler im Bytecode anzeigen</string>
 </resources>
 
