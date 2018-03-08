@@ -62,6 +62,7 @@
    <string name="confirm_clear">Wollen Sie die Methode wirklich leeren?</string>
    <string name="confirm_lines">Wollen Sie wirklich alle LineNumberNodes entfernen?</string>
    <string name="confirm_dead_code">Wollen Sie wirklich den unerreichbaren Code entfernen?</string>
+   <string name="confirm_remove">Wollen Sie die Methode wirklich entfernen?</string>
    <string name="remove_lines">Liniennummern entfernen</string>
    <string name="remove_dead_code">Unerreichbaren Code entfernen</string>
    <string name="add_method">MethodNode hinzufügen</string>

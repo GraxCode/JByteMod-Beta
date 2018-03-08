@@ -81,4 +81,5 @@
    <string name="memory_warning">Предупреждение памяти</string>
    <string name="memory_full">Невозможно загрузить файл: оперативная память заполнена</string> 
    <string name="analyze_errors">Отобразить ошибки</string>
+   <!-- <string name="confirm_remove">Are you sure you want to remove that method?</string>  -->
 </resources>

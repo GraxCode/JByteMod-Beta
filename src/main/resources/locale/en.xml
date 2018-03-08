@@ -62,6 +62,7 @@
    <string name="confirm_clear">Are you sure you want to clear that method?</string>
    <string name="confirm_lines">Are you sure you want to remove all LineNumberNodes?</string>
    <string name="confirm_dead_code">Are you sure you want to remove unvisited code?</string>
+   <string name="confirm_remove">Are you sure you want to remove that method?</string>
    <string name="remove_lines">Remove lines</string>
    <string name="remove_dead_code">Remove unreachable code</string>
    <string name="add_method">Add method</string>
