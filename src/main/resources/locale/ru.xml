@@ -78,9 +78,7 @@
    <string name="refresh">Обновить</string>
    <string name="apply">Применить изменения</string>
    <string name="verify_error">Ошибка верификации классов! Убедитесь в том, что байткод правильный и добавлен ли \"-noverify\" в качестве аргумента.</string>
-	<!-- 
-	<string name="memory_warning">Memory warning at loading</string>
-	<string name="memory_full">Failed loading file: Memory full</string> 
-	<string name="analyze_errors">Display mistakes</string>
-	-->
+   <string name="memory_warning">Предупреждение памяти</string>
+   <string name="memory_full">Невозможно загрузить файл: оперативная память заполнена</string> 
+   <string name="analyze_errors">Отобразить ошибки</string>
 </resources>
