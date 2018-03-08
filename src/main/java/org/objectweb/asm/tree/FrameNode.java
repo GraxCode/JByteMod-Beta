@@ -120,7 +120,7 @@ public class FrameNode extends AbstractInsnNode {
       this.local = asList(nLocal, local);
       break;
     case Opcodes.F_CHOP:
-      this.local = Arrays.asList(new Object[nLocal]);
+      this.local = new ArrayList<Object>(Arrays.asList(new Object[nLocal]));
       break;
     case Opcodes.F_SAME:
       break;
@@ -192,8 +192,8 @@ public class FrameNode extends AbstractInsnNode {
 
   // ------------------------------------------------------------------------
 
-  private static List<Object> asList(final int n, final Object[] o) {
-    return Arrays.asList(o).subList(0, n);
+  private static ArrayList<Object> asList(final int n, final Object[] o) {
+    return new ArrayList<Object>(Arrays.asList(o).subList(0, n));
   }
 
   private static Object[] asArray(final List<Object> l) {

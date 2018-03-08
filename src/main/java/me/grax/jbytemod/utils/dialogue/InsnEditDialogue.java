@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -39,6 +40,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.ui.JFrameList;
 import me.grax.jbytemod.ui.JLDCEditor;
 import me.grax.jbytemod.utils.InstrUtils;
 import me.grax.jbytemod.utils.gui.SwingUtils;
@@ -206,7 +208,7 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean ignore(String name) {
     return name.equals("itf") || name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
         || name.equals("localVariables") || name.equals("instructions") || name.equals("preLoad") || name.equals("attrs") || name.equals("extraBytes")
-        || name.equals("attrs") || name.equals("methods") || name.equals("fields");
+        || name.equals("attrs") || name.equals("methods") || name.equals("fields") || name.equals("local") || name.equals("stack");
   }
 
   @Override
@@ -214,13 +216,21 @@ public class InsnEditDialogue extends ClassDialogue {
     if (obj instanceof AbstractInsnNode) {
       AbstractInsnNode ain = (AbstractInsnNode) obj;
       String[] arr = opc.get(ain.getClass().getSimpleName());
-      if (arr == null) {
-        return;
+      if (arr != null) {
+        leftText.add(new JLabel("Opcode: "));
+        JComboBox<String> opcode = new JComboBox<String>(arr);
+        opcode.setSelectedItem(OpUtils.getOpcodeText(ain.getOpcode()).toLowerCase());
+        rightInput.add(wrap("opc", opcode));
       }
-      leftText.add(new JLabel("Opcode: "));
-      JComboBox<String> opcode = new JComboBox<String>(arr);
-      opcode.setSelectedItem(OpUtils.getOpcodeText(ain.getOpcode()).toLowerCase());
-      rightInput.add(wrap("opc", opcode));
+    }
+    if (obj instanceof FrameNode) {
+      FrameNode fn = (FrameNode) obj;
+      leftText.add(new JLabel("Local / Stack: "));
+      JButton edit = new JButton(JByteMod.res.getResource("edit"));
+      edit.addActionListener(e -> {
+        new JFrameList(fn.local, fn.stack).open();
+      });
+      rightInput.add(wrap("editframe", edit));
     }
   }
 

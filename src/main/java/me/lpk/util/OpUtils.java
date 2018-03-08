@@ -530,7 +530,7 @@ public class OpUtils implements org.objectweb.asm.Opcodes {
     case F_SAME:
       return "F_SAME";
     case F_SAME1:
-      return "F_NEW";
+      return "F_SAME1";
     }
     return "FRAME";
   }
