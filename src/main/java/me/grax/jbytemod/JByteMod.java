@@ -98,7 +98,7 @@ public class JByteMod extends JFrame {
   public static Color border;
   private PluginManager pluginManager;
   
-  private static final String jbytemod = "JByteMod 1.7.0";
+  private static final String jbytemod = "JByteMod 1.7.1";
 
   static {
     try {

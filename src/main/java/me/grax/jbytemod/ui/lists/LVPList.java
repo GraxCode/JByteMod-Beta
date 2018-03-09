@@ -60,7 +60,7 @@ public class LVPList extends JList<LVPEntry> {
             });
             menu.add(edit);
           }
-          JMenuItem insert = new JMenuItem(JByteMod.res.getResource("insert"));
+          JMenuItem insert = new JMenuItem(selected != null ? JByteMod.res.getResource("insert") : JByteMod.res.getResource("add"));
           insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               try {
