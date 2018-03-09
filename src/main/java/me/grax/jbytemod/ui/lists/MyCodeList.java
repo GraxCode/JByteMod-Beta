@@ -28,9 +28,11 @@ import javax.swing.event.PopupMenuListener;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
@@ -242,7 +244,7 @@ public class MyCodeList extends JList<InstrEntry> {
         menu.add(edit);
       }
       if (ain instanceof JumpInsnNode) {
-        JMenuItem edit = new JMenuItem("Jump to Label");
+        JMenuItem edit = new JMenuItem(JByteMod.res.getResource("jump_to_label"));
         edit.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             JumpInsnNode jin = (JumpInsnNode) ain;
@@ -253,6 +255,42 @@ public class MyCodeList extends JList<InstrEntry> {
                 setSelectedIndex(i);
                 ensureIndexIsVisible(i);
                 break;
+              }
+            }
+          }
+        });
+        menu.add(edit);
+      }
+      if (ain instanceof MethodInsnNode) {
+        JMenuItem edit = new JMenuItem(JByteMod.res.getResource("go_to_dec"));
+        edit.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            MethodInsnNode min = (MethodInsnNode) ain;
+            for (ClassNode cn : jbm.getFile().getClasses().values()) {
+
+              if (cn.name.equals(min.owner)) {
+                for (MethodNode mn : cn.methods) {
+                  if (min.name.equals(mn.name) && min.desc.equals(mn.desc)) {
+                    jbm.selectMethod(cn, mn);
+                    jbm.treeSelection(cn, mn);
+                    return;
+                  }
+                }
+              }
+            }
+          }
+        });
+        menu.add(edit);
+      }
+      if (ain instanceof FieldInsnNode) {
+        JMenuItem edit = new JMenuItem(JByteMod.res.getResource("go_to_dec"));
+        edit.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            FieldInsnNode fin = (FieldInsnNode) ain;
+            for (ClassNode cn : jbm.getFile().getClasses().values()) {
+              if (cn.name.equals(fin.owner)) {
+                jbm.selectClass(cn);
+                return;
               }
             }
           }

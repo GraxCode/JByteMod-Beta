@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
@@ -109,7 +110,7 @@ public class InsnEditDialogue extends ClassDialogue {
       rightInput.setLayout(new GridLayout(0, 1));
 
       leftText.add(new JLabel("Ldc Type: "));
-      JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long" });
+      JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class" });
       if (ldc.cst instanceof String) {
         ldctype.setSelectedItem("String");
       } else if (ldc.cst instanceof Float) {
@@ -120,12 +121,17 @@ public class InsnEditDialogue extends ClassDialogue {
         ldctype.setSelectedItem("long");
       } else if (ldc.cst instanceof Integer) {
         ldctype.setSelectedItem("int");
-      } else {
-        throw new RuntimeException("Unsupported LDC Type: " + ldc.cst.getClass().getName());
+      } else if (ldc.cst instanceof Type) {
+        ldctype.setSelectedItem("Class");
       }
       rightInput.add(ldctype);
       leftText.add(new JLabel("Ldc Value: "));
-      JTextField cst = new JTextField(ldc.cst.toString());
+      JTextField cst = new JTextField();
+      if(ldc.cst instanceof Type) {
+        cst.setText(((Type)ldc.cst).getDescriptor());
+      } else {
+        cst.setText(ldc.cst.toString());
+      }
       if (ldc.cst instanceof String) {
         rightInput.add(SwingUtils.withButton(cst, "...", e -> {
           JLDCEditor editor = new JLDCEditor(cst.getText());
@@ -155,6 +161,9 @@ public class InsnEditDialogue extends ClassDialogue {
             break;
           case "int":
             ldc.cst = Integer.parseInt(cst.getText());
+            break;
+          case "Class":
+            ldc.cst = Type.getType(cst.getText());
             break;
           }
         } catch (Exception e) {

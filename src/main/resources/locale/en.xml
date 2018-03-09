@@ -82,5 +82,6 @@
    <string name="memory_warning">Memory warning at loading</string>
    <string name="memory_full">Failed loading file: Memory full</string>
    <string name="analyze_errors">Display mistakes</string>
+   <string name="jump_to_label">Jump to Label</string>
 </resources>
 

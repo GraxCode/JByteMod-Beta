@@ -81,5 +81,6 @@
    <string name="memory_warning">Ladevorgang stoppen, falls der Speicher voll ist</string>
    <string name="memory_full">Laden fehlgeschlagen: Speicher voll</string>
    <string name="analyze_errors">Fehler im Bytecode anzeigen</string>
+   <string name="jump_to_label">Zum Label springen</string>
 </resources>
 
