@@ -85,6 +85,11 @@ public class Options {
   public void save() {
     new Thread(() -> {
       try {
+        if(!propFile.exists()) {
+          propFile.mkdirs();
+          propFile.createNewFile();
+          JByteMod.LOGGER.log("Prop file doesn't exist, creating.");
+        }
         PrintWriter pw = new PrintWriter(propFile);
         for (Option o : bools) {
           pw.println(o.getName() + ":" + o.getType().name() + ":" + o.getGroup() + "=" + o.getValue());
