@@ -66,11 +66,27 @@ public class MyCodeList extends JList<InstrEntry> {
         }
         MethodNode mn = entry.getMethod();
         if (SwingUtilities.isRightMouseButton(e)) {
-          AbstractInsnNode ain = entry.getInstr();
           if (mn != null) {
+            AbstractInsnNode ain = entry.getInstr();
             rightClickMethod(jam, mn, ain, MyCodeList.this.getSelectedValuesList());
           } else {
             rightClickField(jam, (FieldEntry) entry);
+          }
+        } else if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+          if (mn != null) {
+            try {
+              new InsnEditDialogue(mn, entry.getInstr()).open();
+            } catch (Exception e1) {
+              new ErrorDisplay(e1);
+            }
+          } else {
+            FieldEntry fe = (FieldEntry) entry;
+            try {
+              new InsnEditDialogue(null, fe.getFn()).open();
+            } catch (Exception e1) {
+              new ErrorDisplay(e1);
+            }
+            MyCodeList.this.loadFields(fe.getCn());
           }
         }
       }
@@ -80,6 +96,12 @@ public class MyCodeList extends JList<InstrEntry> {
 
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK), "search");
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK), "copy");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK), "duplicate");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK), "insert");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), "insert");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "delete");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "up");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "down");
     am.put("search", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -94,6 +116,64 @@ public class MyCodeList extends JList<InstrEntry> {
       }
     });
 
+    am.put("duplicate", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        InstrEntry entry = getSelectedValue();
+        if (entry != null && entry.getMethod() != null) {
+          duplicate(entry.getMethod(), entry.getInstr());
+        }
+      }
+    });
+    am.put("insert", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        InstrEntry entry = getSelectedValue();
+        if (entry != null && entry.getMethod() != null) {
+          try {
+            InsnEditDialogue.createInsertInsnDialog(entry.getMethod(), entry.getInstr(), true);
+            OpUtils.clearLabelCache();
+          } catch (Exception e1) {
+            new ErrorDisplay(e1);
+          }
+        }
+      }
+    });
+    am.put("delete", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        List<InstrEntry> entries = getSelectedValuesList();
+        for (InstrEntry entry : entries) {
+          if (entry.getMethod() != null) {
+            removeNode(entry.getMethod(), entry.getInstr());
+          }
+        }
+      }
+    });
+    am.put("up", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        InstrEntry entry = getSelectedValue();
+        if (entry != null && entry.getMethod() != null) {
+          int index = getSelectedIndex();
+          if (moveUp(entry.getMethod(), entry.getInstr())) {
+            setSelectedIndex(index - 1);
+          }
+        }
+      }
+    });
+    am.put("down", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        InstrEntry entry = getSelectedValue();
+        if (entry != null && entry.getMethod() != null) {
+          int index = getSelectedIndex();
+          if (moveDown(entry.getMethod(), entry.getInstr())) {
+            setSelectedIndex(index + 1);
+          }
+        }
+      }
+    });
     addMouseMotionListener(new MouseMotionAdapter() {
       @Override
       public void mouseMoved(MouseEvent e) {
@@ -207,6 +287,7 @@ public class MyCodeList extends JList<InstrEntry> {
       JPopupMenu menu = new JPopupMenu();
       JMenuItem insertBefore = new JMenuItem(JByteMod.res.getResource("ins_before"));
       insertBefore.addActionListener(new ActionListener() {
+
         public void actionPerformed(ActionEvent e) {
           try {
             InsnEditDialogue.createInsertInsnDialog(mn, ain, false);
@@ -228,6 +309,7 @@ public class MyCodeList extends JList<InstrEntry> {
           }
         }
       });
+      insert.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
       menu.add(insert);
 
       if (InsnEditDialogue.canEdit(ain)) {
@@ -300,57 +382,85 @@ public class MyCodeList extends JList<InstrEntry> {
       JMenuItem duplicate = new JMenuItem(JByteMod.res.getResource("duplicate"));
       duplicate.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          try {
-            if (ain instanceof LabelNode) {
-              mn.instructions.insert(ain, new LabelNode());
-              OpUtils.clearLabelCache();
-            } else if (ain instanceof JumpInsnNode) {
-              mn.instructions.insert(ain, new JumpInsnNode(ain.getOpcode(), ((JumpInsnNode) ain).label));
-            } else {
-              mn.instructions.insert(ain, ain.clone(new HashMap<>()));
-            }
-            MyCodeList.this.loadInstructions(mn);
-
-          } catch (Exception e1) {
-            new ErrorDisplay(e1);
-          }
+          duplicate(mn, ain);
         }
       });
+      duplicate.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
       menu.add(duplicate);
       JMenuItem up = new JMenuItem(JByteMod.res.getResource("move_up"));
       up.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          AbstractInsnNode node = ain.getPrevious();
-          mn.instructions.remove(node);
-          mn.instructions.insert(ain, node);
-          OpUtils.clearLabelCache();
-          MyCodeList.this.loadInstructions(mn);
+          moveUp(mn, ain);
         }
       });
+      up.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0));
       menu.add(up);
       JMenuItem down = new JMenuItem(JByteMod.res.getResource("move_down"));
       down.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          AbstractInsnNode node = ain.getNext();
-          mn.instructions.remove(node);
-          mn.instructions.insertBefore(ain, node);
-          OpUtils.clearLabelCache();
-          MyCodeList.this.loadInstructions(mn);
+          moveDown(mn, ain);
         }
       });
+      down.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0));
       menu.add(down);
       JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
       remove.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          mn.instructions.remove(ain);
-          OpUtils.clearLabelCache();
-          MyCodeList.this.loadInstructions(mn);
+          removeNode(mn, ain);
         }
       });
+      remove.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
       menu.add(copyText());
       menu.add(remove);
       addPopupListener(menu);
       menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+    }
+  }
+
+  protected void removeNode(MethodNode mn, AbstractInsnNode ain) {
+    mn.instructions.remove(ain);
+    OpUtils.clearLabelCache();
+    loadInstructions(mn);
+  }
+
+  protected boolean moveDown(MethodNode mn, AbstractInsnNode ain) {
+    AbstractInsnNode node = ain.getNext();
+    if (node != null) {
+      mn.instructions.remove(node);
+      mn.instructions.insertBefore(ain, node);
+      OpUtils.clearLabelCache();
+      loadInstructions(mn);
+      return true;
+    }
+    return false;
+  }
+
+  protected boolean moveUp(MethodNode mn, AbstractInsnNode ain) {
+    AbstractInsnNode node = ain.getPrevious();
+    if (node != null) {
+      mn.instructions.remove(node);
+      mn.instructions.insert(ain, node);
+      OpUtils.clearLabelCache();
+      loadInstructions(mn);
+      return true;
+    }
+    return false;
+  }
+
+  protected void duplicate(MethodNode mn, AbstractInsnNode ain) {
+    try {
+      if (ain instanceof LabelNode) {
+        mn.instructions.insert(ain, new LabelNode());
+        OpUtils.clearLabelCache();
+      } else if (ain instanceof JumpInsnNode) {
+        mn.instructions.insert(ain, new JumpInsnNode(ain.getOpcode(), ((JumpInsnNode) ain).label));
+      } else {
+        mn.instructions.insert(ain, ain.clone(new HashMap<>()));
+      }
+      MyCodeList.this.loadInstructions(mn);
+
+    } catch (Exception e1) {
+      new ErrorDisplay(e1);
     }
   }
 
@@ -372,6 +482,7 @@ public class MyCodeList extends JList<InstrEntry> {
     } else if (currentClass != null) {
       JMenuItem add = new JMenuItem(JByteMod.res.getResource("add"));
       add.addActionListener(new ActionListener() {
+
         public void actionPerformed(ActionEvent e) {
           try {
             FieldNode fn = new FieldNode(1, "", "", "", null);
@@ -383,6 +494,7 @@ public class MyCodeList extends JList<InstrEntry> {
           }
           MyCodeList.this.loadFields(currentClass);
         }
+
       });
       menu.add(add);
     }
