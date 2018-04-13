@@ -75,7 +75,9 @@ public class MyCodeList extends JList<InstrEntry> {
         } else if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
           if (mn != null) {
             try {
-              new InsnEditDialogue(mn, entry.getInstr()).open();
+              if (InsnEditDialogue.canEdit(entry.getInstr())) {
+                new InsnEditDialogue(mn, entry.getInstr()).open();
+              }
             } catch (Exception e1) {
               new ErrorDisplay(e1);
             }

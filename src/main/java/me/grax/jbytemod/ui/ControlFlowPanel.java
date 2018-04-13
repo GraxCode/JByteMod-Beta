@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,15 +18,20 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
@@ -53,7 +60,7 @@ public class ControlFlowPanel extends JPanel {
   private static final String jumpColorPurple = "#71388a";
   private static final String jumpColorPink = "#8a386d";
 
-  public ControlFlowPanel() {
+  public ControlFlowPanel(JByteMod jbm) {
     this.setLayout(new BorderLayout(0, 0));
     graph = new mxGraph();
     graph.setAutoOrigin(true);
@@ -118,6 +125,34 @@ public class ControlFlowPanel extends JPanel {
     graphComponent.getViewport().setBackground(Color.WHITE);
     graphComponent.setEnabled(false);
     graphComponent.setBorder(new EmptyBorder(0, 0, 0, 0));
+    graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isRightMouseButton(e)) {
+          mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
+          if (cell != null) {
+            BlockVertex bv = (BlockVertex) cell.getValue();
+            System.out.println(cell.getId());
+            JPopupMenu menu = new JPopupMenu();
+            JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
+            edit.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+              }
+            });
+            //menu.add(edit); TODO  
+            JMenuItem dec = new JMenuItem(JByteMod.res.getResource("go_to_dec"));
+            dec.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                jbm.getCodeList().setSelectedIndex(bv.getListIndex());
+                jbm.getTabbedPane().getEditorTab().getCodeBtn().doClick();
+              }
+            });
+            menu.add(dec);
+            menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+          }
+        }
+      }
+    });
     JPanel inner = new JPanel();
     inner.setBorder(new EmptyBorder(30, 30, 30, 30));
     inner.setLayout(new BorderLayout(0, 0));
@@ -203,11 +238,8 @@ public class ControlFlowPanel extends JPanel {
     if (existing.containsKey(b)) {
       return existing.get(b);
     } else {
-      String text = "";
-      for (AbstractInsnNode ain : b.getNodes()) {
-        text += InstrUtils.toString(ain) + "\n";
-      }
-      v1 = graph.insertVertex(parent, null, text, 150, 10, 80, 40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1;");
+      v1 = graph.insertVertex(parent, null, new BlockVertex(b.getNodes(), b.getLabel(), node.instructions.indexOf(b.getNodes().get(0))), 150, 10, 80,
+          40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1");
       graph.updateCellSize(v1); //resize cell
 
       existing.put(b, v1);
@@ -253,4 +285,57 @@ public class ControlFlowPanel extends JPanel {
     graph.getModel().endUpdate();
   }
 
+  class BlockVertex {
+    private ArrayList<AbstractInsnNode> code;
+    private LabelNode label;
+    private int listIndex;
+    private String text;
+
+    public BlockVertex(ArrayList<AbstractInsnNode> code, LabelNode label, int listIndex) {
+      super();
+      this.code = code;
+      this.label = label;
+      this.listIndex = listIndex;
+      this.setupText();
+    }
+
+    private void setupText() {
+      text = "";
+      for (AbstractInsnNode ain : code) {
+        text += InstrUtils.toString(ain) + "\n";
+      }
+    }
+
+    public ArrayList<AbstractInsnNode> getCode() {
+      return code;
+    }
+
+    public void setCode(ArrayList<AbstractInsnNode> code) {
+      this.code = code;
+    }
+
+    public LabelNode getLabel() {
+      return label;
+    }
+
+    public void setLabel(LabelNode label) {
+      this.label = label;
+    }
+
+    public int getListIndex() {
+      return listIndex;
+    }
+
+    public void setListIndex(int listIndex) {
+      this.listIndex = listIndex;
+    }
+
+    @Override
+    public String toString() {
+      if(text == null) {
+        setupText();
+      }
+      return text;
+    }
+  }
 }

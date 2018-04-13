@@ -16,8 +16,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 
 import org.objectweb.asm.tree.ClassNode;
@@ -77,6 +75,10 @@ public class MyTabbedPane extends JTabbedPane {
     this.editorTab.selectClass(cn);
   }
 
+  public MyEditorTab getEditorTab() {
+    return editorTab;
+  }
+
   private JPanel withBorder(JLabel label, Component c) {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout(0, 0));
@@ -94,6 +96,7 @@ public class MyTabbedPane extends JTabbedPane {
   public void selectMethod(ClassNode cn, MethodNode mn) {
     this.editorTab.selectMethod(cn, mn);
   }
+
   @Override
   public Dimension getMinimumSize() {
     return new Dimension(this.getWidth() / 2, 0);

@@ -29,7 +29,7 @@ public class MyEditorTab extends JPanel {
   private JPanel center;
   private WebBreadcrumbToggleButton decompilerBtn;
   private WebBreadcrumbToggleButton analysisBtn;
-
+  private WebBreadcrumbToggleButton codeBtn;
   private boolean classSelected = false;
 
   private static String analysisText = JByteMod.res.getResource("analysis");
@@ -51,12 +51,12 @@ public class MyEditorTab extends JPanel {
 
     this.decompiler = new DecompilerTab(jbm);
 
-    jbm.setCFP(this.analysis = new ControlFlowPanel());
+    jbm.setCFP(this.analysis = new ControlFlowPanel(jbm));
 
     center.add(code);
 
     WebBreadcrumb selector = new WebBreadcrumb(true);
-    WebBreadcrumbToggleButton codeBtn = new WebBreadcrumbToggleButton("Code");
+    codeBtn = new WebBreadcrumbToggleButton("Code");
     codeBtn.setSelected(true);
     codeBtn.addActionListener(e -> {
       if (center.getComponent(0) != code) {
@@ -109,6 +109,10 @@ public class MyEditorTab extends JPanel {
     south.add(selector);
     this.add(center, BorderLayout.CENTER);
     this.add(south, BorderLayout.PAGE_END);
+  }
+
+  public WebBreadcrumbToggleButton getCodeBtn() {
+    return codeBtn;
   }
 
   private JPanel withBorder(JLabel label, Component c) {

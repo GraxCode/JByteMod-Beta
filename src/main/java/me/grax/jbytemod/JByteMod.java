@@ -429,6 +429,10 @@ public class JByteMod extends JFrame {
     this.tabbedPane = tp;
   }
 
+  public MyTabbedPane getTabbedPane() {
+    return tabbedPane;
+  }
+
   public TCBList getTCBList() {
     return tcblist;
   }
