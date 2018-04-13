@@ -132,7 +132,6 @@ public class ControlFlowPanel extends JPanel {
           mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
           if (cell != null) {
             BlockVertex bv = (BlockVertex) cell.getValue();
-            System.out.println(cell.getId());
             JPopupMenu menu = new JPopupMenu();
             JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
             edit.addActionListener(new ActionListener() {
