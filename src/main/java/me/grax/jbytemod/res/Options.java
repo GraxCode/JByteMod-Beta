@@ -86,7 +86,7 @@ public class Options {
     new Thread(() -> {
       try {
         if(!propFile.exists()) {
-          propFile.mkdirs();
+          propFile.getParentFile().mkdirs();
           propFile.createNewFile();
           JByteMod.LOGGER.log("Prop file doesn't exist, creating.");
         }
