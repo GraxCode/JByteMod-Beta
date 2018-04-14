@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +32,19 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxCompactTreeLayout;
+import com.mxgraph.layout.mxEdgeLabelLayout;
+import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.layout.mxParallelEdgeLayout;
+import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 import me.grax.jbytemod.JByteMod;
@@ -51,6 +60,7 @@ public class ControlFlowPanel extends JPanel {
   private ArrayList<Block> cf = new ArrayList<>();
   private mxGraph graph;
   private mxGraphComponent graphComponent;
+  private JScrollPane scp;
 
   private static final String edgeColor = "#111111";
   private static final String jumpColor = "#39698a";
@@ -121,10 +131,29 @@ public class ControlFlowPanel extends JPanel {
     lpad.add(rs);
     this.add(lpad, BorderLayout.NORTH);
 
-    graphComponent = new mxGraphComponent(graph);
+    graphComponent = new mxGraphComponent(graph) {
+      @Override
+      public void zoomIn() {
+        mxGraphView view = graph.getView();
+        double scale = view.getScale();
+        if (scale < 4) {
+          zoom(zoomFactor);
+        }
+      }
+
+      @Override
+      public void zoomOut() {
+        mxGraphView view = graph.getView();
+        double scale = view.getScale();
+        if ((scp.getVerticalScrollBar().isVisible() || scale >= 1) && scale > 0.3) {
+          zoom(1 / zoomFactor);
+        }
+      }
+    };
     graphComponent.getViewport().setBackground(Color.WHITE);
     graphComponent.setEnabled(false);
     graphComponent.setBorder(new EmptyBorder(0, 0, 0, 0));
+    graphComponent.setZoomFactor(1.1);
     graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
       @Override
       public void mousePressed(MouseEvent e) {
@@ -152,13 +181,32 @@ public class ControlFlowPanel extends JPanel {
         }
       }
     });
+    graphComponent.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
+
+      @Override
+      public void mouseWheelMoved(MouseWheelEvent e) {
+        if (e.isControlDown()) {
+          if (e.getWheelRotation() < 0) {
+            graphComponent.zoomIn();
+          } else {
+            graphComponent.zoomOut();
+          }
+          repaint();
+          revalidate();
+        } else {
+          //do we need this on linux too?
+          scp.getVerticalScrollBar()
+              .setValue(scp.getVerticalScrollBar().getValue() + e.getUnitsToScroll() * scp.getVerticalScrollBar().getUnitIncrement());
+        }
+      }
+    });
     JPanel inner = new JPanel();
     inner.setBorder(new EmptyBorder(30, 30, 30, 30));
     inner.setLayout(new BorderLayout(0, 0));
     inner.setBackground(Color.WHITE);
     inner.add(graphComponent, BorderLayout.CENTER);
     graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
-    JScrollPane scp = new JScrollPane(inner);
+    scp = new JScrollPane(inner);
 
     scp.getVerticalScrollBar().setUnitIncrement(16);
     this.add(scp, BorderLayout.CENTER);
@@ -218,11 +266,18 @@ public class ControlFlowPanel extends JPanel {
           }
         }
       }
+      graph.getView().setScale(1);
       mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
       layout.setFineTuning(true);
       layout.setIntraCellSpacing(25d);
       layout.setInterRankCellSpacing(80d);
       layout.execute(graph.getDefaultParent());
+      //      mxPartitionLayout ct = new mxPartitionLayout(graph);
+      //      ct.execute(graph.getDefaultParent());
+      //      new mxCircleLayout(graph).execute(graph.getDefaultParent());
+      //      new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
+      //      mxFastOrganicLayout first = new mxFastOrganicLayout(graph);
+      //      mxParallelEdgeLayout second = new mxParallelEdgeLayout(graph);
     } finally {
       graph.getModel().endUpdate();
     }
@@ -331,7 +386,7 @@ public class ControlFlowPanel extends JPanel {
 
     @Override
     public String toString() {
-      if(text == null) {
+      if (text == null) {
         setupText();
       }
       return text;
