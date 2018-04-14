@@ -32,12 +32,6 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.mxgraph.layout.mxCircleLayout;
-import com.mxgraph.layout.mxCompactTreeLayout;
-import com.mxgraph.layout.mxEdgeLabelLayout;
-import com.mxgraph.layout.mxFastOrganicLayout;
-import com.mxgraph.layout.mxParallelEdgeLayout;
-import com.mxgraph.layout.mxPartitionLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -73,11 +67,11 @@ public class ControlFlowPanel extends JPanel {
   public ControlFlowPanel(JByteMod jbm) {
     this.setLayout(new BorderLayout(0, 0));
     graph = new mxGraph();
+    setStyles();
     graph.setAutoOrigin(true);
     graph.setAutoSizeCells(true);
     graph.setHtmlLabels(true);
-    setStyles();
-
+    graph.setGridEnabled(true);
     JPanel lpad = new JPanel();
     lpad.setBorder(new EmptyBorder(1, 5, 0, 1));
     lpad.setLayout(new GridLayout());
@@ -216,11 +210,12 @@ public class ControlFlowPanel extends JPanel {
     Map<String, Object> edge = new HashMap<String, Object>();
     edge.put(mxConstants.STYLE_ROUNDED, true);
     edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-    edge.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
+    edge.put(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ELBOW);
     edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
     edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_OPEN);
     edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
     edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+
     //we don't need to set colors
     mxStylesheet edgeStyle = new mxStylesheet();
     edgeStyle.setDefaultEdgeStyle(edge);
@@ -272,12 +267,6 @@ public class ControlFlowPanel extends JPanel {
       layout.setIntraCellSpacing(25d);
       layout.setInterRankCellSpacing(80d);
       layout.execute(graph.getDefaultParent());
-      //      mxPartitionLayout ct = new mxPartitionLayout(graph);
-      //      ct.execute(graph.getDefaultParent());
-      //      new mxCircleLayout(graph).execute(graph.getDefaultParent());
-      //      new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
-      //      mxFastOrganicLayout first = new mxFastOrganicLayout(graph);
-      //      mxParallelEdgeLayout second = new mxParallelEdgeLayout(graph);
     } finally {
       graph.getModel().endUpdate();
     }
