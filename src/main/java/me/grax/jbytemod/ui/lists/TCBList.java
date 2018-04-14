@@ -51,7 +51,7 @@ public class TCBList extends JList<TCBEntry> {
               public void actionPerformed(ActionEvent e) {
                 try {
                   new InsnEditDialogue(mn, selected.getTcbn()).open();
-                  if (selected.getTcbn().type.equals("")) {
+                  if (selected.getTcbn().type != null && selected.getTcbn().type.equals("")) {
                     selected.getTcbn().type = null;
                   }
                 } catch (Exception ex) {
@@ -66,10 +66,10 @@ public class TCBList extends JList<TCBEntry> {
           insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               try {
-                TryCatchBlockNode tcbn = new TryCatchBlockNode(null, null, null, "");
+                TryCatchBlockNode tcbn = new TryCatchBlockNode(null, null, null, null);
                 if (new InsnEditDialogue(mn, tcbn).open())
                   if (tcbn.handler != null && tcbn.start != null && tcbn.end != null) {
-                    if (tcbn.type.equals("")) {
+                    if (tcbn.type != null && tcbn.type.equals("")) {
                       tcbn.type = null;
                     }
                     mn.tryCatchBlocks.add(tcbn);
