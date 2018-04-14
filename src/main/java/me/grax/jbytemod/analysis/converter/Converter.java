@@ -30,7 +30,7 @@ public class Converter implements Opcodes {
     this.nodes = new ArrayList<>(Arrays.asList(array));
   }
 
-  public ArrayList<Block> convert(boolean simplify, boolean removeRedundant) {
+  public ArrayList<Block> convert(boolean simplify, boolean removeRedundant, boolean skipDupeSwitches) {
     ArrayList<Block> blocks = new ArrayList<>();
     HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
     Block block = null;
@@ -102,7 +102,13 @@ public class Converter implements Opcodes {
           blockAtDefault.getInput().add(b);
           outputs.add(blockAtDefault);
         }
+        ArrayList<LabelNode> alreadyConnected = new ArrayList<>();
         for (LabelNode l : tsin.labels) {
+          if (skipDupeSwitches) {
+            if (alreadyConnected.contains(l))
+              continue;
+            alreadyConnected.add(l);
+          }
           Block blockAtCase = correspBlock.get(l);
           blockAtCase.getInput().add(b);
           outputs.add(blockAtCase);
@@ -116,7 +122,13 @@ public class Converter implements Opcodes {
           blockAtDefault.getInput().add(b);
           outputs.add(blockAtDefault);
         }
+        ArrayList<LabelNode> alreadyConnected = new ArrayList<>();
         for (LabelNode l : lsin.labels) {
+          if (skipDupeSwitches) {
+            if (alreadyConnected.contains(l))
+              continue;
+            alreadyConnected.add(l);
+          }
           Block blockAtCase = correspBlock.get(l);
           blockAtCase.getInput().add(b);
           outputs.add(blockAtCase);
@@ -153,7 +165,7 @@ public class Converter implements Opcodes {
         }
       }
     }
-    if (DEBUG ) {
+    if (DEBUG) {
       ArrayList<Block> visited = new ArrayList<>();
       calculateDepths(visited, blocks, first, 0);
       for (Block b : blocks) {

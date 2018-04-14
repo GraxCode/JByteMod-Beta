@@ -130,7 +130,7 @@ public class ControlFlowPanel extends JPanel {
       public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isRightMouseButton(e)) {
           mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
-          if (cell != null) {
+          if (cell != null && cell.getValue() instanceof BlockVertex) {
             BlockVertex bv = (BlockVertex) cell.getValue();
             JPopupMenu menu = new JPopupMenu();
             JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
@@ -197,7 +197,7 @@ public class ControlFlowPanel extends JPanel {
     }
     Converter c = new Converter(node);
     try {
-      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean()));
+      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean(), true));
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorDisplay(e);
