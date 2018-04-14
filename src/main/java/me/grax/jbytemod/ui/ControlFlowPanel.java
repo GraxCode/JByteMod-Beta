@@ -37,6 +37,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
@@ -66,7 +67,14 @@ public class ControlFlowPanel extends JPanel {
 
   public ControlFlowPanel(JByteMod jbm) {
     this.setLayout(new BorderLayout(0, 0));
-    graph = new mxGraph();
+    graph = new mxGraph() {
+      @Override
+      public mxRectangle getPreferredSizeForCell(Object arg0) {
+        mxRectangle size = super.getPreferredSizeForCell(arg0);
+        size.setWidth(size.getWidth() + 10); //some items touch the border
+        return size;
+      }
+    };
     setStyles();
     graph.setAutoOrigin(true);
     graph.setAutoSizeCells(true);
