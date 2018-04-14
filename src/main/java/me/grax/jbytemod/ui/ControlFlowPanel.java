@@ -68,7 +68,7 @@ public class ControlFlowPanel extends JPanel {
   private static final String jumpColorGreen = "#388a47";
   private static final String jumpColorRed = "#8a3e38";
   private static final String jumpColorPurple = "#71388a";
-  private static final String jumpColorPink = "#8a386d";
+  private static final String jumpColorPink = "#ba057a"; //8a386d
 
   public ControlFlowPanel(JByteMod jbm) {
     this.setLayout(new BorderLayout(0, 0));
