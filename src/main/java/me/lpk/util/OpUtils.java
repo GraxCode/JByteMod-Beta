@@ -15,6 +15,7 @@ import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
@@ -579,6 +580,9 @@ public class OpUtils implements org.objectweb.asm.Opcodes {
     case AbstractInsnNode.TYPE_INSN:
       TypeInsnNode tin = (TypeInsnNode) ain;
       return s + " " + tin.desc;
+    case AbstractInsnNode.MULTIANEWARRAY_INSN:
+      MultiANewArrayInsnNode mnin = (MultiANewArrayInsnNode) ain;
+      return s + " " + mnin.dims + " " + mnin.desc;
     case AbstractInsnNode.JUMP_INSN:
       JumpInsnNode jin = (JumpInsnNode) ain;
       return s + " " + getIndex(jin.label);

@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -54,6 +55,10 @@ public class InstrUtils {
       } else {
         opc += getDisplayClass(esc);
       }
+      break;
+    case AbstractInsnNode.MULTIANEWARRAY_INSN:
+      MultiANewArrayInsnNode mnin = (MultiANewArrayInsnNode) ain;
+      opc += mnin.dims + " " + getDisplayType(TextUtils.escape(mnin.desc), true);
       break;
     case AbstractInsnNode.JUMP_INSN:
       JumpInsnNode jin = (JumpInsnNode) ain;
@@ -247,6 +252,10 @@ public class InstrUtils {
     case AbstractInsnNode.VAR_INSN:
       VarInsnNode vin = (VarInsnNode) ain;
       opc += vin.var;
+      break;
+    case AbstractInsnNode.MULTIANEWARRAY_INSN:
+      MultiANewArrayInsnNode mnin = (MultiANewArrayInsnNode) ain;
+      opc += mnin.dims + " " + getDisplayType(mnin.desc, false);
       break;
     case AbstractInsnNode.TYPE_INSN:
       TypeInsnNode tin = (TypeInsnNode) ain;

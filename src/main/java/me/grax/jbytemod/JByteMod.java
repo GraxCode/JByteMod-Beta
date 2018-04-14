@@ -97,8 +97,8 @@ public class JByteMod extends JFrame {
   public static JByteMod instance;
   public static Color border;
   private PluginManager pluginManager;
-  
-  private static final String jbytemod = "JByteMod 1.7.1";
+
+  private static final String jbytemod = "JByteMod 1.7.2";
 
   static {
     try {
@@ -113,11 +113,11 @@ public class JByteMod extends JFrame {
     res = new LanguageRes();
     ops = new Options();
     try {
-    System.setProperty("file.encoding","UTF-8");
-    Field charset = Charset.class.getDeclaredField("defaultCharset");
-    charset.setAccessible(true);
-    charset.set(null,null);
-    } catch(Throwable t) {
+      System.setProperty("file.encoding", "UTF-8");
+      Field charset = Charset.class.getDeclaredField("defaultCharset");
+      charset.setAccessible(true);
+      charset.set(null, null);
+    } catch (Throwable t) {
       JByteMod.LOGGER.err("Failed to set encoding to UTF-8 (" + t.getMessage() + ")");
     }
   }
@@ -157,7 +157,7 @@ public class JByteMod extends JFrame {
     if (line.hasOption("c")) {
       configPath = line.getOptionValue("c");
     }
-    initialize(); 
+    initialize();
     EventQueue.invokeLater(new Runnable() {
 
       public void run() {

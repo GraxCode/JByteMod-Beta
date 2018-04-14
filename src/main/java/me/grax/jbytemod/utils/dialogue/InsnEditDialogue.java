@@ -35,6 +35,7 @@ import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -69,6 +70,7 @@ public class InsnEditDialogue extends ClassDialogue {
     opc.put(VarInsnNode.class.getSimpleName(),
         new String[] { "iload", "lload", "fload", "dload", "aload", "istore", "lstore", "fstore", "dstore", "astore", "ret" });
     opc.put(TypeInsnNode.class.getSimpleName(), new String[] { "new", "anewarray", "checkcast", "instanceof" });
+    opc.put(MultiANewArrayInsnNode.class.getSimpleName(), new String[] { "multianewarray" });
     opc.put(LdcInsnNode.class.getSimpleName(), new String[] { "ldc" });
     opc.put(IincInsnNode.class.getSimpleName(), new String[] { "iinc" });
     opc.put(JumpInsnNode.class.getSimpleName(), new String[] { "ifeq", "ifne", "iflt", "ifge", "ifgt", "ifle", "if_icmpeq", "if_icmpne", "if_icmplt",
