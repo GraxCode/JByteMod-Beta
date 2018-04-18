@@ -18,6 +18,7 @@ import com.alee.extended.breadcrumb.WebBreadcrumbToggleButton;
 import com.alee.utils.SwingUtils;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.graph.ControlFlowPanel;
 
 public class MyEditorTab extends JPanel {
   private MyCodeEditor codeEditor;

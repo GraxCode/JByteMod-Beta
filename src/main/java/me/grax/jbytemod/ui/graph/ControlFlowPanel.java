@@ -1,4 +1,4 @@
-package me.grax.jbytemod.ui;
+package me.grax.jbytemod.ui.graph;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -45,6 +45,7 @@ import com.mxgraph.view.mxStylesheet;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
 import me.grax.jbytemod.analysis.converter.Converter;
+import me.grax.jbytemod.ui.graph.CFGraph.CFGComponent;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.ImageUtils;
 import me.grax.jbytemod.utils.InstrUtils;
@@ -53,8 +54,8 @@ public class ControlFlowPanel extends JPanel {
 
   private MethodNode node;
   private ArrayList<Block> cf = new ArrayList<>();
-  private mxGraph graph;
-  private mxGraphComponent graphComponent;
+  private CFGraph graph;
+  private CFGComponent graphComponent;
   private JScrollPane scp;
 
   private static final String edgeColor = "#111111";
@@ -67,19 +68,7 @@ public class ControlFlowPanel extends JPanel {
 
   public ControlFlowPanel(JByteMod jbm) {
     this.setLayout(new BorderLayout(0, 0));
-    graph = new mxGraph() {
-      @Override
-      public mxRectangle getPreferredSizeForCell(Object arg0) {
-        mxRectangle size = super.getPreferredSizeForCell(arg0);
-        size.setWidth(size.getWidth() + 10); //some items touch the border
-        return size;
-      }
-    };
-    setStyles();
-    graph.setAutoOrigin(true);
-    graph.setAutoSizeCells(true);
-    graph.setHtmlLabels(true);
-    graph.setGridEnabled(true);
+    graph = new CFGraph(jbm);
     JPanel lpad = new JPanel();
     lpad.setBorder(new EmptyBorder(1, 5, 0, 1));
     lpad.setLayout(new GridLayout());
@@ -133,101 +122,18 @@ public class ControlFlowPanel extends JPanel {
     lpad.add(rs);
     this.add(lpad, BorderLayout.NORTH);
 
-    graphComponent = new mxGraphComponent(graph) {
-      @Override
-      public void zoomIn() {
-        mxGraphView view = graph.getView();
-        double scale = view.getScale();
-        if (scale < 4) {
-          zoom(zoomFactor);
-        }
-      }
-
-      @Override
-      public void zoomOut() {
-        mxGraphView view = graph.getView();
-        double scale = view.getScale();
-        if ((scp.getVerticalScrollBar().isVisible() || scale >= 1) && scale > 0.3) {
-          zoom(1 / zoomFactor);
-        }
-      }
-    };
-    graphComponent.getViewport().setBackground(Color.WHITE);
-    graphComponent.setEnabled(false);
-    graphComponent.setBorder(new EmptyBorder(0, 0, 0, 0));
-    graphComponent.setZoomFactor(1.1);
-    graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
-      @Override
-      public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isRightMouseButton(e)) {
-          mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
-          if (cell != null && cell.getValue() instanceof BlockVertex) {
-            BlockVertex bv = (BlockVertex) cell.getValue();
-            JPopupMenu menu = new JPopupMenu();
-            JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
-            edit.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-              }
-            });
-            //menu.add(edit); TODO  
-            JMenuItem dec = new JMenuItem(JByteMod.res.getResource("go_to_dec"));
-            dec.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                jbm.getCodeList().setSelectedIndex(bv.getListIndex());
-                jbm.getTabbedPane().getEditorTab().getCodeBtn().doClick();
-              }
-            });
-            menu.add(dec);
-            menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
-          }
-        }
-      }
-    });
-    graphComponent.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
-
-      @Override
-      public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.isControlDown()) {
-          if (e.getWheelRotation() < 0) {
-            graphComponent.zoomIn();
-          } else {
-            graphComponent.zoomOut();
-          }
-          repaint();
-          revalidate();
-        } else {
-          //do we need this on linux too?
-          scp.getVerticalScrollBar()
-              .setValue(scp.getVerticalScrollBar().getValue() + e.getUnitsToScroll() * scp.getVerticalScrollBar().getUnitIncrement());
-        }
-      }
-    });
+    graphComponent = graph.getComponent();
+    graphComponent.setScp(scp);
     JPanel inner = new JPanel();
     inner.setBorder(new EmptyBorder(30, 30, 30, 30));
     inner.setLayout(new BorderLayout(0, 0));
     inner.setBackground(Color.WHITE);
     inner.add(graphComponent, BorderLayout.CENTER);
-    graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
+    //graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
     scp = new JScrollPane(inner);
 
     scp.getVerticalScrollBar().setUnitIncrement(16);
     this.add(scp, BorderLayout.CENTER);
-  }
-
-  private void setStyles() {
-    Map<String, Object> edge = new HashMap<String, Object>();
-    edge.put(mxConstants.STYLE_ROUNDED, true);
-    edge.put(mxConstants.STYLE_ORTHOGONAL, false);
-    edge.put(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ELBOW);
-    edge.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
-    edge.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_OPEN);
-    edge.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-    edge.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-
-    //we don't need to set colors
-    mxStylesheet edgeStyle = new mxStylesheet();
-    edgeStyle.setDefaultEdgeStyle(edge);
-    graph.setStylesheet(edgeStyle);
   }
 
   public MethodNode getNode() {
@@ -246,6 +152,7 @@ public class ControlFlowPanel extends JPanel {
       this.clear();
       return;
     }
+    graphComponent.setScp(scp);
     Converter c = new Converter(node);
     try {
       cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean(), true));
@@ -334,59 +241,5 @@ public class ControlFlowPanel extends JPanel {
     graph.getModel().beginUpdate();
     graph.removeCells(graph.getChildCells(graph.getDefaultParent(), true, true));
     graph.getModel().endUpdate();
-  }
-
-  class BlockVertex {
-    private ArrayList<AbstractInsnNode> code;
-    private LabelNode label;
-    private int listIndex;
-    private String text;
-
-    public BlockVertex(ArrayList<AbstractInsnNode> code, LabelNode label, int listIndex) {
-      super();
-      this.code = code;
-      this.label = label;
-      this.listIndex = listIndex;
-      this.setupText();
-    }
-
-    private void setupText() {
-      text = "";
-      for (AbstractInsnNode ain : code) {
-        text += InstrUtils.toString(ain) + "\n";
-      }
-    }
-
-    public ArrayList<AbstractInsnNode> getCode() {
-      return code;
-    }
-
-    public void setCode(ArrayList<AbstractInsnNode> code) {
-      this.code = code;
-    }
-
-    public LabelNode getLabel() {
-      return label;
-    }
-
-    public void setLabel(LabelNode label) {
-      this.label = label;
-    }
-
-    public int getListIndex() {
-      return listIndex;
-    }
-
-    public void setListIndex(int listIndex) {
-      this.listIndex = listIndex;
-    }
-
-    @Override
-    public String toString() {
-      if (text == null) {
-        setupText();
-      }
-      return text;
-    }
   }
 }
