@@ -7,8 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JMenuItem;
@@ -19,11 +17,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
@@ -58,16 +53,20 @@ public class CFGraph extends mxGraph {
   }
 
   private void setStyles() {
-    Map<String, Object> edgeStyle = new HashMap<String, Object>();
+    Map<String, Object> edgeStyle = this.getStylesheet().getDefaultEdgeStyle();
     edgeStyle.put(mxConstants.STYLE_ROUNDED, true);
-    edgeStyle.put(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ELBOW);
     edgeStyle.put(mxConstants.STYLE_ELBOW, mxConstants.ELBOW_VERTICAL);
-    edgeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
     edgeStyle.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_OPEN);
-    edgeStyle.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-    edgeStyle.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-    Map<String, Object> vertexStyle = this.getStylesheet().getDefaultVertexStyle();
+    edgeStyle.put(mxConstants.STYLE_TARGET_PERIMETER_SPACING, 1d);
 
+    //edgeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+    //edgeStyle.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+    //edgeStyle.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+    //default values
+    //edgeStyle.put(mxConstants.STYLE_EDGE, mxEdgeStyle.OrthConnector);
+    //STYLE_EDGE is disabled
+    
+    Map<String, Object> vertexStyle = this.getStylesheet().getDefaultVertexStyle();
     vertexStyle.put(mxConstants.STYLE_SHADOW, true);
     mxStylesheet stylesheet = new mxStylesheet();
     stylesheet.setDefaultEdgeStyle(edgeStyle);

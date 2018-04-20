@@ -5,42 +5,25 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxCellRenderer;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxRectangle;
-import com.mxgraph.view.mxGraph;
-import com.mxgraph.view.mxGraphView;
-import com.mxgraph.view.mxStylesheet;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
@@ -48,7 +31,6 @@ import me.grax.jbytemod.analysis.converter.Converter;
 import me.grax.jbytemod.ui.graph.CFGraph.CFGComponent;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.ImageUtils;
-import me.grax.jbytemod.utils.InstrUtils;
 
 public class ControlFlowPanel extends JPanel {
 
@@ -131,7 +113,6 @@ public class ControlFlowPanel extends JPanel {
     inner.add(graphComponent, BorderLayout.CENTER);
     //graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
     scp = new JScrollPane(inner);
-
     scp.getVerticalScrollBar().setUnitIncrement(16);
     this.add(scp, BorderLayout.CENTER);
   }
@@ -177,16 +158,60 @@ public class ControlFlowPanel extends JPanel {
         }
       }
       graph.getView().setScale(1);
-      mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+      mxHierarchicalLayout layout = new mxHierarchicalLayout(graph) {
+        public double placementStage(double initialX, Object parent) {
+          CFCoordinateAssignment placementStage = new CFCoordinateAssignment(this, intraCellSpacing, interRankCellSpacing, orientation, initialX,
+              parallelEdgeSpacing);
+          placementStage.setFineTuning(fineTuning);
+          placementStage.execute(parent);
+          return placementStage.getLimitX() + interHierarchySpacing;
+        }
+      };
       layout.setFineTuning(true);
       layout.setIntraCellSpacing(25d);
       layout.setInterRankCellSpacing(80d);
+      layout.setDisableEdgeStyle(true);
+      layout.setParallelEdgeSpacing(100d);
+      layout.setUseBoundingBox(true);
       layout.execute(graph.getDefaultParent());
+      //      mxCompactTreeLayout layout = new mxCompactTreeLayout(graph) {
+      //        @Override
+      //        public void execute(Object parent) {
+      //          super.execute(parent);
+      //          Object[] vertexes = mxGraphModel.getChildVertices(graph.getModel(), graph.getDefaultParent());
+      //          for (int i = 0; i < vertexes.length; i++) {
+      //            mxICell parentCell = ((mxICell) (vertexes[i]));
+      //            for (int j = 0; j < parentCell.getEdgeCount(); j++) {
+      //              mxICell edge = parentCell.getEdgeAt(j);
+      //              if (edge.getTerminal(true) != parentCell) {
+      //                continue;
+      //              }
+      //              mxRectangle parentBounds = getVertexBounds(parentCell);
+      //              List<mxPoint> edgePoints = edge.getGeometry().getPoints();
+      //              if (edgePoints != null) {
+      //                mxPoint outPort = edgePoints.get(0);
+      //                mxPoint elbowPoint = edgePoints.get(1);
+      //                if (outPort.getX() != parentBounds.getCenterX()) {
+      //                  outPort.setX(parentBounds.getCenterX());
+      //                  elbowPoint.setX(parentBounds.getCenterX());
+      //                }
+      //              }
+      //            }
+      //          }
+      //        }
+      //      };
+      //      layout.setResetEdges(true);
+      //      layout.setEdgeRouting(true);
+      //      layout.setHorizontal(false);
+      //      layout.setMoveTree(true);
+      //      layout.setUseBoundingBox(true);
+      //      layout.execute(graph.getDefaultParent());
     } finally {
       graph.getModel().endUpdate();
     }
     this.revalidate();
     this.repaint();
+    //TODO set horizontal scroll to half
   }
 
   private HashMap<Block, Object> existing = new HashMap<>();
