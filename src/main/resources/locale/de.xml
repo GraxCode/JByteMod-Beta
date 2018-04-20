@@ -82,5 +82,10 @@
    <string name="memory_full">Laden fehlgeschlagen: Speicher voll</string>
    <string name="analyze_errors">Fehler im Bytecode anzeigen</string>
    <string name="jump_to_label">Zum Label springen</string>
+   <string name="search_ldc">LDC</string>
+   <string name="search_field">Field Referenz</string>
+   <string name="search_method">Method Referenz</string>
+   <string name="replace_ldc">LDC ersetzen</string>
+   <string name="attach">An Prozess anhängen</string>
 </resources>
 

@@ -114,7 +114,7 @@ public class MyMenuBar extends JMenuBar {
     this.add(file);
 
     JMenu search = new JMenu(JByteMod.res.getResource("search"));
-    JMenuItem ldc = new JMenuItem("Search LDC");
+    JMenuItem ldc = new JMenuItem(JByteMod.res.getResource("search_ldc"));
     ldc.addActionListener(new ActionListener() {
 
       @Override
@@ -124,7 +124,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(ldc);
-    JMenuItem field = new JMenuItem("Search FieldInsnNode");
+    JMenuItem field = new JMenuItem(JByteMod.res.getResource("search_field"));
     field.addActionListener(new ActionListener() {
 
       @Override
@@ -134,7 +134,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(field);
-    JMenuItem method = new JMenuItem("Search MethodInsnNode");
+    JMenuItem method = new JMenuItem(JByteMod.res.getResource("search_method"));
     method.addActionListener(new ActionListener() {
 
       @Override
@@ -144,7 +144,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(method);
-    JMenuItem replace = new JMenuItem("Replace LDC");
+    JMenuItem replace = new JMenuItem(JByteMod.res.getResource("replace_ldc"));
     replace.addActionListener(new ActionListener() {
 
       @Override
@@ -165,7 +165,7 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     utils.add(accman);
-    JMenuItem attach = new JMenuItem("Attach to Process");
+    JMenuItem attach = new JMenuItem(JByteMod.res.getResource("attach"));
     attach.addActionListener(new ActionListener() {
 
       @Override
