@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -22,8 +23,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.objectweb.asm.tree.MethodNode;
 
+import com.mxgraph.layout.mxCompactTreeLayout;
+import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.layout.orthogonal.mxOrthogonalLayout;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxCellRenderer;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxRectangle;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
@@ -158,15 +166,7 @@ public class ControlFlowPanel extends JPanel {
         }
       }
       graph.getView().setScale(1);
-      mxHierarchicalLayout layout = new mxHierarchicalLayout(graph) {
-        public double placementStage(double initialX, Object parent) {
-          CFCoordinateAssignment placementStage = new CFCoordinateAssignment(this, intraCellSpacing, interRankCellSpacing, orientation, initialX,
-              parallelEdgeSpacing);
-          placementStage.setFineTuning(fineTuning);
-          placementStage.execute(parent);
-          return placementStage.getLimitX() + interHierarchySpacing;
-        }
-      };
+      PatchedHierarchicalLayout layout = new PatchedHierarchicalLayout(graph);
       layout.setFineTuning(true);
       layout.setIntraCellSpacing(25d);
       layout.setInterRankCellSpacing(80d);
@@ -174,38 +174,13 @@ public class ControlFlowPanel extends JPanel {
       layout.setParallelEdgeSpacing(100d);
       layout.setUseBoundingBox(true);
       layout.execute(graph.getDefaultParent());
-      //      mxCompactTreeLayout layout = new mxCompactTreeLayout(graph) {
-      //        @Override
-      //        public void execute(Object parent) {
-      //          super.execute(parent);
-      //          Object[] vertexes = mxGraphModel.getChildVertices(graph.getModel(), graph.getDefaultParent());
-      //          for (int i = 0; i < vertexes.length; i++) {
-      //            mxICell parentCell = ((mxICell) (vertexes[i]));
-      //            for (int j = 0; j < parentCell.getEdgeCount(); j++) {
-      //              mxICell edge = parentCell.getEdgeAt(j);
-      //              if (edge.getTerminal(true) != parentCell) {
-      //                continue;
-      //              }
-      //              mxRectangle parentBounds = getVertexBounds(parentCell);
-      //              List<mxPoint> edgePoints = edge.getGeometry().getPoints();
-      //              if (edgePoints != null) {
-      //                mxPoint outPort = edgePoints.get(0);
-      //                mxPoint elbowPoint = edgePoints.get(1);
-      //                if (outPort.getX() != parentBounds.getCenterX()) {
-      //                  outPort.setX(parentBounds.getCenterX());
-      //                  elbowPoint.setX(parentBounds.getCenterX());
-      //                }
-      //              }
-      //            }
-      //          }
-      //        }
-      //      };
-      //      layout.setResetEdges(true);
-      //      layout.setEdgeRouting(true);
-      //      layout.setHorizontal(false);
-      //      layout.setMoveTree(true);
-      //      layout.setUseBoundingBox(true);
-      //      layout.execute(graph.getDefaultParent());
+//      mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
+//      layout.setResetEdges(true);
+//      layout.setEdgeRouting(true);
+//      layout.setHorizontal(false);
+//      layout.setMoveTree(true);
+//      layout.setUseBoundingBox(true);
+//      layout.execute(graph.getDefaultParent());
     } finally {
       graph.getModel().endUpdate();
     }
@@ -221,7 +196,7 @@ public class ControlFlowPanel extends JPanel {
     if (existing.containsKey(b)) {
       return existing.get(b);
     } else {
-      v1 = graph.insertVertex(parent, null, new BlockVertex(b.getNodes(), b.getLabel(), node.instructions.indexOf(b.getNodes().get(0))), 150, 10, 80,
+      v1 = graph.insertVertex(parent, null, new BlockVertex(node, b, b.getNodes(), b.getLabel(), node.instructions.indexOf(b.getNodes().get(0))), 150, 10, 80,
           40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1");
       graph.updateCellSize(v1); //resize cell
 

@@ -1,0 +1,36 @@
+package me.grax.decompiler.code.ast.expressions;
+
+import me.grax.decompiler.code.ast.Expression;
+import me.grax.decompiler.code.ast.VarType;
+import me.grax.jbytemod.utils.InstrUtils;
+import me.grax.jbytemod.utils.TextUtils;
+
+public class ArrayIndexExpression extends Expression {
+
+  private Expression array;
+  private Expression index;
+  private VarType type;
+
+  public ArrayIndexExpression(Expression array, Expression index, VarType arrayType) {
+    super();
+    this.array = array;
+    this.index = index;
+    this.type = arrayType;
+  }
+
+
+  @Override
+  public String toString() {
+    return TextUtils.addTag(array.toString(), "font color=" + InstrUtils.primColor.getString()) + "[" + index + "]";
+  }
+
+  @Override
+  public int size() {
+    return type.size();
+  }
+
+  @Override
+  public Expression clone() {
+    return new ArrayIndexExpression(array.clone(), index.clone(), type);
+  }
+}

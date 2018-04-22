@@ -4,17 +4,29 @@ import java.util.ArrayList;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodNode;
 
+import me.grax.decompiler.code.ast.Expression;
+import me.grax.decompiler.struct.Conversion;
+import me.grax.decompiler.syntax.nodes.NodeList;
+import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.analysis.block.Block;
+import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.InstrUtils;
 
-public   class BlockVertex {
+public class BlockVertex {
   private ArrayList<AbstractInsnNode> code;
   private LabelNode label;
   private int listIndex;
   private String text;
+  private Block block;
+  private MethodNode mn;
+  private boolean decompile = JByteMod.ops.get("decompile_graph").getBoolean();
 
-  public BlockVertex(ArrayList<AbstractInsnNode> code, LabelNode label, int listIndex) {
+  public BlockVertex(MethodNode mn, Block block, ArrayList<AbstractInsnNode> code, LabelNode label, int listIndex) {
     super();
+    this.mn = mn;
+    this.block = block;
     this.code = code;
     this.label = label;
     this.listIndex = listIndex;
@@ -23,8 +35,22 @@ public   class BlockVertex {
 
   private void setupText() {
     text = "";
-    for (AbstractInsnNode ain : code) {
-      text += InstrUtils.toString(ain) + "\n";
+    if (decompile) {
+      try {
+        NodeList list = new NodeList();
+        Conversion c = new Conversion(mn, list);
+        c.convert(block);
+        for (Expression e : list) {
+          text += e.toString() + "\n";
+        }
+      } catch (Exception e) {
+        new ErrorDisplay(e);
+      }
+    }
+    if (text.trim().isEmpty()) {
+      for (AbstractInsnNode ain : code) {
+        text += InstrUtils.toString(ain) + "\n";
+      }
     }
   }
 
@@ -50,6 +76,10 @@ public   class BlockVertex {
 
   public void setListIndex(int listIndex) {
     this.listIndex = listIndex;
+  }
+
+  public Block getBlock() {
+    return block;
   }
 
   @Override

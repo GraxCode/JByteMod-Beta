@@ -65,7 +65,7 @@ public class CFGraph extends mxGraph {
     //default values
     //edgeStyle.put(mxConstants.STYLE_EDGE, mxEdgeStyle.OrthConnector);
     //STYLE_EDGE is disabled
-    
+
     Map<String, Object> vertexStyle = this.getStylesheet().getDefaultVertexStyle();
     vertexStyle.put(mxConstants.STYLE_SHADOW, true);
     mxStylesheet stylesheet = new mxStylesheet();

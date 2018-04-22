@@ -88,5 +88,6 @@
    <string name="search_method">Search Method reference</string>
    <string name="replace_ldc">Replace LDC</string>
    <string name="attach">Attach to process</string>
+   <string name="decompile_graph">Decompile Graph</string>
 </resources>
 
