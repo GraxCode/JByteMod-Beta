@@ -79,9 +79,9 @@ public class JVMStack {
     if (size == 2) {
       return list.pop();
     } else if (size == 1) {
-      list.pop();
+      Expression oldTop = list.pop();
       if (peek().size() != 1) {
-        throw new StackException("Second value is " + top.size() + "-word, cannot pop2");
+        throw new StackException("Second value is " + top.size() + "-word, cannot pop2 (Top was 1-word: " + oldTop.getClass().getSimpleName() + " " + oldTop.toString() + ")");
       }
       return list.pop();
     }

@@ -297,13 +297,18 @@ public class Conversion implements Opcodes {
       throw new RuntimeException(OpUtils.getOpcodeText(opcode));
     }
     ArrayList<Expression> args = new ArrayList<>();
-    for (int i : DescUtils.getInnerDescSizes(desc)) {
+    ArrayList<Integer> descSizes = DescUtils.getInnerDescSizes(desc);
+    if (opcode == INVOKEVIRTUAL) { //for some reason invokevirtual reads stack as arg1, arg2.... and all other read as argN ... arg1
+      Collections.reverse(descSizes);
+    }
+    for (int i : descSizes) {
       if (i == 1) {
         args.add(stack.pop());
       } else {
         args.add(stack.pop2());
       }
     }
+    Collections.reverse(args);
     if (opcode == INVOKESTATIC) {
       MethodExpression me = new MethodExpression(new ClassDefinition(owner), name, args, VarType.ofDesc(desc));
       if (me.getReturnType() == VarType.VOID) {
@@ -319,7 +324,7 @@ public class Conversion implements Opcodes {
             Expression e = stack.peek();
             if (e instanceof NewTypeExpression) {
               NewTypeExpression nte = (NewTypeExpression) e;
-              nte.setInit(me); //TODO remove method owner and name
+              nte.setInit(me);
               return;
             }
           }
@@ -329,7 +334,6 @@ public class Conversion implements Opcodes {
         stack.push(me);
       }
     } else if (opcode == INVOKEINTERFACE) {
-      Collections.reverse(args); //TODO check if this is right
       MethodExpression me = new MethodExpression(stack.pop(), name, args, VarType.ofDesc(desc));
       if (me.getReturnType() == VarType.VOID) {
         list.add(me);
