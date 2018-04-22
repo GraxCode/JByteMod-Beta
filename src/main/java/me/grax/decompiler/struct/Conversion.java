@@ -182,7 +182,7 @@ public class Conversion implements Opcodes {
       stack.push(new NewPrimArrayExpression(stack.pop(), type));
       break;
     default:
-      throw new RuntimeException(OpUtils.getOpcodeText(opcode));
+      throw new UnknownOPException(opcode);
     }
   }
 
@@ -248,7 +248,7 @@ public class Conversion implements Opcodes {
         break;
       case JSR:
       default:
-        throw new RuntimeException(OpUtils.getOpcodeText(opcode));
+        throw new UnknownOPException(opcode);
       }
     }
   }
@@ -268,7 +268,7 @@ public class Conversion implements Opcodes {
       stack.push(new CastExpression(new ClassDefinition(desc), stack.pop()));
       break;
     default:
-      throw new RuntimeException(OpUtils.getOpcodeText(opcode));
+      throw new UnknownOPException(opcode);
     }
   }
 
@@ -315,8 +315,8 @@ public class Conversion implements Opcodes {
       MethodExpression me = new MethodExpression(stack.pop(), name, args, VarType.ofDesc(desc));
       if (me.getReturnType() == VarType.VOID) {
         if (name.equals("<init>")) {
-          if (!list.isEmpty()) {
-            Expression e = list.get(list.size() - 1);
+          if (stack.size() > 0) {
+            Expression e = stack.peek();
             if (e instanceof NewTypeExpression) {
               NewTypeExpression nte = (NewTypeExpression) e;
               nte.setInit(me); //TODO remove method owner and name
@@ -561,6 +561,10 @@ public class Conversion implements Opcodes {
     case DCONST_0:
     case DCONST_1:
       stack.push(new ValueExpression(VarType.DOUBLE, (double) (opc - 14d)));
+      break;
+    case LCONST_0:
+    case LCONST_1:
+      stack.push(new ValueExpression(VarType.LONG, (long) (opc - 9L)));
       break;
     default:
       throw new UnknownOPException(opc);

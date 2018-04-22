@@ -44,7 +44,7 @@ public class MethodExpression extends Expression {
       sb.append(invokeOn.toString());
     }
     sb.append("</font>.");
-    sb.append(TextUtils.addTag(TextUtils.escape(methodName), "font color=" + InstrUtils.primColor.getString()));
+    sb.append(TextUtils.addTag(TextUtils.escape(methodName), "font color=#8855aa"));
     sb.append("</font>(");
     ArrayList<String> argsString = new ArrayList<>();
     for (Expression ref : args) {

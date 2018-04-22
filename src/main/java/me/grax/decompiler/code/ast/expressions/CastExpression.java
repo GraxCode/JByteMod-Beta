@@ -48,9 +48,9 @@ public class CastExpression extends Expression {
   @Override
   public String toString() {
     if (typeCast != null) {
-      return "(" + typeCast.getType() + ") " + object;
+      return "((" + typeCast.getType() + ") " + object + ")";
     }
-    return "(" + cast.getShortName() + ") " + object;
+    return "((" + cast.getShortName() + ") " + object + ")";
   }
 
   @Override
