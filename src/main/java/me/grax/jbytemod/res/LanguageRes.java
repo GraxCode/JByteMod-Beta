@@ -92,6 +92,6 @@ public class LanguageRes {
   }
 
   private String getLanguage() {
-    return System.getProperty("user.language");
+    return System.getProperty("user.language").toLowerCase().replace('_', '-');
   }
 }
