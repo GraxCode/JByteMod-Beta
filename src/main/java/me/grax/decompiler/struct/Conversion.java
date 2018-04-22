@@ -578,10 +578,16 @@ public class Conversion implements Opcodes {
   private void stackOp(int opc) {
     switch (opc) {
     case POP:
-      stack.pop();
+      Expression pop = stack.pop();
+      if(pop instanceof MethodExpression || pop instanceof NewArrayExpression) {
+        list.add(pop); //expressions were invoked, they must be added to the output
+      }
       break;
     case POP2:
-      stack.pop2();
+      Expression pop2 = stack.pop2();
+      if(pop2 instanceof MethodExpression) {
+        list.add(pop2); //expressions were invoked, they must be added to the output
+      }
       break;
     case DUP:
       stack.push(stack.peek().clone(), false);
