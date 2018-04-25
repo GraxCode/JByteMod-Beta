@@ -4,27 +4,21 @@ import me.grax.decompiler.code.ast.Expression;
 import me.grax.decompiler.code.ast.VarType;
 import me.grax.jbytemod.utils.TextUtils;
 
-public class DebugStackExpression extends Expression {
+public class DebugStackUnknownExpression extends Expression {
 
   private int var;
   private int size;
   private VarType type;
-  private String prefix;
 
-  public DebugStackExpression(int var, int size, VarType type) {
-    this(var, size, type, "stack");
-  }
-
-  public DebugStackExpression(int var, int size, VarType type, String prefix) {
+  public DebugStackUnknownExpression(int var, int size, VarType type) {
     this.var = var;
     this.size = size;
     this.type = type;
-    this.prefix = prefix;
   }
 
   @Override
   public String toString() {
-    return TextUtils.addTag("<i>" + prefix + var + "</i>", "font color=#909011");
+    return TextUtils.addTag("<i>unkn_stack_" + var + "</i>", "font color=#997755");
   }
 
   @Override
@@ -34,7 +28,7 @@ public class DebugStackExpression extends Expression {
 
   @Override
   public Expression clone() {
-    return new DebugStackExpression(var, size, type, prefix);
+    return new DebugStackUnknownExpression(var, size, type);
   }
 
   public int getVar() {
@@ -59,14 +53,6 @@ public class DebugStackExpression extends Expression {
 
   public void setType(VarType type) {
     this.type = type;
-  }
-
-  public String getPrefix() {
-    return prefix;
-  }
-
-  public void setPrefix(String prefix) {
-    this.prefix = prefix;
   }
 
 }

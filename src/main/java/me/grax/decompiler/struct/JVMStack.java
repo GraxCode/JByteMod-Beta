@@ -1,10 +1,13 @@
 package me.grax.decompiler.struct;
 
+import java.lang.reflect.Field;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
 import me.grax.decompiler.code.ast.Expression;
+import me.grax.decompiler.code.ast.VarType;
 import me.grax.decompiler.code.ast.expressions.DebugStackExpression;
+import me.grax.decompiler.code.ast.expressions.DebugStackUnknownExpression;
 import me.grax.decompiler.struct.exception.StackException;
 
 public class JVMStack {
@@ -13,7 +16,28 @@ public class JVMStack {
 
   public JVMStack() {
     this.list = new Stack<Expression>();
+  }
 
+  private int belowStackCount = 0;
+
+  public JVMStack(JVMStack preStack) {
+    this.list = new Stack<Expression>();
+    for (Expression e : preStack.list) {
+      list.add(new DebugStackExpression(belowStackCount++, e.size(), getVarType(e)));
+    }
+  }
+
+  private VarType getVarType(Expression array) {
+    for (Field f : array.getClass().getDeclaredFields()) {
+      if (f.getType() == VarType.class) {
+        f.setAccessible(true);
+        try {
+          return (VarType) f.get(array);
+        } catch (Exception e) {
+        }
+      }
+    }
+    return null;
   }
 
   public void push(Expression o, boolean twoword) {
@@ -41,13 +65,12 @@ public class JVMStack {
     return list.pop();
   }
 
-  private int belowStackCount = 0;
-
   public Expression peek() {
     try {
       return list.peek();
     } catch (EmptyStackException e) {
-      list.add(new DebugStackExpression(belowStackCount++, 1));
+      //stack empty, maybe a try catch block?
+      list.push(new DebugStackUnknownExpression(belowStackCount, 1, null));
       return list.peek();
     }
   }
@@ -81,7 +104,8 @@ public class JVMStack {
     } else if (size == 1) {
       Expression oldTop = list.pop();
       if (peek().size() != 1) {
-        throw new StackException("Second value is " + top.size() + "-word, cannot pop2 (Top was 1-word: " + oldTop.getClass().getSimpleName() + " " + oldTop.toString() + ")");
+        throw new StackException("Second value is " + top.size() + "-word, cannot pop2 (Top was 1-word: " + oldTop.getClass().getSimpleName() + " "
+            + oldTop.toString() + ")");
       }
       return list.pop();
     }
@@ -90,6 +114,10 @@ public class JVMStack {
 
   public Expression peek2() {
     return list.elementAt(list.size() - 2);
+  }
+
+  public Stack<Expression> getList() {
+    return list;
   }
 
 }

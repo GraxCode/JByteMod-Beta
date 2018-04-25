@@ -2,12 +2,16 @@ package me.grax.jbytemod.ui.graph;
 
 import java.util.ArrayList;
 
+import org.apache.commons.io.IOUtils;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.strobel.core.ExceptionUtilities;
+
 import me.grax.decompiler.code.ast.Expression;
 import me.grax.decompiler.struct.Conversion;
+import me.grax.decompiler.struct.JVMStack;
 import me.grax.decompiler.syntax.nodes.NodeList;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
@@ -18,10 +22,13 @@ public class BlockVertex {
   private ArrayList<AbstractInsnNode> code;
   private LabelNode label;
   private int listIndex;
-  private String text;
+  private String text = null;
   private Block block;
   private MethodNode mn;
   private boolean decompile = JByteMod.ops.get("decompile_graph").getBoolean();
+  private ArrayList<BlockVertex> input = new ArrayList<>();
+  private JVMStack leftOverStack;
+  private boolean setupText;
 
   public BlockVertex(MethodNode mn, Block block, ArrayList<AbstractInsnNode> code, LabelNode label, int listIndex) {
     super();
@@ -30,21 +37,41 @@ public class BlockVertex {
     this.code = code;
     this.label = label;
     this.listIndex = listIndex;
-    this.setupText();
   }
 
-  private void setupText() {
+  public void addInput(BlockVertex v) {
+    if (!input.contains(v)) {
+      this.input.add(v);
+    }
+  }
+
+  public static int index = 0;
+
+  public void setupText() {
+    if (setupText) {
+      return;
+    }
     text = "";
     if (decompile) {
+      ++index;
       try {
         NodeList list = new NodeList();
-        Conversion c = new Conversion(mn, list);
+        JVMStack inputStack = null;
+        if (!input.isEmpty()) {
+          inputStack = input.get(0).getLeftOverStack();
+        }
+        Conversion c = new Conversion(mn, list, inputStack);
         c.convert(block);
+        leftOverStack = c.getStack();
         for (Expression e : list) {
           text += e.toString() + "\n";
         }
       } catch (Exception e) {
-        new ErrorDisplay(e);
+        for (AbstractInsnNode ain : code) {
+          text += InstrUtils.toString(ain) + "\n";
+        }
+        text += "\n<i>";
+        text += ExceptionUtilities.getStackTraceString(e);
       }
     }
     if (text.trim().isEmpty()) {
@@ -52,6 +79,11 @@ public class BlockVertex {
         text += InstrUtils.toString(ain) + "\n";
       }
     }
+    setupText = true;
+  }
+
+  public JVMStack getLeftOverStack() {
+    return leftOverStack;
   }
 
   public ArrayList<AbstractInsnNode> getCode() {

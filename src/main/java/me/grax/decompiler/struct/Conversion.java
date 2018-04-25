@@ -28,6 +28,7 @@ import me.grax.decompiler.code.ast.expressions.CastExpression;
 import me.grax.decompiler.code.ast.expressions.ClassTypeExpression;
 import me.grax.decompiler.code.ast.expressions.ComparisonExpression;
 import me.grax.decompiler.code.ast.expressions.DebugStackAssignExpression;
+import me.grax.decompiler.code.ast.expressions.DebugStackExpression;
 import me.grax.decompiler.code.ast.expressions.FieldAssignExpression;
 import me.grax.decompiler.code.ast.expressions.FieldExpression;
 import me.grax.decompiler.code.ast.expressions.IncrementExpression;
@@ -62,10 +63,18 @@ public class Conversion implements Opcodes {
   private JVMStack stack;
   private int line;
   private MethodNode mn;
-
+  private JVMStack preStack;
+  private int arrayDebugIndex;
+  
   public Conversion(MethodNode mn, NodeList list) {
     this.mn = mn;
     this.list = list;
+  }
+
+  public Conversion(MethodNode mn, NodeList list, JVMStack preStack) {
+    this.mn = mn;
+    this.list = list;
+    this.preStack = preStack;
   }
 
   public int getLine() {
@@ -74,7 +83,11 @@ public class Conversion implements Opcodes {
 
   public void convert(Block b) {
     this.line = 0;
-    this.stack = new JVMStack();
+    if (preStack != null) {
+      this.stack = new JVMStack(preStack);
+    } else {
+      this.stack = new JVMStack();
+    }
     for (AbstractInsnNode ain : b.getNodes()) {
       switch (ain.getType()) {
       case AbstractInsnNode.INSN:
@@ -125,13 +138,26 @@ public class Conversion implements Opcodes {
       line++;
     }
     int var = 0;
-    while (stack.size() > 0) {
-      Expression item = stack.pop();
+    ArrayList<Expression> left = new ArrayList<>();
+    while (!stack.getList().isEmpty()) {
+      Expression item = stack.getList().pop();
       if (item instanceof ComparisonExpression || item instanceof TableSwitchExpression) {
         list.add(item);
       } else {
-        list.add(new DebugStackAssignExpression(var++, item));
+        left.add(0, item);
       }
+    }
+    for (Expression debug : left) {
+      int prev = -1;
+      if(debug instanceof DebugStackExpression) {
+        prev = ((DebugStackExpression)debug).getVar();
+      }
+      if (prev != var) {
+        //avoid nonsense setters
+        list.add(new DebugStackAssignExpression(var, debug));
+      }
+      stack.getList().push(debug);
+      var++;
     }
   }
 
@@ -259,7 +285,10 @@ public class Conversion implements Opcodes {
       stack.push(new NewTypeExpression(new ClassDefinition(desc)));
       break;
     case ANEWARRAY:
-      stack.push(new NewArrayExpression(stack.pop(), new ClassDefinition(desc)));
+      NewArrayExpression nae = new NewArrayExpression(stack.pop(), new ClassDefinition(desc));
+      DebugStackExpression e = new DebugStackExpression(arrayDebugIndex, 1, null, "array");
+      list.add(new DebugStackAssignExpression(arrayDebugIndex++, nae, "array"));
+      stack.push(e);
       break;
     case INSTANCEOF:
       stack.push(new InstanceofExpression(stack.pop(), new ClassDefinition(desc)));
@@ -479,7 +508,7 @@ public class Conversion implements Opcodes {
         }
       }
     }
-    throw new RuntimeException("Expression doesn't have type");
+    throw new RuntimeException("Expression doesn't have type (" + array.getClass().getName() + ")");
   }
 
   private void athrow() {
@@ -579,13 +608,13 @@ public class Conversion implements Opcodes {
     switch (opc) {
     case POP:
       Expression pop = stack.pop();
-      if(pop instanceof MethodExpression || pop instanceof NewArrayExpression) {
+      if (pop instanceof MethodExpression || pop instanceof NewArrayExpression) {
         list.add(pop); //expressions were invoked, they must be added to the output
       }
       break;
     case POP2:
       Expression pop2 = stack.pop2();
-      if(pop2 instanceof MethodExpression) {
+      if (pop2 instanceof MethodExpression) {
         list.add(pop2); //expressions were invoked, they must be added to the output
       }
       break;
@@ -599,7 +628,14 @@ public class Conversion implements Opcodes {
       stack.push(stack.peek().clone(), 2, false);
       break;
     case DUP2:
-      stack.push(stack.peek().clone(), true);
+      if (stack.peek().size() == 2) {
+        stack.push(stack.peek().clone(), true);
+      } else if (stack.peek().size() == 1 && stack.peek2().size() == 1) {
+        Expression o1 = stack.peek();
+        Expression o2 = stack.peek2();
+        stack.push(o2.clone());
+        stack.push(o1.clone());
+      }
       break;
     case DUP2_X1:
       stack.push(stack.peek().clone(), 1, true);

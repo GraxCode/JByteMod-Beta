@@ -27,6 +27,7 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.orthogonal.mxOrthogonalLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxCellRenderer;
@@ -119,7 +120,6 @@ public class ControlFlowPanel extends JPanel {
     inner.setLayout(new BorderLayout(0, 0));
     inner.setBackground(Color.WHITE);
     inner.add(graphComponent, BorderLayout.CENTER);
-    //graphComponent.removeMouseWheelListener(graphComponent.getMouseWheelListeners()[0]);
     scp = new JScrollPane(inner);
     scp.getVerticalScrollBar().setUnitIncrement(16);
     this.add(scp, BorderLayout.CENTER);
@@ -160,7 +160,7 @@ public class ControlFlowPanel extends JPanel {
         boolean first = true;
         for (Block b : cf) {
           if (b.getInput().isEmpty() || first) {
-            addBlock(parent, b);
+            addBlock((mxCell) parent, b, null);
             first = false;
           }
         }
@@ -174,13 +174,13 @@ public class ControlFlowPanel extends JPanel {
       layout.setParallelEdgeSpacing(100d);
       layout.setUseBoundingBox(true);
       layout.execute(graph.getDefaultParent());
-//      mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
-//      layout.setResetEdges(true);
-//      layout.setEdgeRouting(true);
-//      layout.setHorizontal(false);
-//      layout.setMoveTree(true);
-//      layout.setUseBoundingBox(true);
-//      layout.execute(graph.getDefaultParent());
+      //      mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
+      //      layout.setResetEdges(true);
+      //      layout.setEdgeRouting(true);
+      //      layout.setHorizontal(false);
+      //      layout.setMoveTree(true);
+      //      layout.setUseBoundingBox(true);
+      //      layout.execute(graph.getDefaultParent());
     } finally {
       graph.getModel().endUpdate();
     }
@@ -189,19 +189,26 @@ public class ControlFlowPanel extends JPanel {
     //TODO set horizontal scroll to half
   }
 
-  private HashMap<Block, Object> existing = new HashMap<>();
+  private HashMap<Block, mxCell> existing = new HashMap<>();
 
-  private Object addBlock(Object parent, Block b) {
-    Object v1 = null;
+  private mxCell addBlock(mxCell parent, Block b, BlockVertex input) {
+    mxCell v1 = null;
     if (existing.containsKey(b)) {
-      return existing.get(b);
-    } else {
-      v1 = graph.insertVertex(parent, null, new BlockVertex(node, b, b.getNodes(), b.getLabel(), node.instructions.indexOf(b.getNodes().get(0))), 150, 10, 80,
-          40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1");
-      graph.updateCellSize(v1); //resize cell
-
-      existing.put(b, v1);
+      mxCell cached = existing.get(b);
+      if (input != null) {
+        ((BlockVertex) cached.getValue()).addInput(input);
+      }
+      return cached;
     }
+    BlockVertex vertex = new BlockVertex(node, b, b.getNodes(), b.getLabel(), node.instructions.indexOf(b.getNodes().get(0)));
+    if (input != null) {
+      vertex.addInput(input);
+    }
+    vertex.setupText();
+    v1 = (mxCell) graph.insertVertex(parent, null, vertex, 150, 10, 80, 40, "fillColor=#FFFFFF;fontColor=#111111;strokeColor=#9297a1");
+    graph.updateCellSize(v1); //resize cell
+
+    existing.put(b, v1);
     if (v1 == null) {
       throw new RuntimeException();
     }
@@ -212,7 +219,8 @@ public class ControlFlowPanel extends JPanel {
         graph.insertEdge(parent, null, null, v1, v1, "strokeColor=" + getEdgeColor(b, i) + ";");
       } else {
         assert (out.getInput().contains(b));
-        graph.insertEdge(parent, null, null, v1, addBlock(parent, out), "strokeColor=" + getEdgeColor(b, i) + ";");
+        mxCell vertexOut = addBlock(parent, out, vertex);
+        graph.insertEdge(parent, null, null, v1, vertexOut, "strokeColor=" + getEdgeColor(b, i) + ";");
       }
     }
     return v1;
