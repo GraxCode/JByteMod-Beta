@@ -1,6 +1,7 @@
 package me.grax.jbytemod.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -38,6 +40,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import com.sun.codemodel.internal.JNullType;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
@@ -50,6 +53,7 @@ import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.attach.AttachUtils;
+import me.grax.jbytemod.utils.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.list.SearchEntry;
 
 public class MyMenuBar extends JMenuBar {
@@ -339,6 +343,20 @@ public class MyMenuBar extends JMenuBar {
         jtf.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
             op.setValue(jtf.getText());
+            o.save();
+          }
+        });
+        menu.add(jm);
+        break;
+      case INT:
+        jm = new JMenu(lr.getResource(op.getName()));
+        JFormattedTextField jnf = ClassDialogue.createNumberField();
+        jnf.setValue(op.getInteger());
+        jnf.setPreferredSize(new Dimension(64, (int) jnf.getPreferredSize().getHeight()));
+        jm.add(jnf);
+        jnf.addFocusListener(new FocusAdapter() {
+          public void focusLost(FocusEvent e) {
+            op.setValue((int)jnf.getValue());
             o.save();
           }
         });

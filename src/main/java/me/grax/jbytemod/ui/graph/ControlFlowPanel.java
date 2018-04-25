@@ -144,7 +144,7 @@ public class ControlFlowPanel extends JPanel {
     graphComponent.setScp(scp);
     Converter c = new Converter(node);
     try {
-      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean(), true));
+      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean(), true, JByteMod.ops.get("max_redundant_input").getInteger()));
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorDisplay(e);
