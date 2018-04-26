@@ -22,6 +22,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.graph.methodref.MethodRefPanel;
 import me.grax.jbytemod.ui.lists.SearchList;
 
 public class MyTabbedPane extends JTabbedPane {
@@ -35,6 +36,9 @@ public class MyTabbedPane extends JTabbedPane {
     JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
     this.addTab(JByteMod.res.getResource("search"), this.withBorder(search, searchList));
     this.addTab("Opcodes", this.withBorder(new JLabel("Opcodes"), new OpcodeTable()));
+    //MethodRefPanel mrp = new MethodRefPanel(jbm);
+    //jbm.setMethodRefPanel(mrp);
+    //this.addTab("References", mrp);
     jbm.setTabbedPane(this);
     this.addMouseListener(new MouseAdapter() {
       @Override

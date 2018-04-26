@@ -47,6 +47,7 @@ import me.grax.jbytemod.ui.MyTabbedPane;
 import me.grax.jbytemod.ui.MyToolBar;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.grax.jbytemod.ui.graph.ControlFlowPanel;
+import me.grax.jbytemod.ui.graph.methodref.MethodRefPanel;
 import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
@@ -97,6 +98,7 @@ public class JByteMod extends JFrame {
   public static JByteMod instance;
   public static Color border;
   private PluginManager pluginManager;
+  private MethodRefPanel methodRefPanel;
 
   private static final String jbytemod = "JByteMod 1.8.0";
 
@@ -494,5 +496,13 @@ public class JByteMod extends JFrame {
       throw new RuntimeException();
     }
     new RetransformTask(this, agentInstrumentation, file).execute();
+  }
+
+  public void setMethodRefPanel(MethodRefPanel mrp) {
+    this.methodRefPanel = mrp;
+  }
+
+  public MethodRefPanel getMethodRefPanel() {
+    return methodRefPanel;
   }
 }
