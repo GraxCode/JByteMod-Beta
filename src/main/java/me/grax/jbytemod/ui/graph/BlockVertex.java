@@ -9,12 +9,12 @@ import org.objectweb.asm.tree.MethodNode;
 
 import com.strobel.core.ExceptionUtilities;
 
-import me.grax.decompiler.code.ast.Expression;
-import me.grax.decompiler.struct.Conversion;
-import me.grax.decompiler.struct.JVMStack;
-import me.grax.decompiler.syntax.nodes.NodeList;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
+import me.grax.jbytemod.analysis.decompiler.code.ast.Expression;
+import me.grax.jbytemod.analysis.decompiler.struct.Conversion;
+import me.grax.jbytemod.analysis.decompiler.struct.JVMStack;
+import me.grax.jbytemod.analysis.decompiler.syntax.nodes.NodeList;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.InstrUtils;
 
