@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
@@ -59,13 +58,6 @@ public class CFGraph extends mxGraph {
     edgeStyle.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_OPEN);
     edgeStyle.put(mxConstants.STYLE_TARGET_PERIMETER_SPACING, 1d);
 
-    //edgeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
-    //edgeStyle.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-    //edgeStyle.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-    //default values
-    //edgeStyle.put(mxConstants.STYLE_EDGE, mxEdgeStyle.OrthConnector);
-    //STYLE_EDGE is disabled
-
     Map<String, Object> vertexStyle = this.getStylesheet().getDefaultVertexStyle();
     vertexStyle.put(mxConstants.STYLE_SHADOW, true);
     mxStylesheet stylesheet = new mxStylesheet();
@@ -78,10 +70,6 @@ public class CFGraph extends mxGraph {
   public class CFGComponent extends mxGraphComponent {
 
     private JScrollPane scp;
-    private mxCell dragged = null;
-    private boolean mouseDown = false;
-    private double startX;
-    private double startY;
 
     public CFGComponent(mxGraph g) {
       super(g);
@@ -113,42 +101,7 @@ public class CFGraph extends mxGraph {
               menu.add(dec);
               menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
             }
-          } else if (SwingUtilities.isLeftMouseButton(e)) {
-            mouseDown = true;
-            startX = e.getX();
-            startY = e.getY();
-            mxCell cell = (mxCell) getCellAt(e.getX(), e.getY());
-            if (cell != null && cell.getValue() instanceof BlockVertex) {
-              dragged = cell;
-            }
           }
-        }
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
-          if (mouseDown && dragged != null) {
-            //TODO
-            //            graph.getModel().beginUpdate();
-            //            try {
-            //              graph.moveCells(new Object[] { dragged }, e.getX() - startX, e.getY() - startY, false);
-            //              startX = e.getX();
-            //              startY = e.getY();
-            //              DragLayoutUpdate layout = new DragLayoutUpdate(g);
-            //              layout.setFineTuning(true);
-            //              layout.setIntraCellSpacing(25d);
-            //              layout.setInterRankCellSpacing(80d);
-            //              layout.execute(graph.getDefaultParent());
-            //            } finally {
-            //              graph.getModel().endUpdate();
-            //            }
-
-          }
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-          mouseDown = false;
-          dragged = null;
         }
       };
       this.getGraphControl().addMouseListener(adapter);
@@ -195,14 +148,5 @@ public class CFGraph extends mxGraph {
     public void setScp(JScrollPane scp) {
       this.scp = scp;
     }
-
-  }
-
-  public class DragLayoutUpdate extends mxHierarchicalLayout {
-    public DragLayoutUpdate(mxGraph arg0) {
-      super(arg0);
-    }
-
-    //TODO
   }
 }

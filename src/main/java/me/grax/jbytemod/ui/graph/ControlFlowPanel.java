@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -23,16 +22,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.objectweb.asm.tree.MethodNode;
 
-import com.mxgraph.layout.mxCompactTreeLayout;
-import com.mxgraph.layout.mxOrganicLayout;
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.layout.orthogonal.mxOrthogonalLayout;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxCellRenderer;
-import com.mxgraph.util.mxPoint;
-import com.mxgraph.util.mxRectangle;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.block.Block;
@@ -144,7 +135,8 @@ public class ControlFlowPanel extends JPanel {
     graphComponent.setScp(scp);
     Converter c = new Converter(node);
     try {
-      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean(), true, JByteMod.ops.get("max_redundant_input").getInteger()));
+      cf.addAll(c.convert(JByteMod.ops.get("simplify_graph").getBoolean(), JByteMod.ops.get("remove_redundant").getBoolean(), true,
+          JByteMod.ops.get("max_redundant_input").getInteger()));
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorDisplay(e);
@@ -174,13 +166,14 @@ public class ControlFlowPanel extends JPanel {
       layout.setParallelEdgeSpacing(100d);
       layout.setUseBoundingBox(true);
       layout.execute(graph.getDefaultParent());
-      //      mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
-      //      layout.setResetEdges(true);
-      //      layout.setEdgeRouting(true);
-      //      layout.setHorizontal(false);
-      //      layout.setMoveTree(true);
-      //      layout.setUseBoundingBox(true);
-      //      layout.execute(graph.getDefaultParent());
+      /*
+       * Alternative layout, prettier but can't handle complicated flow
+       * mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
+       * layout.setResetEdges(true); layout.setEdgeRouting(true);
+       * layout.setHorizontal(false); layout.setMoveTree(true);
+       * layout.setUseBoundingBox(true);
+       * layout.execute(graph.getDefaultParent());
+       **/
     } finally {
       graph.getModel().endUpdate();
     }

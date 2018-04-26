@@ -2,7 +2,6 @@ package me.grax.jbytemod.ui.graph;
 
 import java.util.ArrayList;
 
-import org.apache.commons.io.IOUtils;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -15,7 +14,6 @@ import me.grax.jbytemod.analysis.decompiler.code.ast.Expression;
 import me.grax.jbytemod.analysis.decompiler.struct.Conversion;
 import me.grax.jbytemod.analysis.decompiler.struct.JVMStack;
 import me.grax.jbytemod.analysis.decompiler.syntax.nodes.NodeList;
-import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.InstrUtils;
 
 public class BlockVertex {
@@ -45,20 +43,18 @@ public class BlockVertex {
     }
   }
 
-  public static int index = 0;
-
   public void setupText() {
     if (setupText) {
       return;
     }
     text = "";
     if (decompile) {
-      ++index;
       try {
         NodeList list = new NodeList();
         JVMStack inputStack = null;
         if (!input.isEmpty()) {
           inputStack = input.get(0).getLeftOverStack();
+          assert(inputStack != null);
         }
         Conversion c = new Conversion(mn, list, inputStack);
         c.convert(block);

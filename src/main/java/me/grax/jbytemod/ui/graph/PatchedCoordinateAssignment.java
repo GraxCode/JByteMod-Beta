@@ -1,14 +1,9 @@
 // Copyright GFI 2017 - Data Systemizer
 package me.grax.jbytemod.ui.graph;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.swing.SwingConstants;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.hierarchical.model.mxGraphAbstractHierarchyCell;
@@ -17,7 +12,6 @@ import com.mxgraph.layout.hierarchical.model.mxGraphHierarchyModel;
 import com.mxgraph.layout.hierarchical.model.mxGraphHierarchyNode;
 import com.mxgraph.layout.hierarchical.stage.mxCoordinateAssignment;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxGraph;
 
 /**
@@ -143,131 +137,6 @@ public class PatchedCoordinateAssignment extends mxCoordinateAssignment {
       }
 
     }
-
     return isCrossGroupEdge;
-  }
-
-  @Override
-  protected void setVertexLocation(mxGraphAbstractHierarchyCell cell) {
-    super.setVertexLocation(cell);
-    //    mxGraphHierarchyNode node = (mxGraphHierarchyNode) cell;
-    //    mxCell realCell = (mxCell) node.cell;
-    //    double positionX = realCell.getGeometry().getX();
-    //    double positionY = realCell.getGeometry().getY();
-    //    rankTopY[cell.minRank] = Math.min(rankTopY[cell.minRank], positionY);
-    //    rankBottomY[cell.minRank] = Math.max(rankBottomY[cell.minRank], positionY + node.height);
-    //
-    //    if (orientation == SwingConstants.NORTH || orientation == SwingConstants.SOUTH) {
-    //      layout.setVertexLocation(realCell, positionX, positionY);
-    //    } else {
-    //      layout.setVertexLocation(realCell, positionY, positionX);
-    //    }
-    //
-    //    limitX = Math.max(limitX, positionX + node.width);
-  }
-
-  @Override
-  protected void minPath(mxGraphHierarchyModel model) {
-    // Work down and up each edge with at least 2 control points
-    // trying to straighten each one out. If the same number of
-    // straight segments are formed in both directions, the 
-    // preferred direction used is the one where the final
-    // control points have the least offset from the connectable 
-    // region of the terminating vertices
-    Map<Object, mxGraphHierarchyEdge> edges = model.getEdgeMapper();
-
-    for (mxGraphAbstractHierarchyCell cell : edges.values()) {
-      if (cell.maxRank > cell.minRank + 2) {
-        int numEdgeLayers = cell.maxRank - cell.minRank - 1;
-        // At least two virtual nodes in the edge
-        // Check first whether the edge is already straight
-        int referenceX = cell.getGeneralPurposeVariable(cell.minRank + 1);
-        boolean edgeStraight = true;
-        int refSegCount = 0;
-
-        for (int i = cell.minRank + 2; i < cell.maxRank; i++) {
-          int x = cell.getGeneralPurposeVariable(i);
-
-          if (referenceX != x) {
-            edgeStraight = false;
-            referenceX = x;
-          } else {
-            refSegCount++;
-          }
-        }
-
-        if (edgeStraight) {
-          continue;
-        }
-
-        int upSegCount = 0;
-        int downSegCount = 0;
-        double upXPositions[] = new double[numEdgeLayers - 1];
-        double downXPositions[] = new double[numEdgeLayers - 1];
-
-        double currentX = cell.getX(cell.minRank + 1);
-
-        for (int i = cell.minRank + 1; i < cell.maxRank - 1; i++) {
-          // Attempt to straight out the control point on the
-          // next segment up with the current control point.
-          double nextX = cell.getX(i + 1);
-
-          if (currentX == nextX) {
-            upXPositions[i - cell.minRank - 1] = currentX;
-            upSegCount++;
-          } else if (repositionValid(model, cell, i + 1, currentX)) {
-            upXPositions[i - cell.minRank - 1] = currentX;
-            upSegCount++;
-            // Leave currentX at same value
-          } else {
-            upXPositions[i - cell.minRank - 1] = nextX;
-            currentX = nextX;
-          }
-        }
-
-        currentX = cell.getX(cell.maxRank - 1);
-
-        for (int i = cell.maxRank - 1; i > cell.minRank + 1; i--) {
-          // Attempt to straight out the control point on the
-          // next segment down with the current control point.
-          double nextX = cell.getX(i - 1);
-
-          if (currentX == nextX) {
-            downXPositions[i - cell.minRank - 2] = currentX;
-            downSegCount++;
-          } else if (repositionValid(model, cell, i - 1, currentX)) {
-            downXPositions[i - cell.minRank - 2] = currentX;
-            downSegCount++;
-            // Leave currentX at same value
-          } else {
-            downXPositions[i - cell.minRank - 2] = cell.getX(i - 1);
-            currentX = nextX;
-          }
-        }
-
-        if (downSegCount <= refSegCount && upSegCount <= refSegCount) {
-          // Neither of the new calculation provide a straighter edge
-//          continue;
-        }
-
-        if (downSegCount >= upSegCount) {
-          // Apply down calculation values
-          for (int i = cell.maxRank - 2; i > cell.minRank; i--) {
-            cell.setX(i, (int) downXPositions[i - cell.minRank - 1]);
-          }
-        } else if (upSegCount > downSegCount) {
-          // Apply up calculation values
-          for (int i = cell.minRank + 2; i < cell.maxRank; i++) {
-            cell.setX(i, (int) upXPositions[i - cell.minRank - 2]);
-          }
-        } else {
-          // Neither direction provided a favourable result
-          // But both calculations are better than the
-          // existing solution, so apply the one with minimal
-          // offset to attached vertices at either end.
-
-        }
-      }
-    }
   }
 }
