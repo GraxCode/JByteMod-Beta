@@ -22,7 +22,6 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
-import me.grax.jbytemod.ui.graph.methodref.MethodRefPanel;
 import me.grax.jbytemod.ui.lists.SearchList;
 
 public class MyTabbedPane extends JTabbedPane {

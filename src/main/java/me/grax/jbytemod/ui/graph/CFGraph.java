@@ -15,15 +15,21 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import org.objectweb.asm.tree.AbstractInsnNode;
+
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxRectangle;
+import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.analysis.block.Block;
+import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
 
 public class CFGraph extends mxGraph {
   private CFGComponent component;
@@ -80,10 +86,10 @@ public class CFGraph extends mxGraph {
       MouseAdapter adapter = new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
-          if (SwingUtilities.isRightMouseButton(e)) {
-            mxCell cell = (mxCell) getCellAt(e.getX(), e.getY());
-            if (cell != null && cell.getValue() instanceof BlockVertex) {
-              BlockVertex bv = (BlockVertex) cell.getValue();
+          mxCell cell = (mxCell) getCellAt(e.getX(), e.getY());
+          if (cell != null && cell.getValue() instanceof BlockVertex) {
+            BlockVertex bv = (BlockVertex) cell.getValue();
+            if (SwingUtilities.isRightMouseButton(e)) {
               JPopupMenu menu = new JPopupMenu();
               JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
               edit.addActionListener(new ActionListener() {
@@ -100,6 +106,23 @@ public class CFGraph extends mxGraph {
               });
               menu.add(dec);
               menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+            } else if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2 && !e.isConsumed()) {
+              view.getBounds(new Object[] { cell });
+              mxCellState cs = view.getState(cell);
+              double dif = (double) (e.getY() - (cs.getY()));
+              double difpc = dif / cs.getHeight();
+              Block block = bv.getBlock();
+              int size = block.getNodes().size();
+              int index = (int) Math.floor((size * difpc));
+              try {
+                AbstractInsnNode ain = block.getNodes().get(index);
+                if (InsnEditDialogue.canEdit(ain)) {
+                  new InsnEditDialogue(jbm.getCurrentMethod(), ain).open();
+                }
+              } catch (Exception ex) {
+                new ErrorDisplay(ex);
+              }
+              e.consume();
             }
           }
         }
