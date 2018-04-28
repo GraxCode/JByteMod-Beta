@@ -3,14 +3,18 @@ package me.grax.jbytemod.analysis.decompiler.struct;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
@@ -34,6 +38,8 @@ import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.FieldAssignExpr
 import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.FieldExpression;
 import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.IncrementExpression;
 import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.InstanceofExpression;
+import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.InvokeDynamicExpression;
+import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.LookupSwitchExpression;
 import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.MethodExpression;
 import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.NewArrayExpression;
 import me.grax.jbytemod.analysis.decompiler.code.ast.expressions.NewPrimArrayExpression;
@@ -127,12 +133,19 @@ public class Conversion implements Opcodes {
       case AbstractInsnNode.TABLESWITCH_INSN:
         TableSwitchInsnNode sw = (TableSwitchInsnNode) ain;
         visitTableSwitch(sw.min, sw.max);
+        break;
+      case AbstractInsnNode.LOOKUPSWITCH_INSN:
+        LookupSwitchInsnNode lsw = (LookupSwitchInsnNode) ain;
+        visitLookupSwitch(lsw.keys.size());
+        break;
+      case AbstractInsnNode.INVOKE_DYNAMIC_INSN:
+        InvokeDynamicInsnNode idin = (InvokeDynamicInsnNode) ain;
+        visitInvokeDynamic(idin);
       case AbstractInsnNode.LABEL:
       case AbstractInsnNode.LINE:
       case AbstractInsnNode.FRAME:
         break;
       default:
-        //TODO lookupswitch
         throw new RuntimeException("unrecognized AbstractInsnNode type: " + ain.getType());
       }
       line++;
@@ -159,6 +172,29 @@ public class Conversion implements Opcodes {
       stack.getList().push(debug);
       var++;
     }
+  }
+
+  private void visitInvokeDynamic(InvokeDynamicInsnNode idin) {
+    InvokeDynamicExpression idye = new InvokeDynamicExpression(idin.name, idin.desc, idin.bsmArgs, idin.bsm);
+    Handle methodHandle = idye.getMethodHandle();
+    if(methodHandle != null) {
+      ArrayList<Integer> descSizes = DescUtils.getInnerDescSizes(methodHandle.getDesc());
+      List<Expression> args = new ArrayList<>();
+      for (int i : descSizes) {
+        if (i == 1) {
+          args.add(stack.pop());
+        } else {
+          args.add(stack.pop2());
+        }
+      }
+      Collections.reverse(args);
+      idye.setArgs(args);
+    }
+    stack.push(idye);
+  }
+
+  private void visitLookupSwitch(int size) {
+    stack.push(new LookupSwitchExpression(stack.pop(), size));
   }
 
   private void visitTableSwitch(int min, int max) {
@@ -321,10 +357,6 @@ public class Conversion implements Opcodes {
   }
 
   private void visitMethodInsnNode(int opcode, String owner, String name, String desc) {
-    if (opcode == INVOKEDYNAMIC) {
-      //TODO
-      throw new RuntimeException(OpUtils.getOpcodeText(opcode));
-    }
     ArrayList<Expression> args = new ArrayList<>();
     ArrayList<Integer> descSizes = DescUtils.getInnerDescSizes(desc);
     if (opcode == INVOKEVIRTUAL) { //for some reason invokevirtual reads stack as arg1, arg2.... and all other read as argN ... arg1
