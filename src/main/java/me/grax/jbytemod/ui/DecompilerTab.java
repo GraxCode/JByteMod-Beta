@@ -20,6 +20,7 @@ import me.grax.jbytemod.decompiler.CFRDecompiler;
 import me.grax.jbytemod.decompiler.Decompiler;
 import me.grax.jbytemod.decompiler.Decompilers;
 import me.grax.jbytemod.decompiler.FernflowerDecompiler;
+import me.grax.jbytemod.decompiler.KrakatauDecompiler;
 import me.grax.jbytemod.decompiler.ProcyonDecompiler;
 
 public class DecompilerTab extends JPanel {
@@ -82,6 +83,9 @@ public class DecompilerTab extends JPanel {
       break;
     case CFR:
       d = new CFRDecompiler(jbm, dp);
+      break;
+    case KRAKATAU:
+      d = new KrakatauDecompiler(jbm, dp);
       break;
     }
     d.setNode(cn);
