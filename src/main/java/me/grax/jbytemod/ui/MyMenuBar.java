@@ -40,7 +40,6 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.sun.codemodel.internal.JNullType;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
@@ -51,10 +50,8 @@ import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.attach.AttachUtils;
 import me.grax.jbytemod.utils.dialogue.ClassDialogue;
-import me.grax.jbytemod.utils.list.SearchEntry;
 
 public class MyMenuBar extends JMenuBar {
 
