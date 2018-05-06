@@ -10,6 +10,8 @@ import org.objectweb.asm.tree.analysis.Analyzer;
 import org.objectweb.asm.tree.analysis.AnalyzerException;
 import org.objectweb.asm.tree.analysis.BasicVerifier;
 
+import me.grax.jbytemod.JByteMod;
+
 public class ErrorAnalyzer {
   private MethodNode mn;
 
@@ -28,8 +30,10 @@ public class ErrorAnalyzer {
     final Analyzer a = new Analyzer(new BasicVerifier());
     try {
       a.analyze(mn.owner, mn);
-    } catch (final AnalyzerException e) {
+    } catch (AnalyzerException e) {
       put(map, e.node, new InsnError(e.getMessage()));
+    } catch(Exception e) {
+      JByteMod.LOGGER.err("Couldn't analyze errors in bytecode (" + e.toString() + ")");
     }
     return map;
   }

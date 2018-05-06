@@ -1,6 +1,7 @@
 package me.grax.jbytemod.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -48,9 +50,8 @@ import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.attach.AttachUtils;
-import me.grax.jbytemod.utils.list.SearchEntry;
+import me.grax.jbytemod.utils.dialogue.ClassDialogue;
 
 public class MyMenuBar extends JMenuBar {
 
@@ -114,7 +115,7 @@ public class MyMenuBar extends JMenuBar {
     this.add(file);
 
     JMenu search = new JMenu(JByteMod.res.getResource("search"));
-    JMenuItem ldc = new JMenuItem("Search LDC");
+    JMenuItem ldc = new JMenuItem(JByteMod.res.getResource("search_ldc"));
     ldc.addActionListener(new ActionListener() {
 
       @Override
@@ -124,7 +125,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(ldc);
-    JMenuItem field = new JMenuItem("Search FieldInsnNode");
+    JMenuItem field = new JMenuItem(JByteMod.res.getResource("search_field"));
     field.addActionListener(new ActionListener() {
 
       @Override
@@ -134,7 +135,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(field);
-    JMenuItem method = new JMenuItem("Search MethodInsnNode");
+    JMenuItem method = new JMenuItem(JByteMod.res.getResource("search_method"));
     method.addActionListener(new ActionListener() {
 
       @Override
@@ -144,7 +145,7 @@ public class MyMenuBar extends JMenuBar {
     });
 
     search.add(method);
-    JMenuItem replace = new JMenuItem("Replace LDC");
+    JMenuItem replace = new JMenuItem(JByteMod.res.getResource("replace_ldc"));
     replace.addActionListener(new ActionListener() {
 
       @Override
@@ -165,7 +166,7 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     utils.add(accman);
-    JMenuItem attach = new JMenuItem("Attach to Process");
+    JMenuItem attach = new JMenuItem(JByteMod.res.getResource("attach"));
     attach.addActionListener(new ActionListener() {
 
       @Override
@@ -339,6 +340,20 @@ public class MyMenuBar extends JMenuBar {
         jtf.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
             op.setValue(jtf.getText());
+            o.save();
+          }
+        });
+        menu.add(jm);
+        break;
+      case INT:
+        jm = new JMenu(lr.getResource(op.getName()));
+        JFormattedTextField jnf = ClassDialogue.createNumberField();
+        jnf.setValue(op.getInteger());
+        jnf.setPreferredSize(new Dimension(64, (int) jnf.getPreferredSize().getHeight()));
+        jm.add(jnf);
+        jnf.addFocusListener(new FocusAdapter() {
+          public void focusLost(FocusEvent e) {
+            op.setValue((int)jnf.getValue());
             o.save();
           }
         });

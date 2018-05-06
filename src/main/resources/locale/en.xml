@@ -82,6 +82,13 @@
    <string name="memory_warning">Memory warning at loading</string>
    <string name="memory_full">Failed loading file: Memory full</string>
    <string name="analyze_errors">Display mistakes</string>
-   <string name="jump_to_label">Jump to Label</string>
+   <string name="jump_to_label">Zum Label springen</string>
+   <string name="search_ldc">Search LDC</string>
+   <string name="search_field">Search Field reference</string>
+   <string name="search_method">Search Method reference</string>
+   <string name="replace_ldc">Replace LDC</string>
+   <string name="attach">Attach to process</string>
+   <string name="decompile_graph">Decompile Graph</string>
+   <string name="max_redundant_input">Max inputs for redundant blocks</string>
 </resources>
 

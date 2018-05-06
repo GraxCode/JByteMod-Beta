@@ -35,6 +35,9 @@ public class MyTabbedPane extends JTabbedPane {
     JLabel search = new JLabel(JByteMod.res.getResource("search_results"));
     this.addTab(JByteMod.res.getResource("search"), this.withBorder(search, searchList));
     this.addTab("Opcodes", this.withBorder(new JLabel("Opcodes"), new OpcodeTable()));
+    //MethodRefPanel mrp = new MethodRefPanel(jbm);
+    //jbm.setMethodRefPanel(mrp);
+    //this.addTab("References", mrp);
     jbm.setTabbedPane(this);
     this.addMouseListener(new MouseAdapter() {
       @Override

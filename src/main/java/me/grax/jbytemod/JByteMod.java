@@ -39,7 +39,6 @@ import me.grax.jbytemod.plugin.PluginManager;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.ClassTree;
-import me.grax.jbytemod.ui.ControlFlowPanel;
 import me.grax.jbytemod.ui.DecompilerPanel;
 import me.grax.jbytemod.ui.InfoPanel;
 import me.grax.jbytemod.ui.MyMenuBar;
@@ -47,6 +46,8 @@ import me.grax.jbytemod.ui.MySplitPane;
 import me.grax.jbytemod.ui.MyTabbedPane;
 import me.grax.jbytemod.ui.MyToolBar;
 import me.grax.jbytemod.ui.PageEndPanel;
+import me.grax.jbytemod.ui.graph.ControlFlowPanel;
+import me.grax.jbytemod.ui.graph.methodref.MethodRefPanel;
 import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
@@ -97,8 +98,11 @@ public class JByteMod extends JFrame {
   public static JByteMod instance;
   public static Color border;
   private PluginManager pluginManager;
+  @SuppressWarnings("deprecation")
+  private MethodRefPanel methodRefPanel;
+  private File filePath;
 
-  private static final String jbytemod = "JByteMod 1.7.2";
+  private static final String jbytemod = "JByteMod 1.8.1";
 
   static {
     try {
@@ -267,6 +271,7 @@ public class JByteMod extends JFrame {
    * Load .jar or .class file
    */
   public void loadFile(File input) {
+    this.filePath = input;
     String ap = input.getAbsolutePath();
     if (ap.endsWith(".jar")) {
       try {
@@ -289,6 +294,10 @@ public class JByteMod extends JFrame {
     for (Plugin p : pluginManager.getPlugins()) {
       p.loadFile(file.getClasses());
     }
+  }
+
+  public File getFilePath() {
+    return filePath;
   }
 
   private void setTitleSuffix(String suffix) {
@@ -494,5 +503,13 @@ public class JByteMod extends JFrame {
       throw new RuntimeException();
     }
     new RetransformTask(this, agentInstrumentation, file).execute();
+  }
+
+  public void setMethodRefPanel(MethodRefPanel mrp) {
+    this.methodRefPanel = mrp;
+  }
+
+  public MethodRefPanel getMethodRefPanel() {
+    return methodRefPanel;
   }
 }

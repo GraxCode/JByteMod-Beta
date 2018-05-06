@@ -20,6 +20,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -71,6 +72,7 @@ public class ClassTree extends JTree implements IDropUser {
     this.model = new DefaultTreeModel(new SortedTreeNode(""));
     this.setModel(model);
     this.setTransferHandler(new JarDropHandler(this, 0));
+    this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
   }
 
   private static ArrayList<Object> expandedNodes = new ArrayList<>();

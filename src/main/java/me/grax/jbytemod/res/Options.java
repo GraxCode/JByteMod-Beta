@@ -23,6 +23,7 @@ public class Options {
       new Option("memory_warning", true, Type.BOOLEAN), new Option("hints", false, Type.BOOLEAN, "editor_group"),
       new Option("copy_formatted", false, Type.BOOLEAN, "editor_group"), new Option("analyze_errors", true, Type.BOOLEAN, "editor_group"),
       new Option("simplify_graph", true, Type.BOOLEAN, "graph_group"), new Option("remove_redundant", false, Type.BOOLEAN, "graph_group"),
+      new Option("max_redundant_input", 2, Type.INT, "graph_group"), new Option("decompile_graph", true, Type.BOOLEAN, "graph_group"),
       new Option("primary_color", "#557799", Type.STRING, "color_group"), new Option("secondary_color", "#995555", Type.STRING, "color_group"),
       new Option("use_weblaf", true, Type.BOOLEAN, "style_group"));
 
@@ -85,7 +86,7 @@ public class Options {
   public void save() {
     new Thread(() -> {
       try {
-        if(!propFile.exists()) {
+        if (!propFile.exists()) {
           propFile.getParentFile().mkdirs();
           propFile.createNewFile();
           JByteMod.LOGGER.log("Prop file doesn't exist, creating.");

@@ -22,8 +22,8 @@ import me.lpk.util.OpUtils;
 
 public class InstrUtils {
 
-  private static Option primColor = JByteMod.ops.get("primary_color");
-  private static Option secColor = JByteMod.ops.get("secondary_color");
+  public static Option primColor = JByteMod.ops.get("primary_color");
+  public static Option secColor = JByteMod.ops.get("secondary_color");
 
   public static String toString(AbstractInsnNode ain) {
     String opc = TextUtils.toBold(OpUtils.getOpcodeText(ain.getOpcode()).toLowerCase()) + " ";

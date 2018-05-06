@@ -1,5 +1,6 @@
 package me.grax.jbytemod.res;
 
+import java.awt.Font;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.alee.laf.WebLookAndFeel;
+
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
@@ -23,7 +26,31 @@ public class LanguageRes {
     JByteMod.LOGGER.log("Reading Language XML..");
     this.readXML(map, getXML());
     this.readXML(defaultMap, LanguageRes.class.getResourceAsStream("/locale/en.xml"));
-    JByteMod.LOGGER.log("Successfully loaded " +map.size() + " local resources and " + defaultMap.size() + " default resources");
+    JByteMod.LOGGER.log("Successfully loaded " + map.size() + " local resources and " + defaultMap.size() + " default resources");
+    this.fixUnicodeSupport();
+  }
+
+  private void fixUnicodeSupport() {
+    for (String translation : map.values()) {
+      for (char c : translation.toCharArray()) {
+        if(!WebLookAndFeel.globalControlFont.canDisplay(c)) {
+          WebLookAndFeel.globalControlFont = fixFont(WebLookAndFeel.globalControlFont);
+          WebLookAndFeel.globalTooltipFont = fixFont(WebLookAndFeel.globalTooltipFont);
+          WebLookAndFeel.globalAlertFont = fixFont(WebLookAndFeel.globalAlertFont);
+          WebLookAndFeel.globalMenuFont = fixFont(WebLookAndFeel.globalMenuFont);
+          WebLookAndFeel.globalAcceleratorFont = fixFont(WebLookAndFeel.globalAcceleratorFont);
+          WebLookAndFeel.globalTitleFont = fixFont(WebLookAndFeel.globalTitleFont);
+          WebLookAndFeel.globalTextFont = fixFont(WebLookAndFeel.globalTextFont);
+          JByteMod.LOGGER.log("Updated WebLaF fonts for unicode support");
+          return;
+        }
+      }
+    }
+    JByteMod.LOGGER.log("Unicode check finished!");
+  }
+
+  private Font fixFont(Font font) {
+    return new Font(null, font.getStyle(), font.getSize());
   }
 
   public String getResource(String desc) {
@@ -65,6 +92,6 @@ public class LanguageRes {
   }
 
   private String getLanguage() {
-    return System.getProperty("user.language");
+    return System.getProperty("user.language").toLowerCase().replace('_', '-');
   }
 }

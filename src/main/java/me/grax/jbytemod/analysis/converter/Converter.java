@@ -30,7 +30,7 @@ public class Converter implements Opcodes {
     this.nodes = new ArrayList<>(Arrays.asList(array));
   }
 
-  public ArrayList<Block> convert(boolean simplify, boolean removeRedundant, boolean skipDupeSwitches) {
+  public ArrayList<Block> convert(boolean simplify, boolean removeRedundant, boolean skipDupeSwitches, int maxInputRemoveNonsense) {
     ArrayList<Block> blocks = new ArrayList<>();
     HashMap<AbstractInsnNode, Block> correspBlock = new HashMap<>();
     Block block = null;
@@ -149,10 +149,10 @@ public class Converter implements Opcodes {
     assert (first != null);
     if (removeRedundant) {
       ArrayList<Block> visited = new ArrayList<>();
-      removeNonsense(visited, blocks, first);
+      removeNonsense(visited, blocks, first, maxInputRemoveNonsense);
       for (Block b : new ArrayList<>(blocks)) {
         if (b.getInput().isEmpty()) {
-          removeNonsense(visited, blocks, b);
+          removeNonsense(visited, blocks, b, maxInputRemoveNonsense);
         }
       }
     }
@@ -205,25 +205,26 @@ public class Converter implements Opcodes {
     }
   }
 
-  private void removeNonsense(ArrayList<Block> visited, ArrayList<Block> blocks, Block b) {
+  private void removeNonsense(ArrayList<Block> visited, ArrayList<Block> blocks, Block b, int maxInputRemoveNonsense) {
     if (visited.contains(b)) {
       return;
     }
     visited.add(b);
     if (b.endsWithJump()) {
-      if (b.getInput().size() == 1 && b.getOutput().size() == 1) {
+      if (b.getInput().size() <= maxInputRemoveNonsense && b.getOutput().size() == 1) { //there could be more inputs but that might lead to a unreadable graph
         if (isJumpBlock(b)) {
-          Block input = b.getInput().get(0);
           Block output = b.getOutput().get(0);
-          input.getOutput().remove(b);
-          input.getOutput().add(output);
+          for(Block input : b.getInput()) {
+            input.getOutput().remove(b);
+            input.getOutput().add(output);
+            output.getInput().add(input);
+          }
           output.getInput().remove(b);
-          output.getInput().add(input);
         }
       }
     }
     for (Block output : new ArrayList<>(b.getOutput())) {
-      removeNonsense(visited, blocks, output);
+      removeNonsense(visited, blocks, output, maxInputRemoveNonsense);
     }
   }
 
