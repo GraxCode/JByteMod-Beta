@@ -71,7 +71,7 @@ public class Conversion implements Opcodes {
   private MethodNode mn;
   private JVMStack preStack;
   private int arrayDebugIndex;
-  
+
   public Conversion(MethodNode mn, NodeList list) {
     this.mn = mn;
     this.list = list;
@@ -162,8 +162,8 @@ public class Conversion implements Opcodes {
     }
     for (Expression debug : left) {
       int prev = -1;
-      if(debug instanceof DebugStackExpression) {
-        prev = ((DebugStackExpression)debug).getVar();
+      if (debug instanceof DebugStackExpression) {
+        prev = ((DebugStackExpression) debug).getVar();
       }
       if (prev != var) {
         //avoid nonsense setters
@@ -177,7 +177,7 @@ public class Conversion implements Opcodes {
   private void visitInvokeDynamic(InvokeDynamicInsnNode idin) {
     InvokeDynamicExpression idye = new InvokeDynamicExpression(idin.name, idin.desc, idin.bsmArgs, idin.bsm);
     Handle methodHandle = idye.getMethodHandle();
-    if(methodHandle != null) {
+    if (methodHandle != null) {
       ArrayList<Integer> descSizes = DescUtils.getInnerDescSizes(methodHandle.getDesc());
       List<Expression> args = new ArrayList<>();
       for (int i : descSizes) {
@@ -506,6 +506,8 @@ public class Conversion implements Opcodes {
       visiFieldInsnNode(GETFIELD, null, "length", "I");
     } else if (opc == MONITORENTER || opc == MONITOREXIT) {
       list.add(new TextExpression(OpUtils.getOpcodeText(opc).toLowerCase()));
+    } else if (opc == NOP) {
+      //do nothing
     } else {
       //comparison nodes
       throw new RuntimeException(OpUtils.getOpcodeText(opc));

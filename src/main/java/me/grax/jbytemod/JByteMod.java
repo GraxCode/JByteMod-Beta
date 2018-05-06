@@ -98,10 +98,11 @@ public class JByteMod extends JFrame {
   public static JByteMod instance;
   public static Color border;
   private PluginManager pluginManager;
+  @SuppressWarnings("deprecation")
   private MethodRefPanel methodRefPanel;
   private File filePath;
 
-  private static final String jbytemod = "JByteMod 1.8.0";
+  private static final String jbytemod = "JByteMod 1.8.1";
 
   static {
     try {
