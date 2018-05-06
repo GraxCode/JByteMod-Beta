@@ -3,6 +3,7 @@ package me.grax.jbytemod.analysis.decompiler.code.ast.expressions;
 import me.grax.jbytemod.analysis.decompiler.code.ast.Expression;
 import me.grax.jbytemod.analysis.decompiler.code.ast.Operation;
 import me.grax.jbytemod.analysis.decompiler.code.ast.VarType;
+import me.grax.jbytemod.utils.TextUtils;
 
 public class OpExpression extends Expression {
   protected Expression left;
@@ -44,7 +45,7 @@ public class OpExpression extends Expression {
 
   @Override
   public String toString() {
-    return left.toString() + " " + op.getSymbol() + " " + right.toString();
+    return left.toString() + " " + TextUtils.escape(op.getSymbol()) + " " + right.toString();
   }
 
   @Override
