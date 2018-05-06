@@ -536,10 +536,19 @@ public class Conversion implements Opcodes {
     for (Field f : array.getClass().getDeclaredFields()) {
       if (f.getType() == VarType.class) {
         f.setAccessible(true);
+        VarType type = null;
         try {
-          return (VarType) f.get(array);
+          type = (VarType) f.get(array);
         } catch (Exception e) {
         }
+        if (type == null) {
+          if (array instanceof CastExpression) {
+            type = VarType.OBJECT;
+          } else {
+            throw new RuntimeException("Expression type is null (" + array.getClass().getName() + ")");
+          }
+        }
+        return type;
       }
     }
     throw new RuntimeException("Expression doesn't have type (" + array.getClass().getName() + ")");
