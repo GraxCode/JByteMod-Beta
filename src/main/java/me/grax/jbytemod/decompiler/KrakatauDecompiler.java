@@ -39,14 +39,19 @@ public class KrakatauDecompiler extends Decompiler {
         decompile = makeTemp();
         JByteMod.LOGGER.log("Successfully created Krakatau temp folder");
       }
-      String command = "py " + escape(decompile.getAbsolutePath()) + " -nauto -path " + escape(JarUtils.getRT().getAbsolutePath())
-          + ";" + escape(tempJar.getAbsolutePath()) + " -out " + escape(outputZip.getAbsolutePath()) + " -skip "
-          + escape(tempJar.getAbsolutePath());
+      File filePath = jbm.getFilePath();
+      String command = "py " + escape(decompile.getAbsolutePath()) + " -nauto -path " + escape(JarUtils.getRT().getAbsolutePath()) + ";"
+          + escape(tempJar.getAbsolutePath()) + (filePath != null ? (";" + escape(filePath.getAbsolutePath())) : "") + " -out "
+          + escape(outputZip.getAbsolutePath()) + " -skip " + escape(tempJar.getAbsolutePath());
       Process p = Runtime.getRuntime().exec(command);
-      BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+      BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+      BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
       String s = null;
-      while ((s = stdError.readLine()) != null) {
+      while ((s = input.readLine()) != null) {
+        JByteMod.LOGGER.log(s);
+      }
+      while ((s = error.readLine()) != null) {
         JByteMod.LOGGER.err(s);
       }
       p.waitFor();
@@ -100,7 +105,6 @@ public class KrakatauDecompiler extends Decompiler {
     byte[] buffer = new byte[1024];
     ZipInputStream zis = new ZipInputStream(KrakatauDecompiler.class.getResourceAsStream("/resources/krakatau.zip"));
     ZipEntry zipEntry = zis.getNextEntry();
-    System.out.println(krakatauDir.getPath());
     if (!krakatauDir.exists()) {
       krakatauDir.mkdirs();
     }

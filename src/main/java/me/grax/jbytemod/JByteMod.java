@@ -99,6 +99,7 @@ public class JByteMod extends JFrame {
   public static Color border;
   private PluginManager pluginManager;
   private MethodRefPanel methodRefPanel;
+  private File filePath;
 
   private static final String jbytemod = "JByteMod 1.8.0";
 
@@ -269,6 +270,7 @@ public class JByteMod extends JFrame {
    * Load .jar or .class file
    */
   public void loadFile(File input) {
+    this.filePath = input;
     String ap = input.getAbsolutePath();
     if (ap.endsWith(".jar")) {
       try {
@@ -291,6 +293,10 @@ public class JByteMod extends JFrame {
     for (Plugin p : pluginManager.getPlugins()) {
       p.loadFile(file.getClasses());
     }
+  }
+
+  public File getFilePath() {
+    return filePath;
   }
 
   private void setTitleSuffix(String suffix) {
