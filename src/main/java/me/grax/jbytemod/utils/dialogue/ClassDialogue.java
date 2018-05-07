@@ -139,7 +139,7 @@ public class ClassDialogue {
       jtf = (JTextField) child;
       return Type.getType(jtf.getText());
     default:
-      throw new RuntimeException("" + noChilds.indexOf(type));
+      throw new RuntimeException("" + noChilds.indexOf(type.getName()));
     }
   }
 
@@ -178,6 +178,52 @@ public class ClassDialogue {
           }
         });
         rightInput.add(wrap(f, edit));
+      } else if(f.getName().equals("value") && clazz.getName().equals("org.objectweb.asm.tree.FieldNode")) {
+    	  JPanel panel = new JPanel();
+    	  Object value;
+          try {
+        	  value = f.get(object);
+	          panel.setLayout(new BorderLayout());
+	          JButton edit = new JButton(JByteMod.res.getResource("edit"));
+	          edit.setToolTipText("Can be null");
+	          edit.addActionListener(e -> {
+	              try {
+	                //should still be the same class type
+	                ClassDialogue dialogue = ClassDialogue.this.init(value == null ? new String("") : value);
+	                if (dialogue.open()) {
+	                  f.set(object, dialogue.getObject());
+	                }
+	              } catch (Exception ex) {
+	                ex.printStackTrace();
+	              }
+	            });
+	          panel.add(edit, BorderLayout.CENTER);
+	          JCheckBox jcb = new JCheckBox("", f.get(object) != null);
+	          jcb.addItemListener(i -> {
+	        	  try {
+		            if (jcb.isSelected()) {
+		            	if (f.get(object) == null) {
+		            		f.set(object, new String(""));
+		            	}
+		          	  edit.setEnabled(true);
+		            } else {
+		              f.set(object, null);
+		          	  edit.setEnabled(false);
+		            }
+	        	  } catch (Exception ex) {
+	                ex.printStackTrace();
+	              }
+	          });
+	          if (f.get(object) == null) {
+	          	edit.setEnabled(false);
+	          } else {
+	          	edit.setEnabled(true);
+	          }
+	          panel.add(jcb, BorderLayout.WEST);
+          } catch (IllegalArgumentException | IllegalAccessException e1) {
+              e1.printStackTrace();
+          }
+          rightInput.add(wrap(f, panel));
       } else {
         JButton edit = new JButton(JByteMod.res.getResource("edit"));
         Object value;
@@ -252,7 +298,7 @@ public class ClassDialogue {
   public Object getObject() {
     return object;
   }
-
+  
   @SuppressWarnings("unused")
   private Component wrapRight(Field f, Component component, Component component2) {
     WrappedPanel wp = new WrappedPanel(f);
