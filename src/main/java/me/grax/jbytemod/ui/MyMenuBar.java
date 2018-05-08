@@ -353,7 +353,7 @@ public class MyMenuBar extends JMenuBar {
         jm.add(jnf);
         jnf.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
-            op.setValue((int)jnf.getValue());
+            op.setValue((int) jnf.getValue());
             o.save();
           }
         });

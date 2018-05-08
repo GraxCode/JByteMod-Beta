@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Files;
 import java.util.Collections;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -40,7 +39,7 @@ public class KrakatauDecompiler extends Decompiler {
         JByteMod.LOGGER.log("Successfully created Krakatau temp folder");
       }
       File filePath = jbm.getFilePath();
-      String command = "py " + escape(decompile.getAbsolutePath()) + " -nauto -path " + escape(JarUtils.getRT().getAbsolutePath()) + ";"
+      String command = getPythonPath() + escape(decompile.getAbsolutePath()) + " -nauto -path " + escape(JarUtils.getRT().getAbsolutePath()) + ";"
           + escape(tempJar.getAbsolutePath()) + (filePath != null ? (";" + escape(filePath.getAbsolutePath())) : "") + " -out "
           + escape(outputZip.getAbsolutePath()) + " -skip " + escape(tempJar.getAbsolutePath());
       Process p = Runtime.getRuntime().exec(command);
@@ -73,8 +72,25 @@ public class KrakatauDecompiler extends Decompiler {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
       e.printStackTrace(pw);
-      return sw.toString();
+      return sw.toString() + "\n\n" + JByteMod.res.getResource("set_py_path");
     }
+  }
+
+  private String getPythonPath() {
+    String pp = JByteMod.ops.get("python_path").getString();
+    if (!pp.isEmpty()) {
+      try {
+        File path = new File(pp);
+        if (!path.exists()) {
+          JByteMod.LOGGER.err("Python executable does not exist");
+        } else {
+          return "\"" + path.getAbsolutePath() + "\"";
+        }
+      } catch (Exception e) {
+        JByteMod.LOGGER.err("Invalid python path (" + e.toString() + ")");
+      }
+    }
+    return "py ";
   }
 
   private String escape(String absolutePath) {
