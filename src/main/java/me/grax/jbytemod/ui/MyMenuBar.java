@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -336,6 +337,8 @@ public class MyMenuBar extends JMenuBar {
       case STRING:
         JMenu jm = new JMenu(lr.getResource(op.getName()));
         JTextField jtf = new JTextField(op.getString());
+        jtf.setPreferredSize(new Dimension(Math.max((int) jtf.getPreferredSize().getWidth(), 128), (int) jtf.getPreferredSize().getHeight()));
+        jm.add(Box.createHorizontalGlue());
         jm.add(jtf);
         jtf.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
@@ -349,7 +352,7 @@ public class MyMenuBar extends JMenuBar {
         jm = new JMenu(lr.getResource(op.getName()));
         JFormattedTextField jnf = ClassDialogue.createNumberField();
         jnf.setValue(op.getInteger());
-        jnf.setPreferredSize(new Dimension(64, (int) jnf.getPreferredSize().getHeight()));
+        jnf.setPreferredSize(new Dimension(Math.max((int) jnf.getPreferredSize().getWidth(), 64), (int) jnf.getPreferredSize().getHeight()));
         jm.add(jnf);
         jnf.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
