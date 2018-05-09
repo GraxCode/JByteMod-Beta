@@ -39,8 +39,8 @@ public class KrakatauDecompiler extends Decompiler {
         JByteMod.LOGGER.log("Successfully created Krakatau temp folder");
       }
       File filePath = jbm.getFilePath();
-      String command = getPythonPath() + escape(decompile.getAbsolutePath()) + " -nauto -path " + escape(JarUtils.getRT().getAbsolutePath()) + ";"
-          + escape(tempJar.getAbsolutePath()) + (filePath != null ? (";" + escape(filePath.getAbsolutePath())) : "") + " -out "
+      String command = getPythonPath() + " " + escape(decompile.getAbsolutePath()) + " -nauto -path " + escape(JarUtils.getRT().getAbsolutePath())
+          + ";" + escape(tempJar.getAbsolutePath()) + (filePath != null ? (";" + escape(filePath.getAbsolutePath())) : "") + " -out "
           + escape(outputZip.getAbsolutePath()) + " -skip " + escape(tempJar.getAbsolutePath());
       Process p = Runtime.getRuntime().exec(command);
       BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -84,13 +84,13 @@ public class KrakatauDecompiler extends Decompiler {
         if (!path.exists()) {
           JByteMod.LOGGER.err("Python executable does not exist");
         } else {
-          return "\"" + path.getAbsolutePath() + "\"";
+          return "\"" + path.getAbsolutePath() + "\" ";
         }
       } catch (Exception e) {
         JByteMod.LOGGER.err("Invalid python path (" + e.toString() + ")");
       }
     }
-    return "py ";
+    return "py";
   }
 
   private String escape(String absolutePath) {
