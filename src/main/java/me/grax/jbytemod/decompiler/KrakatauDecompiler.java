@@ -84,7 +84,7 @@ public class KrakatauDecompiler extends Decompiler {
         if (!path.exists()) {
           JByteMod.LOGGER.err("Python executable does not exist");
         } else {
-          return "\"" + path.getAbsolutePath() + "\" ";
+          return "\"" + path.getAbsolutePath() + "\"";
         }
       } catch (Exception e) {
         JByteMod.LOGGER.err("Invalid python path (" + e.toString() + ")");
