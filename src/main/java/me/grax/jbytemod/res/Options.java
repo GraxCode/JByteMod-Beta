@@ -32,10 +32,12 @@ public class Options {
       JByteMod.LOGGER.log("Loading settings... ");
       try {
         Files.lines(propFile.toPath()).forEach(l -> {
-          String[] split = l.split("=");
-          String[] def = split[0].split(":");
+          int split = l.indexOf('=');
+          String part1 = l.substring(0, split);
+          String part2 = split == l.length() ? "" : l.substring(split + 1, l.length());
+          String[] def = part1.split(":");
           try {
-            bools.add(new Option(def[0], split[1], Type.valueOf(def[1]), def[2]));
+            bools.add(new Option(def[0], part2, Type.valueOf(def[1]), def[2]));
           } catch (Exception e) {
             JByteMod.LOGGER.warn("Couldn't parse line: " + l);
           }
