@@ -9,13 +9,13 @@ public class ArrayIndexExpression extends Expression {
 
   private Expression array;
   private Expression index;
-  private VarType type;
+  private boolean twoword;
 
-  public ArrayIndexExpression(Expression array, Expression index, VarType arrayType) {
+  public ArrayIndexExpression(Expression array, Expression index, boolean twoword) {
     super();
     this.array = array;
     this.index = index;
-    this.type = arrayType;
+    this.twoword = twoword;
   }
 
 
@@ -26,11 +26,11 @@ public class ArrayIndexExpression extends Expression {
 
   @Override
   public int size() {
-    return type.size();
+    return twoword ? 2 : 1;
   }
 
   @Override
   public Expression clone() {
-    return new ArrayIndexExpression(array.clone(), index.clone(), type);
+    return new ArrayIndexExpression(array.clone(), index.clone(), twoword);
   }
 }
