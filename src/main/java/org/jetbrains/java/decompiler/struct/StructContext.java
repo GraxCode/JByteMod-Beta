@@ -17,12 +17,6 @@
  */
 package org.jetbrains.java.decompiler.struct;
 
-import org.jetbrains.java.decompiler.main.DecompilerContext;
-import org.jetbrains.java.decompiler.main.extern.IResultSaver;
-import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
-import org.jetbrains.java.decompiler.util.DataInputFullStream;
-import org.jetbrains.java.decompiler.util.InterpreterUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -31,6 +25,12 @@ import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import org.jetbrains.java.decompiler.main.DecompilerContext;
+import org.jetbrains.java.decompiler.main.extern.IResultSaver;
+import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
+import org.jetbrains.java.decompiler.util.DataInputFullStream;
+import org.jetbrains.java.decompiler.util.InterpreterUtil;
 
 public class StructContext {
 

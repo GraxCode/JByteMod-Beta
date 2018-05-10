@@ -214,7 +214,7 @@ public class Converter implements Opcodes {
       if (b.getInput().size() <= maxInputRemoveNonsense && b.getOutput().size() == 1) { //there could be more inputs but that might lead to a unreadable graph
         if (isJumpBlock(b)) {
           Block output = b.getOutput().get(0);
-          for(Block input : b.getInput()) {
+          for (Block input : b.getInput()) {
             input.getOutput().remove(b);
             input.getOutput().add(output);
             output.getInput().add(input);

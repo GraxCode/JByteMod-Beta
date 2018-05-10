@@ -15,6 +15,9 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.stats;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.main.TextBuffer;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.modules.decompiler.DecHelper;
@@ -26,9 +29,6 @@ import org.jetbrains.java.decompiler.struct.match.IMatchable;
 import org.jetbrains.java.decompiler.struct.match.MatchEngine;
 import org.jetbrains.java.decompiler.struct.match.MatchNode;
 import org.jetbrains.java.decompiler.util.TextUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class IfStatement extends Statement {
 

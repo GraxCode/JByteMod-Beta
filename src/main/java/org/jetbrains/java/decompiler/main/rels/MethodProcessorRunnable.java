@@ -15,6 +15,8 @@
  */
 package org.jetbrains.java.decompiler.main.rels;
 
+import java.io.IOException;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.InstructionSequence;
 import org.jetbrains.java.decompiler.code.cfg.ControlFlowGraph;
@@ -23,15 +25,27 @@ import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.modules.code.DeadCodeHelper;
-import org.jetbrains.java.decompiler.modules.decompiler.*;
+import org.jetbrains.java.decompiler.modules.decompiler.ClearStructHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.DomHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.ExitHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
+import org.jetbrains.java.decompiler.modules.decompiler.FinallyProcessor;
+import org.jetbrains.java.decompiler.modules.decompiler.IdeaNotNullHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.IfHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.InlineSingleBlockHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.LabelHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.LoopExtractHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.MergeHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.PPandMMHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.SecondaryFunctionsHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.SequenceHelper;
+import org.jetbrains.java.decompiler.modules.decompiler.StackVarsProcessor;
 import org.jetbrains.java.decompiler.modules.decompiler.deobfuscator.ExceptionDeobfuscator;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
-
-import java.io.IOException;
 
 public class MethodProcessorRunnable implements Runnable {
   public final Object lock = new Object();

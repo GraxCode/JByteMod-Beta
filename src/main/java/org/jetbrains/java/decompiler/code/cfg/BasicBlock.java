@@ -15,14 +15,14 @@
  */
 package org.jetbrains.java.decompiler.code.cfg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.code.Instruction;
 import org.jetbrains.java.decompiler.code.InstructionSequence;
 import org.jetbrains.java.decompiler.code.SimpleInstructionSequence;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.modules.decompiler.decompose.IGraphNode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BasicBlock implements IGraphNode {
 

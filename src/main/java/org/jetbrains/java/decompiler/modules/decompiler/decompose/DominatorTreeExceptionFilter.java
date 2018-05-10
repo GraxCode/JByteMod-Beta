@@ -15,12 +15,16 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.decompose;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 public class DominatorTreeExceptionFilter {
 

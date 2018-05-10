@@ -129,8 +129,8 @@ public class InsnEditDialogue extends ClassDialogue {
       rightInput.add(ldctype);
       leftText.add(new JLabel("Ldc Value: "));
       JTextField cst = new JTextField();
-      if(ldc.cst instanceof Type) {
-        cst.setText(((Type)ldc.cst).getDescriptor());
+      if (ldc.cst instanceof Type) {
+        cst.setText(((Type) ldc.cst).getDescriptor());
       } else {
         cst.setText(ldc.cst.toString());
       }

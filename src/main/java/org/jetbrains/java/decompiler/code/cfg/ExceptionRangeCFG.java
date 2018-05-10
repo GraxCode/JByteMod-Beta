@@ -15,12 +15,12 @@
  */
 package org.jetbrains.java.decompiler.code.cfg;
 
-import org.jetbrains.java.decompiler.main.DecompilerContext;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.jetbrains.java.decompiler.main.DecompilerContext;
 
 public class ExceptionRangeCFG {
 

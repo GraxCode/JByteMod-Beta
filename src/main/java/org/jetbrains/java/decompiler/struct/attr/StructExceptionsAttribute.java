@@ -15,13 +15,13 @@
  */
 package org.jetbrains.java.decompiler.struct.attr;
 
-import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 
 public class StructExceptionsAttribute extends StructGeneralAttribute {
 

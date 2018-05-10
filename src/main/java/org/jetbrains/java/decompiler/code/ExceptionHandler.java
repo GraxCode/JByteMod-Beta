@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.code;
 
-import org.jetbrains.java.decompiler.main.DecompilerContext;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import org.jetbrains.java.decompiler.main.DecompilerContext;
 
 public class ExceptionHandler {
 

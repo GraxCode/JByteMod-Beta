@@ -15,14 +15,14 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.modules.decompiler.stats.DoStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.SequenceStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 
 public class LoopExtractHelper {
 

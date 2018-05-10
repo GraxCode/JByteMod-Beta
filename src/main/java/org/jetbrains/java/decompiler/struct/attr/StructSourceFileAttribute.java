@@ -15,9 +15,9 @@
  */
 package org.jetbrains.java.decompiler.struct.attr;
 
-import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
-
 import java.io.IOException;
+
+import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 
 public class StructSourceFileAttribute extends StructGeneralAttribute {
 

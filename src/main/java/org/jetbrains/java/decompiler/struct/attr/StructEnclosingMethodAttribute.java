@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.struct.attr;
 
-import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
-import org.jetbrains.java.decompiler.struct.consts.LinkConstant;
-
 import java.io.DataInputStream;
 import java.io.IOException;
+
+import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
+import org.jetbrains.java.decompiler.struct.consts.LinkConstant;
 
 public class StructEnclosingMethodAttribute extends StructGeneralAttribute {
 

@@ -15,13 +15,13 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.deobfuscator;
 
-import org.jetbrains.java.decompiler.modules.decompiler.StatEdge;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
-import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jetbrains.java.decompiler.modules.decompiler.StatEdge;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.BasicBlockStatement;
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 
 public class IrreducibleCFGDeobfuscator {
 

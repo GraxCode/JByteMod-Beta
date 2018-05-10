@@ -15,6 +15,16 @@
  */
 package org.jetbrains.java.decompiler.main;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeSourceMapper;
 import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
@@ -34,10 +44,6 @@ import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.attr.StructInnerClassesAttribute;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class ClassesProcessor {
   public static final int AVERAGE_CLASS_SIZE = 16 * 1024;

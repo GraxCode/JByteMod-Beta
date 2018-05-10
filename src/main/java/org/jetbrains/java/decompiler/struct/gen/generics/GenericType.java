@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.struct.gen.generics;
 
-import org.jetbrains.java.decompiler.code.CodeConstants;
-import org.jetbrains.java.decompiler.struct.gen.VarType;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.code.CodeConstants;
+import org.jetbrains.java.decompiler.struct.gen.VarType;
 
 public class GenericType {
 

@@ -15,13 +15,13 @@
  */
 package org.jetbrains.java.decompiler.struct.attr;
 
-import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
-import org.jetbrains.java.decompiler.util.DataInputFullStream;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
+import org.jetbrains.java.decompiler.util.DataInputFullStream;
 
 /*
   u2 local_variable_table_length;

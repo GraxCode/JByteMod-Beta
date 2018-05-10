@@ -15,18 +15,18 @@
  */
 package org.jetbrains.java.decompiler.struct;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.main.extern.IResultSaver;
 import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 import org.jetbrains.java.decompiler.struct.lazy.LazyLoader.Link;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 public class ContextUnit {
 

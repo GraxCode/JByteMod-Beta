@@ -33,7 +33,7 @@ public class LanguageRes {
   private void fixUnicodeSupport() {
     for (String translation : map.values()) {
       for (char c : translation.toCharArray()) {
-        if(!WebLookAndFeel.globalControlFont.canDisplay(c)) {
+        if (!WebLookAndFeel.globalControlFont.canDisplay(c)) {
           WebLookAndFeel.globalControlFont = fixFont(WebLookAndFeel.globalControlFont);
           WebLookAndFeel.globalTooltipFont = fixFont(WebLookAndFeel.globalTooltipFont);
           WebLookAndFeel.globalAlertFont = fixFont(WebLookAndFeel.globalAlertFont);

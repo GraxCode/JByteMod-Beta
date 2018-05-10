@@ -15,10 +15,14 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
-
-import java.util.*;
 
 public class DecHelper {
 

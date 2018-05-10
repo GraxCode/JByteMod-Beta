@@ -1,7 +1,6 @@
 package me.grax.jbytemod.analysis.decompiler.code.ast.expressions;
 
 import me.grax.jbytemod.analysis.decompiler.code.ast.Expression;
-import me.grax.jbytemod.utils.InstrUtils;
 import me.grax.jbytemod.utils.TextUtils;
 
 public class StringExpression extends Expression {
@@ -23,7 +22,7 @@ public class StringExpression extends Expression {
 
   @Override
   public String toString() {
-    return TextUtils.addTag("\"" + value+ "\"", "font color=#559955"); //TODO escape
+    return TextUtils.addTag("\"" + value + "\"", "font color=#559955"); //TODO escape
   }
 
   @Override

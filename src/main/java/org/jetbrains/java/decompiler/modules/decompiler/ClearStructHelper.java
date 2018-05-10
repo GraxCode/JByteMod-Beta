@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
+import java.util.LinkedList;
+
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
-
-import java.util.LinkedList;
 
 public class ClearStructHelper {
 

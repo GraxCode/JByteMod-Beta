@@ -54,7 +54,7 @@ public class BlockVertex {
         JVMStack inputStack = null;
         if (!input.isEmpty()) {
           inputStack = input.get(0).getLeftOverStack();
-          assert(inputStack != null);
+          assert (inputStack != null);
         }
         Conversion c = new Conversion(mn, list, inputStack);
         c.convert(block);

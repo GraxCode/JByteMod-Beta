@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.main.extern;
 
-import org.jetbrains.java.decompiler.util.InterpreterUtil;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jetbrains.java.decompiler.util.InterpreterUtil;
 
 public interface IFernflowerPreferences {
   String REMOVE_BRIDGE = "rbr";

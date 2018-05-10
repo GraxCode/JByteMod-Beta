@@ -15,6 +15,8 @@
  */
 package org.jetbrains.java.decompiler.struct;
 
+import java.io.IOException;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 import org.jetbrains.java.decompiler.struct.consts.PrimitiveConstant;
@@ -22,8 +24,6 @@ import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
-
-import java.io.IOException;
 
 /*
   class_file {

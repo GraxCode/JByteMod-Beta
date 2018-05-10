@@ -1,7 +1,6 @@
 package me.grax.jbytemod.analysis.decompiler.code.ast.expressions;
 
 import me.grax.jbytemod.analysis.decompiler.code.ast.Expression;
-import me.grax.jbytemod.analysis.decompiler.code.ast.VarType;
 import me.grax.jbytemod.utils.InstrUtils;
 import me.grax.jbytemod.utils.TextUtils;
 
@@ -17,7 +16,6 @@ public class ArrayIndexExpression extends Expression {
     this.index = index;
     this.twoword = twoword;
   }
-
 
   @Override
   public String toString() {

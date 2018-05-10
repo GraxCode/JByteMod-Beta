@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.stats;
 
-import org.jetbrains.java.decompiler.main.TextBuffer;
-import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
-
 import java.util.Collection;
 import java.util.HashSet;
+
+import org.jetbrains.java.decompiler.main.TextBuffer;
+import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 
 public class GeneralStatement extends Statement {
 

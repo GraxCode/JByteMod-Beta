@@ -15,13 +15,13 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.vars;
 
-import org.jetbrains.java.decompiler.modules.decompiler.decompose.IGraphNode;
-import org.jetbrains.java.decompiler.util.SFormsFastMapDirect;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.jetbrains.java.decompiler.modules.decompiler.decompose.IGraphNode;
+import org.jetbrains.java.decompiler.util.SFormsFastMapDirect;
 
 public class VarVersionNode implements IGraphNode {
 

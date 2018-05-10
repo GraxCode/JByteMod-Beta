@@ -15,6 +15,16 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.deobfuscator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.Instruction;
 import org.jetbrains.java.decompiler.code.InstructionSequence;
@@ -26,9 +36,6 @@ import org.jetbrains.java.decompiler.modules.decompiler.decompose.GenericDominat
 import org.jetbrains.java.decompiler.modules.decompiler.decompose.IGraph;
 import org.jetbrains.java.decompiler.modules.decompiler.decompose.IGraphNode;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 public class ExceptionDeobfuscator {
 

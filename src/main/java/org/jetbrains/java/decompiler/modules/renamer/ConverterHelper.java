@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.modules.renamer;
 
-import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 public class ConverterHelper implements IIdentifierRenamer {
 

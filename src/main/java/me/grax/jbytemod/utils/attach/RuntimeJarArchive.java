@@ -47,7 +47,7 @@ public class RuntimeJarArchive extends JarArchive {
     }
     self.close();
   }
-  
+
   @Override
   public Map<String, ClassNode> getClasses() {
     for (Class<?> c : ins.getAllLoadedClasses()) {

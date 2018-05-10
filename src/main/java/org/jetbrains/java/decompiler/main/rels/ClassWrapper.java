@@ -15,6 +15,10 @@
  */
 package org.jetbrains.java.decompiler.main.rels;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
@@ -32,10 +36,6 @@ import org.jetbrains.java.decompiler.struct.attr.StructLocalVariableTableAttribu
 import org.jetbrains.java.decompiler.struct.gen.MethodDescriptor;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ClassWrapper {
 

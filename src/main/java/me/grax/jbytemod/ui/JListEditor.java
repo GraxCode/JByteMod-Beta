@@ -26,7 +26,7 @@ public class JListEditor extends JFrame {
    */
   private static boolean open = false;
 
-  @SuppressWarnings({ "unchecked"})
+  @SuppressWarnings({ "unchecked" })
   public JListEditor(String title, Object parent, String field) {
     try {
       open = true;

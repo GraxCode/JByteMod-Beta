@@ -65,7 +65,8 @@ public class JLDCEditor extends JDialog {
       }
 
       @Override
-      public void mouseDragged(MouseEvent e) {}
+      public void mouseDragged(MouseEvent e) {
+      }
     });
     add(new JScrollPane(editor), BorderLayout.CENTER);
     setModal(true);
@@ -74,6 +75,7 @@ public class JLDCEditor extends JDialog {
   public String getText() {
     return editor.getText();
   }
+
   private Component shortcutButton(String name, String letter) {
     JButton btn = new JButton(name);
     btn.addActionListener(e -> {

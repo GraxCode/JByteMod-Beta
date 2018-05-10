@@ -13,6 +13,7 @@ public class TabbedStringBuffer {
       sb.append("  ");
     }
   }
+
   @Override
   public String toString() {
     return sb.toString();

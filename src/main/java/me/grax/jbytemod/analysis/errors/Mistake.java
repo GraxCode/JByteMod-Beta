@@ -14,5 +14,5 @@ public abstract class Mistake {
   public void setDesc(String desc) {
     this.desc = desc;
   }
-  
+
 }

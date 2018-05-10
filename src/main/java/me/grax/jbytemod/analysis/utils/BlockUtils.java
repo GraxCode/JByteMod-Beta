@@ -10,7 +10,7 @@ public class BlockUtils {
   }
 
   private static boolean doesMerge(ArrayList<Block> visited, Block block, Block into) {
-    if(visited.contains(block)) {
+    if (visited.contains(block)) {
       return false;
     }
     visited.add(block);

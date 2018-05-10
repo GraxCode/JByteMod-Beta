@@ -15,6 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.stats;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.cfg.BasicBlock;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
@@ -27,10 +31,6 @@ import org.jetbrains.java.decompiler.modules.decompiler.StatEdge;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.vars.VarProcessor;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 public class CatchStatement extends Statement {
 

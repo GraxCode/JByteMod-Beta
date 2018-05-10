@@ -1,7 +1,6 @@
 package me.grax.jbytemod.ui.graph.methodref;
 
 import java.awt.Color;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -19,7 +18,6 @@ import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 import me.grax.jbytemod.JByteMod;
-
 
 @Deprecated
 public class MRGraph extends mxGraph {

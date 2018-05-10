@@ -15,17 +15,16 @@
  */
 package org.jetbrains.java.decompiler.code;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.code.interpreter.Util;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.struct.StructContext;
 import org.jetbrains.java.decompiler.util.TextUtil;
 import org.jetbrains.java.decompiler.util.VBStyleCollection;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public abstract class InstructionSequence {
 

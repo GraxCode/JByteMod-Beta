@@ -15,12 +15,12 @@
  */
 package org.jetbrains.java.decompiler.struct.gen.generics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GenericMain {
 

@@ -12,6 +12,6 @@ public class MyInternalFrame extends JInternalFrame {
     this.setIconifiable(true);
     getDesktopIcon().updateUI();
     updateUI();
-  } 
+  }
 
 }

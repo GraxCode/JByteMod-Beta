@@ -32,7 +32,7 @@ public class ErrorAnalyzer {
       a.analyze(mn.owner, mn);
     } catch (AnalyzerException e) {
       put(map, e.node, new InsnError(e.getMessage()));
-    } catch(Exception e) {
+    } catch (Exception e) {
       JByteMod.LOGGER.err("Couldn't analyze errors in bytecode (" + e.toString() + ")");
     }
     return map;

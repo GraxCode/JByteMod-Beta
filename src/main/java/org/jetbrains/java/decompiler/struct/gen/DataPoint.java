@@ -15,12 +15,12 @@
  */
 package org.jetbrains.java.decompiler.struct.gen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.util.ListStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DataPoint {
 

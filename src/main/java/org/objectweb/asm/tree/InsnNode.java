@@ -44,6 +44,7 @@ public class InsnNode extends AbstractInsnNode {
   public InsnNode() {
     super(Opcodes.DUP);
   }
+
   /**
    * Constructs a new {@link InsnNode}.
    * 

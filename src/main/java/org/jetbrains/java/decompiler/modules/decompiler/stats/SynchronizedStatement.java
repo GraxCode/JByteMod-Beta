@@ -15,6 +15,9 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.stats;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.code.cfg.BasicBlock;
 import org.jetbrains.java.decompiler.main.TextBuffer;
@@ -23,9 +26,6 @@ import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
 import org.jetbrains.java.decompiler.modules.decompiler.SequenceHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.StatEdge;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SynchronizedStatement extends Statement {
 

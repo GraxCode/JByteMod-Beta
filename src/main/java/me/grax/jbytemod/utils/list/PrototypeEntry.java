@@ -10,10 +10,12 @@ public class PrototypeEntry extends InstrEntry {
   public String toString() {
     return " ";
   }
+
   @Override
   public String toEasyString() {
     return " ";
   }
+
   @Override
   public String getHint() {
     return null;
