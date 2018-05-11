@@ -281,7 +281,7 @@ public class MyMenuBar extends JMenuBar {
     VirtualMachine vm = null;
     try {
       if (list.isEmpty()) {
-        String pid = JOptionPane.showInputDialog("Couldn't find any VM's! Enter your process id.");
+        String pid = JOptionPane.showInputDialog(JByteMod.res.getResource("no_vm_found"));
         if (pid != null && !pid.isEmpty()) {
           vm = AttachUtils.getVirtualMachine(Integer.parseInt(pid));
         }
