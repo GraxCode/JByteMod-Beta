@@ -117,7 +117,9 @@ public class CFGraph extends mxGraph {
               try {
                 AbstractInsnNode ain = block.getNodes().get(index);
                 if (InsnEditDialogue.canEdit(ain)) {
-                  new InsnEditDialogue(jbm.getCurrentMethod(), ain).open();
+                  if(new InsnEditDialogue(jbm.getCurrentMethod(), ain).open()) {
+                    jbm.getCFP().generateList();
+                  }
                 }
               } catch (Exception ex) {
                 new ErrorDisplay(ex);

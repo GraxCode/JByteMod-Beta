@@ -454,6 +454,10 @@ public class JByteMod extends JFrame {
     this.cfp = cfp;
   }
 
+  public ControlFlowPanel getCFP() {
+    return this.cfp;
+  }
+
   public static void restartGUI() {
     instance.dispose();
     instance = null;
@@ -512,4 +516,5 @@ public class JByteMod extends JFrame {
   public MethodRefPanel getMethodRefPanel() {
     return methodRefPanel;
   }
+
 }
