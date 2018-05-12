@@ -26,7 +26,7 @@ public class HtmlSelection implements Transferable {
   }
 
   private String html;
-  
+
   public HtmlSelection(String html) {
     this.html = html;
   }

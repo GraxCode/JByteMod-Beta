@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.main.decompiler;
 
+import java.io.PrintStream;
+
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.util.TextUtil;
-
-import java.io.PrintStream;
 
 public class PrintStreamLogger extends IFernflowerLogger {
 

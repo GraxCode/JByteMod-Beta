@@ -15,15 +15,15 @@
  */
 package org.jetbrains.java.decompiler.util;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.jetbrains.java.decompiler.code.CodeConstants;
 import org.jetbrains.java.decompiler.main.ClassesProcessor;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.TextBuffer;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
-
-import java.util.Arrays;
-import java.util.HashSet;
 
 public class TextUtil {
   private static final HashSet<String> KEYWORDS = new HashSet<>(

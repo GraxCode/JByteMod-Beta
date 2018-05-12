@@ -15,10 +15,14 @@
  */
 package org.jetbrains.java.decompiler.main.collectors;
 
-import org.jetbrains.java.decompiler.struct.attr.StructLineNumberTableAttribute;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.jetbrains.java.decompiler.struct.attr.StructLineNumberTableAttribute;
 
 public class BytecodeMappingTracer {
   public static final BytecodeMappingTracer DUMMY = new BytecodeMappingTracer();

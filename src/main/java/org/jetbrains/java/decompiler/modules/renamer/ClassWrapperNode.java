@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.renamer;
 
-import org.jetbrains.java.decompiler.struct.StructClass;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.struct.StructClass;
 
 public class ClassWrapperNode {
 

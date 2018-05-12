@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
-import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
 
 public class PrimitiveExprsList {
 

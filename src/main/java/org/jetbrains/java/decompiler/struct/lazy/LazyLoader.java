@@ -15,15 +15,15 @@
  */
 package org.jetbrains.java.decompiler.struct.lazy;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
 import org.jetbrains.java.decompiler.struct.StructMethod;
 import org.jetbrains.java.decompiler.struct.attr.StructGeneralAttribute;
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LazyLoader {
 

@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.decompose;
 
-import org.jetbrains.java.decompiler.util.VBStyleCollection;
-
 import java.util.List;
 import java.util.Set;
+
+import org.jetbrains.java.decompiler.util.VBStyleCollection;
 
 public class GenericDominatorEngine {
 

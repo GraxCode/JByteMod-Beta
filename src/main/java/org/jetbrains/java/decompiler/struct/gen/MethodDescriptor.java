@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.struct.gen;
 
-import org.jetbrains.java.decompiler.code.CodeConstants;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.code.CodeConstants;
 
 public class MethodDescriptor {
 

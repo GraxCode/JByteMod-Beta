@@ -45,7 +45,7 @@ public class PageEndPanel extends JPanel {
     memoryBar = new WebMemoryBar();
     memoryBar.setShowMaximumMemory(false);
     this.add(memoryBar);
-    
+
   }
 
   public void setValue(int n) {
@@ -56,9 +56,9 @@ public class PageEndPanel extends JPanel {
       }
     });
   }
-  
+
   public void setTip(String s) {
-    if(s != null) {
+    if (s != null) {
       label.setText(s);
     } else {
       label.setText(copyright);

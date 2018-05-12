@@ -15,7 +15,44 @@
  */
 package org.jetbrains.java.decompiler.code;
 
-import org.jetbrains.java.decompiler.code.optinstructions.*;
+import org.jetbrains.java.decompiler.code.optinstructions.ALOAD;
+import org.jetbrains.java.decompiler.code.optinstructions.ANEWARRAY;
+import org.jetbrains.java.decompiler.code.optinstructions.ASTORE;
+import org.jetbrains.java.decompiler.code.optinstructions.BIPUSH;
+import org.jetbrains.java.decompiler.code.optinstructions.CHECKCAST;
+import org.jetbrains.java.decompiler.code.optinstructions.DLOAD;
+import org.jetbrains.java.decompiler.code.optinstructions.DSTORE;
+import org.jetbrains.java.decompiler.code.optinstructions.FLOAD;
+import org.jetbrains.java.decompiler.code.optinstructions.FSTORE;
+import org.jetbrains.java.decompiler.code.optinstructions.GETFIELD;
+import org.jetbrains.java.decompiler.code.optinstructions.GETSTATIC;
+import org.jetbrains.java.decompiler.code.optinstructions.GOTO;
+import org.jetbrains.java.decompiler.code.optinstructions.GOTO_W;
+import org.jetbrains.java.decompiler.code.optinstructions.IINC;
+import org.jetbrains.java.decompiler.code.optinstructions.ILOAD;
+import org.jetbrains.java.decompiler.code.optinstructions.INSTANCEOF;
+import org.jetbrains.java.decompiler.code.optinstructions.INVOKEDYNAMIC;
+import org.jetbrains.java.decompiler.code.optinstructions.INVOKEINTERFACE;
+import org.jetbrains.java.decompiler.code.optinstructions.INVOKESPECIAL;
+import org.jetbrains.java.decompiler.code.optinstructions.INVOKESTATIC;
+import org.jetbrains.java.decompiler.code.optinstructions.INVOKEVIRTUAL;
+import org.jetbrains.java.decompiler.code.optinstructions.ISTORE;
+import org.jetbrains.java.decompiler.code.optinstructions.JSR;
+import org.jetbrains.java.decompiler.code.optinstructions.JSR_W;
+import org.jetbrains.java.decompiler.code.optinstructions.LDC;
+import org.jetbrains.java.decompiler.code.optinstructions.LDC2_W;
+import org.jetbrains.java.decompiler.code.optinstructions.LDC_W;
+import org.jetbrains.java.decompiler.code.optinstructions.LLOAD;
+import org.jetbrains.java.decompiler.code.optinstructions.LOOKUPSWITCH;
+import org.jetbrains.java.decompiler.code.optinstructions.LSTORE;
+import org.jetbrains.java.decompiler.code.optinstructions.MULTIANEWARRAY;
+import org.jetbrains.java.decompiler.code.optinstructions.NEW;
+import org.jetbrains.java.decompiler.code.optinstructions.NEWARRAY;
+import org.jetbrains.java.decompiler.code.optinstructions.PUTFIELD;
+import org.jetbrains.java.decompiler.code.optinstructions.PUTSTATIC;
+import org.jetbrains.java.decompiler.code.optinstructions.RET;
+import org.jetbrains.java.decompiler.code.optinstructions.SIPUSH;
+import org.jetbrains.java.decompiler.code.optinstructions.TABLESWITCH;
 
 public class ConstantsUtil {
 

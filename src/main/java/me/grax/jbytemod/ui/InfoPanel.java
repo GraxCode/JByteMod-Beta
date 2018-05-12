@@ -29,14 +29,15 @@ public class InfoPanel extends JPanel {
   private JDesktopPane deskPane;
   private JByteMod jbm;
   private static Color bg;
-  
+
   static {
     bg = UIManager.getLookAndFeelDefaults().getColor("nimbusLightBackground");
-    if(bg == null) {
+    if (bg == null) {
       //for look and feel changes
       bg = new Color(255, 255, 255);
     }
   }
+
   public InfoPanel(JByteMod jbm) {
     this.jbm = jbm;
     this.setLayout(new BorderLayout());
@@ -47,7 +48,7 @@ public class InfoPanel extends JPanel {
         g.setColor(bg);
         g.fillRect(0, 0, getWidth(), getHeight());
       }
-      
+
     };
     deskPane.setDesktopManager(new DeskMan());
     this.add(deskPane, BorderLayout.CENTER);

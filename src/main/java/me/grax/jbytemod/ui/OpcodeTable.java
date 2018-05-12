@@ -1,7 +1,6 @@
 package me.grax.jbytemod.ui;
 
 import java.awt.Font;
-import java.io.IOException;
 
 import javax.swing.JEditorPane;
 

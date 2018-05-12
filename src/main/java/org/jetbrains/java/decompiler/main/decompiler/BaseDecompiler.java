@@ -15,14 +15,14 @@
  */
 package org.jetbrains.java.decompiler.main.decompiler;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
 import org.jetbrains.java.decompiler.main.Fernflower;
 import org.jetbrains.java.decompiler.main.extern.IBytecodeProvider;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IResultSaver;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 public class BaseDecompiler {
 

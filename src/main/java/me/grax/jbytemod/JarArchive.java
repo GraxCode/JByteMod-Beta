@@ -33,7 +33,7 @@ public class JarArchive {
     } catch (Throwable t) {
       new ErrorDisplay(t);
     }
-  } 
+  }
 
   public boolean isSingleEntry() {
     return singleEntry;

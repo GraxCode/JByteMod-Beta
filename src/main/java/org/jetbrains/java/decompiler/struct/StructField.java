@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.struct;
 
+import java.io.IOException;
+
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
-
-import java.io.IOException;
 
 /*
   field_info {

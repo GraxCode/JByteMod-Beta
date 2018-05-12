@@ -15,13 +15,13 @@
  */
 package org.jetbrains.java.decompiler.util;
 
-import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
-import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.jetbrains.java.decompiler.modules.decompiler.exps.VarExprent;
+import org.jetbrains.java.decompiler.util.FastSparseSetFactory.FastSparseSet;
 
 public class SFormsFastMapDirect {
 

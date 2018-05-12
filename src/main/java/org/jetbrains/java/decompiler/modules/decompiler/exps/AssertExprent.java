@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.exps;
 
+import java.util.List;
+
 import org.jetbrains.java.decompiler.main.TextBuffer;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
-
-import java.util.List;
 
 public class AssertExprent extends Exprent {
 

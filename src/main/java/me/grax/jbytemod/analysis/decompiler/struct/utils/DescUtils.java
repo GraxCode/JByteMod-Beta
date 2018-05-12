@@ -8,20 +8,20 @@ public class DescUtils {
     int dims = 0;
     boolean inObject = false;
     for (char c : desc.toCharArray()) {
-      if(inObject) {
-        if(c == ';') {
+      if (inObject) {
+        if (c == ';') {
           inObject = false;
           descSizes.add(1);
           dims = 0;
         }
         continue;
       }
-      if(c == 'L') {
+      if (c == 'L') {
         inObject = true;
-      } else if(c == '[') {
+      } else if (c == '[') {
         dims++;
       } else {
-        if(dims == 0 && (c == 'J' || c == 'D')) {
+        if (dims == 0 && (c == 'J' || c == 'D')) {
           descSizes.add(2);
         } else {
           descSizes.add(1);
@@ -31,8 +31,9 @@ public class DescUtils {
     }
     return descSizes;
   }
+
   public static ArrayList<Integer> getInnerDescSizes(String desc) {
-    if(desc.startsWith("()")) {
+    if (desc.startsWith("()")) {
       return new ArrayList<>();
     }
     return getDescSizes(desc.substring(1, desc.lastIndexOf(')')));

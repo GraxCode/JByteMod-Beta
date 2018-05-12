@@ -1,6 +1,5 @@
 package me.grax.jbytemod.analysis.decompiler.struct;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -529,29 +528,8 @@ public class Conversion implements Opcodes {
   private void arrayLoad(int opc) {
     Expression index = stack.pop();
     Expression array = stack.pop();
-    stack.push(new ArrayIndexExpression(array, index, getVarType(array)), opc == LALOAD || opc == DALOAD); //LALOAD and DALOAD handled automatically
-  }
-
-  private VarType getVarType(Expression array) {
-    for (Field f : array.getClass().getDeclaredFields()) {
-      if (f.getType() == VarType.class) {
-        f.setAccessible(true);
-        VarType type = null;
-        try {
-          type = (VarType) f.get(array);
-        } catch (Exception e) {
-        }
-        if (type == null) {
-          if (array instanceof CastExpression) {
-            type = VarType.OBJECT;
-          } else {
-            throw new RuntimeException("Expression type is null (" + array.getClass().getName() + ")");
-          }
-        }
-        return type;
-      }
-    }
-    throw new RuntimeException("Expression doesn't have type (" + array.getClass().getName() + ")");
+    boolean twoword = opc == LALOAD || opc == DALOAD;
+    stack.push(new ArrayIndexExpression(array, index, twoword), twoword);
   }
 
   private void athrow() {
@@ -585,9 +563,13 @@ public class Conversion implements Opcodes {
       stack.push(new CastExpression(VarType.INT, stack.pop()));
       break;
     case I2B:
+      stack.push(new CastExpression(VarType.BYTE, stack.pop()));
+      break;
     case I2C:
+      stack.push(new CastExpression(VarType.CHAR, stack.pop()));
+      break;
     case I2S:
-      //they don't need conversion
+      stack.push(new CastExpression(VarType.SHORT, stack.pop()));
       break;
     case I2F:
       stack.push(new CastExpression(VarType.FLOAT, stack.pop()));

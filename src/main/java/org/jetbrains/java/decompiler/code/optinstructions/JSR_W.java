@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.code.optinstructions;
 
-import org.jetbrains.java.decompiler.code.JumpInstruction;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import org.jetbrains.java.decompiler.code.JumpInstruction;
 
 public class JSR_W extends JumpInstruction {
 

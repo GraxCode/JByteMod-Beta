@@ -80,7 +80,7 @@ public class FrameNode extends AbstractInsnNode {
     super(-1);
     local = new ArrayList<>();
     stack = new ArrayList<>();
-    
+
   }
 
   /**

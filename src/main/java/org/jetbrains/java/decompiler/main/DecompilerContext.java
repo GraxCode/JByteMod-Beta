@@ -15,6 +15,10 @@
  */
 package org.jetbrains.java.decompiler.main;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import org.jetbrains.java.decompiler.main.collectors.BytecodeSourceMapper;
 import org.jetbrains.java.decompiler.main.collectors.CounterContainer;
 import org.jetbrains.java.decompiler.main.collectors.ImportCollector;
@@ -23,10 +27,6 @@ import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
 import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
 import org.jetbrains.java.decompiler.modules.renamer.PoolInterceptor;
 import org.jetbrains.java.decompiler.struct.StructContext;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class DecompilerContext {
   public static final String CURRENT_CLASS = "CURRENT_CLASS";

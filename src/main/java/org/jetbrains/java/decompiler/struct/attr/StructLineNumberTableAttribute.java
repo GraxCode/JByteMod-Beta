@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.struct.attr;
 
+import java.io.IOException;
+
 import org.jetbrains.java.decompiler.struct.consts.ConstantPool;
 import org.jetbrains.java.decompiler.util.DataInputFullStream;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
-
-import java.io.IOException;
 
 /**
  * u2 line_number_table_length; { u2 start_pc; u2 line_number; }

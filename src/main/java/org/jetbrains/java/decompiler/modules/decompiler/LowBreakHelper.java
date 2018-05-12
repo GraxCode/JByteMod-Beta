@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
+import java.util.List;
+
 import org.jetbrains.java.decompiler.modules.decompiler.stats.IfStatement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.SynchronizedStatement;
-
-import java.util.List;
 
 public class LowBreakHelper {
 

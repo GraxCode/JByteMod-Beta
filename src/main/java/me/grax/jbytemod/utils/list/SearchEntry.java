@@ -33,6 +33,7 @@ public class SearchEntry {
   public SearchEntry() {
     this.text = " ";
   }
+
   public SearchEntry(ClassNode cn, MethodNode mn, String found) {
     this.cn = cn;
     this.mn = mn;

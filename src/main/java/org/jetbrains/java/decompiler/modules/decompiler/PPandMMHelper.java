@@ -15,6 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.jetbrains.java.decompiler.modules.decompiler.exps.AssignmentExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.ConstExprent;
 import org.jetbrains.java.decompiler.modules.decompiler.exps.Exprent;
@@ -24,10 +28,6 @@ import org.jetbrains.java.decompiler.modules.decompiler.sforms.DirectNode;
 import org.jetbrains.java.decompiler.modules.decompiler.sforms.FlattenStatementsHelper;
 import org.jetbrains.java.decompiler.modules.decompiler.stats.RootStatement;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 
 public class PPandMMHelper {
 

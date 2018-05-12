@@ -13,7 +13,7 @@ public class Loader {
   public static ClassNode classToNode(String type) throws IOException {
     return ASMUtils.getNode(classToBytes(type));
   }
-  
+
   public static byte[] classToBytes(String type) throws IOException {
     if (type == null) {
       return null;

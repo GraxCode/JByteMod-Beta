@@ -15,9 +15,9 @@
  */
 package org.jetbrains.java.decompiler.modules.renamer;
 
-import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
-
 import java.util.HashMap;
+
+import org.jetbrains.java.decompiler.main.extern.IIdentifierRenamer;
 
 public class PoolInterceptor {
 

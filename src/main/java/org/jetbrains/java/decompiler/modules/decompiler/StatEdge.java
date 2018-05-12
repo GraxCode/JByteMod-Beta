@@ -15,10 +15,10 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler;
 
-import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.modules.decompiler.stats.Statement;
 
 public class StatEdge {
 

@@ -15,11 +15,11 @@
  */
 package org.jetbrains.java.decompiler.code;
 
-import org.jetbrains.java.decompiler.code.interpreter.Util;
-import org.jetbrains.java.decompiler.struct.StructContext;
-
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.java.decompiler.code.interpreter.Util;
+import org.jetbrains.java.decompiler.struct.StructContext;
 
 public class ExceptionTable {
   public static final ExceptionTable EMPTY = new ExceptionTable(null) {

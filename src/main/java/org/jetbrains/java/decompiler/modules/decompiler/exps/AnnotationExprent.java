@@ -15,13 +15,13 @@
  */
 package org.jetbrains.java.decompiler.modules.decompiler.exps;
 
+import java.util.List;
+
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 import org.jetbrains.java.decompiler.main.TextBuffer;
 import org.jetbrains.java.decompiler.main.collectors.BytecodeMappingTracer;
 import org.jetbrains.java.decompiler.modules.decompiler.ExprProcessor;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
-
-import java.util.List;
 
 public class AnnotationExprent extends Exprent {
   public static final int ANNOTATION_NORMAL = 1;

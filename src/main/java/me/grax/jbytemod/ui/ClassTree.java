@@ -187,8 +187,8 @@ public class ClassTree extends JTree implements IDropUser {
               JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
               remove.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_remove"), JByteMod.res.getResource("confirm"),
-                      JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_remove"),
+                      JByteMod.res.getResource("confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     cn.methods.remove(mn);
                     model.removeNodeFromParent(stn);
                   }

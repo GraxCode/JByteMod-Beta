@@ -1,9 +1,7 @@
 package me.grax.jbytemod.analysis.decompiler.code.ast.expressions;
 
 import me.grax.jbytemod.analysis.decompiler.ClassDefinition;
-import me.grax.jbytemod.analysis.decompiler.code.ast.Comparison;
 import me.grax.jbytemod.analysis.decompiler.code.ast.Expression;
-import me.grax.jbytemod.utils.TextUtils;
 
 public class InstanceofExpression extends Expression {
 

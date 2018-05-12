@@ -16,7 +16,6 @@ public class PluginManager {
 
   private File pluginFolder = new File(JByteMod.workingDir, "plugins");
 
-
   private final ArrayList<Plugin> plugins = new ArrayList<>();
 
   public PluginManager(JByteMod jbm) {

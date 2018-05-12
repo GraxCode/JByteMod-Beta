@@ -5,7 +5,7 @@ public class ClassDefinition {
 
   public ClassDefinition(String name) {
     super();
-    if(name.startsWith("L") && name.endsWith(";")) {
+    if (name.startsWith("L") && name.endsWith(";")) {
       this.name = name.substring(1, name.length() - 1);
     } else {
       this.name = name;

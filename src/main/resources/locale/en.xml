@@ -90,5 +90,10 @@
    <string name="attach">Attach to process</string>
    <string name="decompile_graph">Decompile Graph</string>
    <string name="max_redundant_input">Max inputs for redundant blocks</string>
+   <string name="set_py_path">Please try setting the python path</string>
+   <string name="python_path">Python path</string>
+   <string name="injecting_msg">Injecting... this could take a while.</string>
+   <string name="no_jar_found">Couldn't find itself as jar!</string>
+   <string name="no_vm_found">Couldn't find any VM's! Enter your process id.</string>
 </resources>
 

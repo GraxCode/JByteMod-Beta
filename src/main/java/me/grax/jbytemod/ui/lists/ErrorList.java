@@ -22,7 +22,6 @@ import com.alee.extended.window.WebPopOver;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.errors.EmptyMistake;
 import me.grax.jbytemod.analysis.errors.ErrorAnalyzer;
-import me.grax.jbytemod.analysis.errors.InsnError;
 import me.grax.jbytemod.analysis.errors.Mistake;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 import me.grax.jbytemod.utils.list.InstrEntry;

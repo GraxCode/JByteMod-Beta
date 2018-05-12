@@ -8,8 +8,8 @@ public class FileUtils {
   }
 
   public static boolean isType(File f, String... types) {
-    for(String type : types) {
-      if(f.getName().endsWith(type)) {
+    for (String type : types) {
+      if (f.getName().endsWith(type)) {
         return true;
       }
     }
