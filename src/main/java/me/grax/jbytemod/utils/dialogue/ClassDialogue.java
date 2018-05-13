@@ -14,17 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -32,9 +22,12 @@ import javax.swing.text.Document;
 import javax.swing.text.NumberFormatter;
 import javax.swing.text.PlainDocument;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JLDCEditor;
+import me.grax.jbytemod.utils.gui.SwingUtils;
 
 public class ClassDialogue {
 
@@ -401,6 +394,10 @@ public class ClassDialogue {
     private Class<?> type;
 
     private JTable jtable;
+    
+    private Field f;
+    
+    private Object bsmHandle;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public ListEditorTable(Object parent, Field f) throws IllegalArgumentException, IllegalAccessException {
@@ -430,6 +427,7 @@ public class ClassDialogue {
           this.type = Object.class;
         }
       }
+      this.f = f;
     }
 
     private JPanel initializePanel() {
@@ -466,28 +464,45 @@ public class ClassDialogue {
       jtable.setModel(lm);
       JPanel actions = new JPanel();
       actions.setLayout(new GridLayout(1, 4));
-      //TODO more list editing functions
-      JButton add = new JButton(JByteMod.res.getResource("add"));
-      add.addActionListener(a -> {
-        try {
-          int row = jtable.getSelectedRow();
-          Object o = type.getConstructor().newInstance();
-          Object edit = extraEditWindow(o, -1, jtable);
-          if (edit != null) {
-            if (row != -1) {
-              lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
-              recalcIndex();
-            } else {
-              lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
+      if (f.getDeclaringClass().getName().equals("org.objectweb.asm.tree.InvokeDynamicInsnNode") && f.getName().equals("bsmArgs")) {
+    	  //Special case for bootstrap arguments
+    	  JButton add = new JButton(JByteMod.res.getResource("add"));
+          add.addActionListener(a -> {
+        	  Object edit = bsmArgsWindow();
+              int row = jtable.getSelectedRow();
+              if (edit != null) {
+                if (row != -1) {
+                  lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
+                  recalcIndex();
+                } else {
+                  lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
+                }
+              }
+          });
+          actions.add(add);
+      } else {
+          JButton add = new JButton(JByteMod.res.getResource("add"));
+          add.addActionListener(a -> {
+            try {
+              int row = jtable.getSelectedRow();
+              Object o = type.getConstructor().newInstance();
+              Object edit = extraEditWindow(o, -1, jtable);
+              if (edit != null) {
+                if (row != -1) {
+                  lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
+                  recalcIndex();
+                } else {
+                  lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
+                }
+              }
+            } catch (Exception e) {
+              e.printStackTrace();
+              JOptionPane.showMessageDialog(null, "Node not supported");
             }
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-          JOptionPane.showMessageDialog(null, "Node not supported");
-        }
-      });
-      if (!type.getName().equals(Object.class.getName())) {
-        actions.add(add);
+          });
+          if (!type.getName().equals(Object.class.getName())) {
+            actions.add(add);
+          }  
       }
       JButton remove = new JButton(JByteMod.res.getResource("remove"));
       remove.addActionListener(a -> {
@@ -496,6 +511,7 @@ public class ClassDialogue {
           for (int j = selectedRows.length - 1; j >= 0; j--) {
             lm.removeRow(selectedRows[j]);
           }
+          recalcIndex();
         }
       });
       actions.add(remove);
@@ -545,14 +561,10 @@ public class ClassDialogue {
       JScrollPane scrollPane = (JScrollPane) panel.getComponent(0);
       JTable table = (JTable) scrollPane.getViewport().getView();
       if (JOptionPane.showConfirmDialog(null, panel, "Edit Array", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+    	list.clear();
         for (int row = 0; row < table.getRowCount(); row++) {
-          int i = (int) table.getValueAt(row, 0);
           Object o = table.getValueAt(row, 2);
-          if (i >= list.size()) {
-            list.add(o);
-          } else {
-            list.set(i, o);
-          }
+          list.add(o);
         }
         return true;
       }
@@ -618,6 +630,80 @@ public class ClassDialogue {
         return newObject;
       }
       return null;
+    }
+    
+    private Object bsmArgsWindow() {
+    	bsmHandle = new Handle(1, "", "", "", false);
+    	JPanel mainPanel = new JPanel();
+        JPanel leftText = new JPanel();
+        JPanel rightInput = new JPanel();
+        JButton handleButton = new JButton("Edit Handle");
+        
+        mainPanel.setLayout(new BorderLayout());
+        leftText.setLayout(new GridLayout(0, 1));
+        rightInput.setLayout(new GridLayout(0, 1));
+
+        leftText.add(new JLabel("Ldc Type: "));
+        JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class", "Handle" });
+        handleButton.addActionListener(e -> {
+      	  try {
+      		  InsnEditDialogue dialogue = new InsnEditDialogue(null, bsmHandle);
+                if (dialogue.open()) {
+                	bsmHandle = (Handle) dialogue.getObject();
+                }
+              } catch (Exception ex) {
+                ex.printStackTrace();
+              }
+        });
+        rightInput.add(ldctype);
+        leftText.add(new JLabel("Ldc Value: "));
+        JTextField cst = new JTextField();
+        rightInput.add(SwingUtils.withButton(cst, "...", e -> {
+        	JLDCEditor editor = new JLDCEditor(cst.getText());
+        	editor.setVisible(true);
+        	cst.setText(editor.getText());
+        }));
+        ldctype.addItemListener(i -> {
+      	  if (ldctype.getSelectedItem().equals("Handle")) {
+      		  cst.setEnabled(false);
+      	      ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
+      		  handleButton.setEnabled(true);
+      	  } else {
+      		  cst.setEnabled(true);
+      		  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(true);
+      		  handleButton.setEnabled(false);
+      	  }
+        });
+      	handleButton.setEnabled(false);
+        mainPanel.add(leftText, BorderLayout.WEST);
+        mainPanel.add(rightInput, BorderLayout.CENTER);
+        mainPanel.add(handleButton, BorderLayout.SOUTH);
+
+        if (JOptionPane.showConfirmDialog(null, mainPanel, "Add BSM Object", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+          try {
+            switch (ldctype.getSelectedItem().toString()) {
+            case "String":
+            	return cst.getText();
+            case "float":
+            	return Float.parseFloat(cst.getText());
+            case "double":
+            	return Double.parseDouble(cst.getText());
+            case "long":
+            	 return Long.parseLong(cst.getText());
+            case "int":
+            	return Integer.parseInt(cst.getText());
+            case "Class":
+            	return org.objectweb.asm.Type.getType(cst.getText());
+            case "Handle":
+          	  return bsmHandle;
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Exception: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+          }
+        }
+        return null;
     }
   }
 
