@@ -50,6 +50,9 @@ public class TCBList extends JList<TCBEntry> {
             edit.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 try {
+                  if (selected.getTcbn().type == null) {
+                    selected.getTcbn().type = "";
+                  }
                   new InsnEditDialogue(mn, selected.getTcbn()).open();
                   if (selected.getTcbn().type != null && selected.getTcbn().type.equals("")) {
                     selected.getTcbn().type = null;

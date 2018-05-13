@@ -27,7 +27,7 @@ public class TCBEntry {
     this.mn = mn;
     this.tcbn = tcbn;
     this.text = TextUtils.toHtml(
-        InstrUtils.getDisplayType(tcbn.type != null ? tcbn.type + ": " : "Null type: ", true) + "label " + OpUtils.getLabelIndex(tcbn.start) + " -> label "
+    	(tcbn.type != null ? InstrUtils.getDisplayType(tcbn.type, true) : TextUtils.addTag("Null type", "font color=" + InstrUtils.primColor.getString())) + ": label " + OpUtils.getLabelIndex(tcbn.start) + " -> label "
             + OpUtils.getLabelIndex(tcbn.end) + " handler: label " + (tcbn.handler == null ? "null" : OpUtils.getLabelIndex(tcbn.handler)));
   }
 
