@@ -69,7 +69,7 @@ public class TCBList extends JList<TCBEntry> {
           insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               try {
-                TryCatchBlockNode tcbn = new TryCatchBlockNode(null, null, null, null);
+                TryCatchBlockNode tcbn = new TryCatchBlockNode(null, null, null, "");
                 if (new InsnEditDialogue(mn, tcbn).open())
                   if (tcbn.handler != null && tcbn.start != null && tcbn.end != null) {
                     if (tcbn.type != null && tcbn.type.equals("")) {
