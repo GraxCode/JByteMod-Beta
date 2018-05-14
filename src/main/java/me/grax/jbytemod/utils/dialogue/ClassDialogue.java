@@ -643,7 +643,7 @@ public class ClassDialogue {
         leftText.setLayout(new GridLayout(0, 1));
         rightInput.setLayout(new GridLayout(0, 1));
 
-        leftText.add(new JLabel("Ldc Type: "));
+        leftText.add(new JLabel("Type: "));
         JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class", "Handle" });
         handleButton.addActionListener(e -> {
       	  try {
@@ -656,7 +656,7 @@ public class ClassDialogue {
               }
         });
         rightInput.add(ldctype);
-        leftText.add(new JLabel("Ldc Value: "));
+        leftText.add(new JLabel("Value: "));
         JTextField cst = new JTextField();
         rightInput.add(SwingUtils.withButton(cst, "...", e -> {
         	JLDCEditor editor = new JLDCEditor(cst.getText());
