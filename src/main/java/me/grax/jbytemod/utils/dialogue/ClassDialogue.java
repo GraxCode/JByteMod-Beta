@@ -24,6 +24,7 @@ import javax.swing.text.PlainDocument;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JLDCEditor;
@@ -171,57 +172,55 @@ public class ClassDialogue {
           }
         });
         rightInput.add(wrap(f, edit));
-      } else if(f.getName().equals("value") && clazz.getName().equals("org.objectweb.asm.tree.FieldNode")) {
-    	  JPanel panel = new JPanel();
-    	  Object value;
-          try {
-        	  value = f.get(object);
-	          panel.setLayout(new BorderLayout());
-	          JButton edit = new JButton(JByteMod.res.getResource("edit"));
-	          edit.setToolTipText("Can be null");
-	          edit.addActionListener(e -> {
-	              try {
-	                //should still be the same class type
-	                ClassDialogue dialogue = ClassDialogue.this.init(value == null ? new String("") : value);
-	                if (dialogue.open()) {
-	                  f.set(object, dialogue.getObject());
-	                }
-	              } catch (Exception ex) {
-	                ex.printStackTrace();
-	              }
-	            });
-	          panel.add(edit, BorderLayout.CENTER);
-	          JCheckBox jcb = new JCheckBox("", f.get(object) != null);
-	          jcb.addItemListener(i -> {
-	        	  try {
-		            if (jcb.isSelected()) {
-		            	if (f.get(object) == null) {
-		            		f.set(object, new String(""));
-		            	}
-		          	  edit.setEnabled(true);
-		            } else {
-		              f.set(object, null);
-		          	  edit.setEnabled(false);
-		            }
-	        	  } catch (Exception ex) {
-	                ex.printStackTrace();
-	              }
-	          });
-	          if (f.get(object) == null) {
-	          	edit.setEnabled(false);
-	          } else {
-	          	edit.setEnabled(true);
-	          }
-	          panel.add(jcb, BorderLayout.WEST);
-          } catch (IllegalArgumentException | IllegalAccessException e1) {
-              e1.printStackTrace();
+      } else if (Object.class.isAssignableFrom(f.getType())) {
+        JPanel panel = new JPanel();
+        try {
+          Object value = f.get(object);
+          panel.setLayout(new BorderLayout());
+          JButton edit = new JButton(JByteMod.res.getResource("edit"));
+          edit.setToolTipText("Can be null");
+          edit.addActionListener(e -> {
+            try {
+              //should still be the same class type
+              ClassDialogue dialogue = ClassDialogue.this.init(value == null ? new String() : value);
+              if (dialogue.open()) {
+                f.set(object, dialogue.getObject());
+              }
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          });
+          panel.add(edit, BorderLayout.CENTER);
+          JCheckBox jcb = new JCheckBox("", f.get(object) != null);
+          jcb.addItemListener(i -> {
+            try {
+              if (jcb.isSelected()) {
+                if (f.get(object) == null) {
+                  f.set(object, new String());
+                }
+                edit.setEnabled(true);
+              } else {
+                f.set(object, null);
+                edit.setEnabled(false);
+              }
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          });
+          if (f.get(object) == null) {
+            edit.setEnabled(false);
+          } else {
+            edit.setEnabled(true);
           }
-          rightInput.add(wrap(f, panel));
+          panel.add(jcb, BorderLayout.WEST);
+        } catch (IllegalArgumentException | IllegalAccessException e1) {
+          e1.printStackTrace();
+        }
+        rightInput.add(wrap(f, panel));
       } else {
         JButton edit = new JButton(JByteMod.res.getResource("edit"));
-        Object value;
         try {
-          value = f.get(object);
+          Object value = f.get(object);
           edit.addActionListener(e -> {
             try {
               //should still be the same class type
@@ -291,7 +290,7 @@ public class ClassDialogue {
   public Object getObject() {
     return object;
   }
-  
+
   @SuppressWarnings("unused")
   private Component wrapRight(Field f, Component component, Component component2) {
     WrappedPanel wp = new WrappedPanel(f);
@@ -394,9 +393,9 @@ public class ClassDialogue {
     private Class<?> type;
 
     private JTable jtable;
-    
+
     private Field f;
-    
+
     private Object bsmHandle;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -464,45 +463,45 @@ public class ClassDialogue {
       jtable.setModel(lm);
       JPanel actions = new JPanel();
       actions.setLayout(new GridLayout(1, 4));
-      if (f.getDeclaringClass().getName().equals("org.objectweb.asm.tree.InvokeDynamicInsnNode") && f.getName().equals("bsmArgs")) {
-    	  //Special case for bootstrap arguments
-    	  JButton add = new JButton(JByteMod.res.getResource("add"));
-          add.addActionListener(a -> {
-        	  Object edit = bsmArgsWindow();
-              int row = jtable.getSelectedRow();
-              if (edit != null) {
-                if (row != -1) {
-                  lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
-                  recalcIndex();
-                } else {
-                  lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
-                }
-              }
-          });
-          actions.add(add);
-      } else {
-          JButton add = new JButton(JByteMod.res.getResource("add"));
-          add.addActionListener(a -> {
-            try {
-              int row = jtable.getSelectedRow();
-              Object o = type.getConstructor().newInstance();
-              Object edit = extraEditWindow(o, -1, jtable);
-              if (edit != null) {
-                if (row != -1) {
-                  lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
-                  recalcIndex();
-                } else {
-                  lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
-                }
-              }
-            } catch (Exception e) {
-              e.printStackTrace();
-              JOptionPane.showMessageDialog(null, "Node not supported");
+      if (InvokeDynamicInsnNode.class.isAssignableFrom(f.getDeclaringClass()) && f.getName().equals("bsmArgs")) {
+        //Special case for bootstrap arguments
+        JButton add = new JButton(JByteMod.res.getResource("add"));
+        add.addActionListener(a -> {
+          Object edit = bsmArgsWindow();
+          int row = jtable.getSelectedRow();
+          if (edit != null) {
+            if (row != -1) {
+              lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
+              recalcIndex();
+            } else {
+              lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
             }
-          });
-          if (!type.getName().equals(Object.class.getName())) {
-            actions.add(add);
-          }  
+          }
+        });
+        actions.add(add);
+      } else {
+        JButton add = new JButton(JByteMod.res.getResource("add"));
+        add.addActionListener(a -> {
+          try {
+            int row = jtable.getSelectedRow();
+            Object o = type.getConstructor().newInstance();
+            Object edit = extraEditWindow(o, -1, jtable);
+            if (edit != null) {
+              if (row != -1) {
+                lm.insertRow(row, new Object[] { -1, edit.getClass().getSimpleName(), edit });
+                recalcIndex();
+              } else {
+                lm.addRow(new Object[] { lm.getRowCount(), edit.getClass().getSimpleName(), edit });
+              }
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Node not supported");
+          }
+        });
+        if (!type.getName().equals(Object.class.getName())) {
+          actions.add(add);
+        }
       }
       JButton remove = new JButton(JByteMod.res.getResource("remove"));
       remove.addActionListener(a -> {
@@ -561,7 +560,7 @@ public class ClassDialogue {
       JScrollPane scrollPane = (JScrollPane) panel.getComponent(0);
       JTable table = (JTable) scrollPane.getViewport().getView();
       if (JOptionPane.showConfirmDialog(null, panel, "Edit Array", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-    	list.clear();
+        list.clear();
         for (int row = 0; row < table.getRowCount(); row++) {
           Object o = table.getValueAt(row, 2);
           list.add(o);
@@ -631,79 +630,79 @@ public class ClassDialogue {
       }
       return null;
     }
-    
+
     private Object bsmArgsWindow() {
-    	bsmHandle = new Handle(1, "", "", "", false);
-    	JPanel mainPanel = new JPanel();
-        JPanel leftText = new JPanel();
-        JPanel rightInput = new JPanel();
-        JButton handleButton = new JButton("Edit Handle");
-        
-        mainPanel.setLayout(new BorderLayout());
-        leftText.setLayout(new GridLayout(0, 1));
-        rightInput.setLayout(new GridLayout(0, 1));
+      bsmHandle = new Handle(1, "", "", "", false);
+      JPanel mainPanel = new JPanel();
+      JPanel leftText = new JPanel();
+      JPanel rightInput = new JPanel();
+      JButton handleButton = new JButton("Edit Handle");
 
-        leftText.add(new JLabel("Type: "));
-        JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class", "Handle" });
-        handleButton.addActionListener(e -> {
-      	  try {
-      		  InsnEditDialogue dialogue = new InsnEditDialogue(null, bsmHandle);
-                if (dialogue.open()) {
-                	bsmHandle = (Handle) dialogue.getObject();
-                }
-              } catch (Exception ex) {
-                ex.printStackTrace();
-              }
-        });
-        rightInput.add(ldctype);
-        leftText.add(new JLabel("Value: "));
-        JTextField cst = new JTextField();
-        rightInput.add(SwingUtils.withButton(cst, "...", e -> {
-        	JLDCEditor editor = new JLDCEditor(cst.getText());
-        	editor.setVisible(true);
-        	cst.setText(editor.getText());
-        }));
-        ldctype.addItemListener(i -> {
-      	  if (ldctype.getSelectedItem().equals("Handle")) {
-      		  cst.setEnabled(false);
-      	      ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
-      		  handleButton.setEnabled(true);
-      	  } else {
-      		  cst.setEnabled(true);
-      		  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(true);
-      		  handleButton.setEnabled(false);
-      	  }
-        });
-      	handleButton.setEnabled(false);
-        mainPanel.add(leftText, BorderLayout.WEST);
-        mainPanel.add(rightInput, BorderLayout.CENTER);
-        mainPanel.add(handleButton, BorderLayout.SOUTH);
+      mainPanel.setLayout(new BorderLayout());
+      leftText.setLayout(new GridLayout(0, 1));
+      rightInput.setLayout(new GridLayout(0, 1));
 
-        if (JOptionPane.showConfirmDialog(null, mainPanel, "Add BSM Object", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-          try {
-            switch (ldctype.getSelectedItem().toString()) {
-            case "String":
-            	return cst.getText();
-            case "float":
-            	return Float.parseFloat(cst.getText());
-            case "double":
-            	return Double.parseDouble(cst.getText());
-            case "long":
-            	 return Long.parseLong(cst.getText());
-            case "int":
-            	return Integer.parseInt(cst.getText());
-            case "Class":
-            	return org.objectweb.asm.Type.getType(cst.getText());
-            case "Handle":
-          	  return bsmHandle;
-            }
-          } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Exception: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
+      leftText.add(new JLabel("Type: "));
+      JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class", "Handle" });
+      handleButton.addActionListener(e -> {
+        try {
+          InsnEditDialogue dialogue = new InsnEditDialogue(null, bsmHandle);
+          if (dialogue.open()) {
+            bsmHandle = (Handle) dialogue.getObject();
           }
+        } catch (Exception ex) {
+          ex.printStackTrace();
         }
-        return null;
+      });
+      rightInput.add(ldctype);
+      leftText.add(new JLabel("Value: "));
+      JTextField cst = new JTextField();
+      rightInput.add(SwingUtils.withButton(cst, "...", e -> {
+        JLDCEditor editor = new JLDCEditor(cst.getText());
+        editor.setVisible(true);
+        cst.setText(editor.getText());
+      }));
+      ldctype.addItemListener(i -> {
+        if (ldctype.getSelectedItem().equals("Handle")) {
+          cst.setEnabled(false);
+          ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
+          handleButton.setEnabled(true);
+        } else {
+          cst.setEnabled(true);
+          ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(true);
+          handleButton.setEnabled(false);
+        }
+      });
+      handleButton.setEnabled(false);
+      mainPanel.add(leftText, BorderLayout.WEST);
+      mainPanel.add(rightInput, BorderLayout.CENTER);
+      mainPanel.add(handleButton, BorderLayout.SOUTH);
+
+      if (JOptionPane.showConfirmDialog(null, mainPanel, "Add BSM Object", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+        try {
+          switch (ldctype.getSelectedItem().toString()) {
+          case "String":
+            return cst.getText();
+          case "float":
+            return Float.parseFloat(cst.getText());
+          case "double":
+            return Double.parseDouble(cst.getText());
+          case "long":
+            return Long.parseLong(cst.getText());
+          case "int":
+            return Integer.parseInt(cst.getText());
+          case "Class":
+            return org.objectweb.asm.Type.getType(cst.getText());
+          case "Handle":
+            return bsmHandle;
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "Exception: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          return null;
+        }
+      }
+      return null;
     }
   }
 
