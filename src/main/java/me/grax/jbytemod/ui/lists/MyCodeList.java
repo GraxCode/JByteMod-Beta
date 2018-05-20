@@ -70,7 +70,7 @@ public class MyCodeList extends JList<InstrEntry> {
             AbstractInsnNode ain = entry.getInstr();
             rightClickMethod(jam, mn, ain, MyCodeList.this.getSelectedValuesList());
           } else {
-            rightClickField(jam, (FieldEntry) entry);
+            rightClickField(jam, (FieldEntry) entry, MyCodeList.this.getSelectedValuesList());
           }
         } else if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
           if (mn != null) {
@@ -195,46 +195,61 @@ public class MyCodeList extends JList<InstrEntry> {
     this.setFixedCellWidth(-1);
   }
 
-  protected void rightClickField(JByteMod jbm, FieldEntry fle) {
-    ClassNode cn = fle.getCn();
-    JPopupMenu menu = new JPopupMenu();
-    JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
-    edit.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          new InsnEditDialogue(null, fle.getFn()).open();
-        } catch (Exception e1) {
-          new ErrorDisplay(e1);
-        }
-        MyCodeList.this.loadFields(cn);
-      }
-    });
-    menu.add(edit);
-    JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
-    remove.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        cn.fields.remove(fle.getFn());
-        MyCodeList.this.loadFields(cn);
-      }
-    });
-    menu.add(remove);
-    JMenuItem add = new JMenuItem(JByteMod.res.getResource("insert"));
-    add.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          FieldNode fn = new FieldNode(1, "", "", "", null);
-          if (new InsnEditDialogue(null, fn).open()) {
-            cn.fields.add(fn);
-          }
-        } catch (Exception e1) {
-          new ErrorDisplay(e1);
-        }
-        MyCodeList.this.loadFields(cn);
-      }
-    });
-    menu.add(add);
-    menu.add(copyText());
-    menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+  protected void rightClickField(JByteMod jbm, FieldEntry fle, List<InstrEntry> selected) {
+	  ClassNode cn = fle.getCn();
+	  JPopupMenu menu = new JPopupMenu();
+	  if (selected.size() > 1) {
+		  JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove_all"));
+	      remove.addActionListener(new ActionListener() {
+	    	 public void actionPerformed(ActionEvent e) {
+	          for (InstrEntry sel : selected) {
+	            cn.fields.remove(((FieldEntry) sel).getFn());
+	          }
+	          MyCodeList.this.loadFields(cn);
+	        }
+	      });
+	      menu.add(remove);
+	      menu.add(copyText());
+	      menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+	  } else {
+	    JMenuItem edit = new JMenuItem(JByteMod.res.getResource("edit"));
+	    edit.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	        try {
+	          new InsnEditDialogue(null, fle.getFn()).open();
+	        } catch (Exception e1) {
+	          new ErrorDisplay(e1);
+	        }
+	        MyCodeList.this.loadFields(cn);
+	      }
+	    });
+	    menu.add(edit);
+	    JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
+	    remove.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	        cn.fields.remove(fle.getFn());
+	        MyCodeList.this.loadFields(cn);
+	      }
+	    });
+	    menu.add(remove);
+	    JMenuItem add = new JMenuItem(JByteMod.res.getResource("insert"));
+	    add.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	        try {
+	          FieldNode fn = new FieldNode(1, "", "", "", null);
+	          if (new InsnEditDialogue(null, fn).open()) {
+	            cn.fields.add(fn);
+	          }
+	        } catch (Exception e1) {
+	          new ErrorDisplay(e1);
+	        }
+	        MyCodeList.this.loadFields(cn);
+	      }
+	    });
+	    menu.add(add);
+	    menu.add(copyText());
+	    menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
+	  }
   }
 
   private JMenuItem copyText() {

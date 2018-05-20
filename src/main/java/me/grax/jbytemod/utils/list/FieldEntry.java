@@ -18,9 +18,12 @@ public class FieldEntry extends InstrEntry {
     this.cn = cn;
     this.fn = fn;
     this.text = TextUtils.toHtml(InstrUtils.getDisplayAccess(fn.access) + " " + InstrUtils.getDisplayType(fn.desc, true) + " "
-        + InstrUtils.getDisplayClassRed(fn.name) + " = " + TextUtils.toBold(String.valueOf(fn.value)));
+        + InstrUtils.getDisplayClassRed(fn.name) + " = " + 
+    		(fn.value instanceof String ? "\"" + String.valueOf(fn.value) + "\"" : 
+    			fn.value != null ? String.valueOf(fn.value) : TextUtils.toBold("null")));
     this.easyText = InstrUtils.getDisplayAccess(fn.access) + " " + InstrUtils.getDisplayType(fn.desc, false) + " "
-        + InstrUtils.getDisplayClassEasy(fn.name) + " = " + String.valueOf(fn.value);
+        + InstrUtils.getDisplayClassEasy(fn.name) + " = " + 
+    		(fn.value instanceof String ? "\"" + String.valueOf(fn.value) + "\"" : String.valueOf(fn.value));
   }
 
   @Override

@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -91,6 +92,7 @@ public class InsnEditDialogue extends ClassDialogue {
   }
 
   private MethodNode mn;
+  private Handle handle;
 
   public InsnEditDialogue(MethodNode mn, Object object) {
     super(object);
@@ -106,13 +108,15 @@ public class InsnEditDialogue extends ClassDialogue {
       JPanel mainPanel = new JPanel();
       JPanel leftText = new JPanel();
       JPanel rightInput = new JPanel();
-
+      JButton handleButton = new JButton("Edit Handle");
+      handle = new Handle(1, "", "", "", false);
+      
       mainPanel.setLayout(new BorderLayout());
       leftText.setLayout(new GridLayout(0, 1));
       rightInput.setLayout(new GridLayout(0, 1));
 
       leftText.add(new JLabel("Ldc Type: "));
-      JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class" });
+      JComboBox<String> ldctype = new JComboBox<String>(new String[] { "String", "float", "double", "int", "long", "Class", "Handle" });
       if (ldc.cst instanceof String) {
         ldctype.setSelectedItem("String");
       } else if (ldc.cst instanceof Float) {
@@ -125,13 +129,26 @@ public class InsnEditDialogue extends ClassDialogue {
         ldctype.setSelectedItem("int");
       } else if (ldc.cst instanceof Type) {
         ldctype.setSelectedItem("Class");
+      } else if (ldc.cst instanceof Handle) {
+        ldctype.setSelectedItem("Handle");
+        handle = (Handle) ldc.cst;
       }
+      handleButton.addActionListener(e -> {
+    	  try {
+    		  InsnEditDialogue dialogue = new InsnEditDialogue(mn, handle);
+              if (dialogue.open()) {
+                handle = (Handle) dialogue.getObject();
+              }
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+      });
       rightInput.add(ldctype);
       leftText.add(new JLabel("Ldc Value: "));
       JTextField cst = new JTextField();
       if (ldc.cst instanceof Type) {
         cst.setText(((Type) ldc.cst).getDescriptor());
-      } else {
+      } else if (!(ldc.cst instanceof Handle)) {
         cst.setText(ldc.cst.toString());
       }
       if (ldc.cst instanceof String) {
@@ -143,8 +160,29 @@ public class InsnEditDialogue extends ClassDialogue {
       } else {
         rightInput.add(cst);
       }
+      ldctype.addItemListener(i -> {
+    	  if (ldctype.getSelectedItem().equals("Handle")) {
+    		  cst.setEnabled(false);
+    		  if (rightInput.getComponent(1) instanceof JPanel)
+    			  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
+    		  handleButton.setEnabled(true);
+    	  } else {
+    		  cst.setEnabled(true);
+    		  if (rightInput.getComponent(1) instanceof JPanel)
+    			  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(true);
+    		  handleButton.setEnabled(false);
+    	  }
+      });
+      if (!ldctype.getSelectedItem().equals("Handle")) {
+    	  handleButton.setEnabled(false);
+      } else {
+    	  cst.setEnabled(false);
+    	  if (rightInput.getComponent(1) instanceof JPanel)
+			  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
+      }
       mainPanel.add(leftText, BorderLayout.WEST);
       mainPanel.add(rightInput, BorderLayout.CENTER);
+      mainPanel.add(handleButton, BorderLayout.SOUTH);
 
       if (JOptionPane.showConfirmDialog(null, mainPanel, "Edit LdcInsnNode", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
         try {
@@ -167,6 +205,9 @@ public class InsnEditDialogue extends ClassDialogue {
           case "Class":
             ldc.cst = Type.getType(cst.getText());
             break;
+          case "Handle":
+        	ldc.cst = handle;
+        	break;
           }
         } catch (Exception e) {
           e.printStackTrace();
@@ -219,7 +260,7 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean ignore(String name) {
     return name.equals("itf") || name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
         || name.equals("localVariables") || name.equals("instructions") || name.equals("preLoad") || name.equals("attrs") || name.equals("extraBytes")
-        || name.equals("attrs") || name.equals("methods") || name.equals("fields") || name.equals("local") || name.equals("stack");
+        || name.equals("methods") || name.equals("fields") || name.equals("local") || name.equals("stack");
   }
 
   @Override
