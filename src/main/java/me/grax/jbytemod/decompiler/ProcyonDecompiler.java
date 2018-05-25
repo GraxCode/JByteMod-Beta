@@ -2,6 +2,7 @@ package me.grax.jbytemod.decompiler;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 
 import com.strobel.assembler.InputTypeLoader;
 import com.strobel.assembler.metadata.Buffer;
@@ -26,6 +27,17 @@ public class ProcyonDecompiler extends Decompiler {
   public String decompile(byte[] b) {
     try {
       DecompilerSettings settings = new DecompilerSettings();
+      try {
+        for (Field f : settings.getClass().getDeclaredFields()) {
+          if (f.getType() == boolean.class) {
+            f.setAccessible(true);
+            f.setBoolean(settings, JByteMod.ops.get("procyon" + f.getName()).getBoolean());
+          }
+        }
+      } catch (Throwable t) {
+        t.printStackTrace();
+      }
+      settings.setShowSyntheticMembers(true);
       MetadataSystem metadataSystem = new MetadataSystem(new ITypeLoader() {
         private InputTypeLoader backLoader = new InputTypeLoader();
 

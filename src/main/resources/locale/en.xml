@@ -95,5 +95,104 @@
    <string name="injecting_msg">Injecting... this could take a while.</string>
    <string name="no_jar_found">Couldn't find itself as jar!</string>
    <string name="no_vm_found">Couldn't find any VM's! Enter your process id.</string>
+   
+   <!-- Decompiler Options -->
+   
+   <!-- Fernflower -->
+   <string name="ff_rbr">Hide bridge methods</string>
+   <string name="ff_rsy">Hide synthetic class members</string>
+   <string name="ff_din">Decompile inner classes</string>
+   <string name="ff_dc4">Collapse 1.4 class references</string>
+   <string name="ff_das">Decompile assertions</string>
+   <string name="ff_hes">Hide empty super invocation</string>
+   <string name="ff_hdc">Hide empty default constructor</string>
+   <string name="ff_dgs">Decompile generic signatures</string>
+   <string name="ff_ner">Assume return not throwing exceptions</string>
+   <string name="ff_den">Decompile enumerations</string>
+   <string name="ff_rgn">Remove getClass() invocation</string>
+   <string name="ff_lit">Output numeric literals "as-is"</string>
+   <string name="ff_asc">Encode non-ASCII characters</string>
+   <string name="ff_bto">Interpret int 1 as boolean true</string>
+   <string name="ff_nns">Allow for not set synthetic attribute</string>
+   <string name="ff_uto">Consider nameless types as Object</string>
+   <string name="ff_udv">Reconstruct variable names</string>
+   <string name="ff_rer">Remove empty exception ranges</string>
+   <string name="ff_fdi">De-inline finally structures</string>
+   <string name="ff_ren">Rename ambiguous elements</string>
+   <string name="ff_inn">Check for IntelliJ IDEA-specific @NotNull</string>
+   <string name="ff_lac">Decompile lambda expressions</string>
+   
+   <!-- Procyon -->
+   <string name="procyon_includeLineNumbersInBytecode">Include line numbers in bytecode</string>
+   <string name="procyon_showSyntheticMembers">Show synthetic members</string>
+   <string name="procyon_alwaysGenerateExceptionVariableForCatchBlocks">Always generate exception variable for catch blocks</string>
+   <string name="procyon_forceFullyQualifiedReferences">Force fully qualified references</string>
+   <string name="procyon_forceExplicitImports">Force explicit imports</string>
+   <string name="procyon_forceExplicitTypeArguments">Force explicit type arguments</string>
+   <string name="procyon_flattenSwitchBlocks">Flatten switch blocks</string>
+   <string name="procyon_excludeNestedTypes">Exclude nested types</string>
+   <string name="procyon_retainRedundantCasts">Retain redundant casts</string>
+   <string name="procyon_retainPointlessSwitches">Retain pointless switches</string>
+   <string name="procyon_isUnicodeOutputEnabled">Unicode output</string>
+   <string name="procyon_includeErrorDiagnostics">Include error diagnostics</string>
+   <string name="procyon_mergeVariables">Merge variables</string>
+   <string name="procyon_disableForEachTransforms">Disable for each transforms</string>
+   <string name="procyon_showDebugLineNumbers">Show debug line numbers</string>
+   <string name="procyon_simplifyMemberReferences">Simplify member references</string>
+   
+   <!-- CFR -->
+   <string name="cfr_aexagg">Aexagg</string>
+   <string name="cfr_allowcorrecting">Allow Correcting</string>
+   <string name="cfr_arrayiter">Array iter</string>
+   <string name="cfr_caseinsensitivefs">Case insensitive fs</string>
+   <string name="cfr_clobber">Clobber</string>
+   <string name="cfr_collectioniter">Collection iter</string>
+   <string name="cfr_commentmonitors">Comment monitors</string>
+   <string name="cfr_decodeenumswitch">Decode enum switch</string>
+   <string name="cfr_decodefinally">Decode finally</string>
+   <string name="cfr_decodelambdas">Decode lambdas</string>
+   <string name="cfr_decodestringswitch">Decode string switch</string>
+   <string name="cfr_dumpclasspath">Dump classpath</string>
+   <string name="cfr_eclipse">Eclipse</string>
+   <string name="cfr_elidescala">Elide scala</string>
+   <string name="cfr_forcecondpropagate">Force cond propagate</string>
+   <string name="cfr_forceexceptionprune">Force exception prune</string>
+   <string name="cfr_forcereturningifs">Force returning ifs</string>
+   <string name="cfr_forcetopsort">Force top sort</string>
+   <string name="cfr_forcetopsortaggress">Force top sort aggress</string>
+   <string name="cfr_forloopaggcapture">For loop agg capture</string>
+   <string name="cfr_hidebridgemethods">Hide bridge methods</string>
+   <string name="cfr_hidelangimports">Hide lang imports</string>
+   <string name="cfr_hidelongstrings">Hide long strings</string>
+   <string name="cfr_hideutf">Hide UTF</string>
+   <string name="cfr_innerclasses">Innerclasses</string>
+   <string name="cfr_j14classobj">J14classobj</string>
+   <string name="cfr_labelledblocks">Labelled blocks</string>
+   <string name="cfr_lenient">Lenient</string>
+   <string name="cfr_liftconstructorinit">Lift constructor init</string>
+   <string name="cfr_override">Override</string>
+   <string name="cfr_pullcodecase">Pull code case</string>
+   <string name="cfr_recover">Recover</string>
+   <string name="cfr_recovertypeclash">Recover type clash</string>
+   <string name="cfr_recovertypehints">Recover type hints</string>
+   <string name="cfr_relinkconststring">Relink const string</string>
+   <string name="cfr_removebadgenerics">Remove bad generics</string>
+   <string name="cfr_removeboilerplate">Remove boiler plate</string>
+   <string name="cfr_removedeadmethods">Remove dead methods</string>
+   <string name="cfr_removeinnerclasssynthetics">Remove inner class synthetics</string>
+   <string name="cfr_rename">Rename</string>
+   <string name="cfr_renamedupmembers">Rename dup members</string>
+   <string name="cfr_renameenumidents">Rename enum idents</string>
+   <string name="cfr_renameillegalidents">Rename illegal idents</string>
+   <string name="cfr_showinferrable">Show inferrable</string>
+   <string name="cfr_showversion">Show version</string>
+   <string name="cfr_silent">Silent</string>
+   <string name="cfr_stringbuffer">StringBuffer</string>
+   <string name="cfr_stringbuilder">StringBuilder</string>
+   <string name="cfr_sugarasserts">Sugar asserts</string>
+   <string name="cfr_sugarboxing">Sugar boxing</string>
+   <string name="cfr_sugarenums">Sugar enums</string>
+   <string name="cfr_tidymonitors">Tidy monitors</string>
+   <string name="cfr_usenametable">Use name table</string>
 </resources>
 

@@ -24,6 +24,33 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
   private byte[] bytes;
   private String returned;
 
+  public static final HashMap<String, Boolean> options = new HashMap<>();
+
+  static {
+    options.put("rbr", true);
+    options.put("rsy", false);
+    options.put("din", true);
+    options.put("dc4", true);
+    options.put("das", true);
+    options.put("hes", true);
+    options.put("hdc", true);
+    options.put("dgs", false);
+    options.put("ner", true);
+    options.put("den", true);
+    options.put("rgn", true);
+    options.put("lit", false);
+    options.put("asc", true);
+    options.put("bto", true);
+    options.put("nns", false);
+    options.put("uto", true);
+    options.put("udv", true);
+    options.put("rer", true);
+    options.put("fdi", true);
+    options.put("ren", false);
+    options.put("inn", true);
+    options.put("lac", false);
+  }
+
   public FernflowerDecompiler(JByteMod jbm, DecompilerPanel dp) {
     super(jbm, dp);
   }
@@ -32,7 +59,9 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
     try {
       this.bytes = b;
       HashMap<String, Object> map = new HashMap<>();
-      map.put("asc", "1"); //encode non-ASCII characters in string and character literals as Unicode escapes
+      for (String key : options.keySet()) {
+        map.put(key, JByteMod.ops.get("ff_" + key).getBoolean() ? "1" : "0");
+      }
       Fernflower f = new Fernflower(this, this, map, new PrintStreamLogger(JByteMod.LOGGER));
       StructContext sc = f.getStructContext();
       StructClass cl = new StructClass(b, true, sc.getLoader());

@@ -16,6 +16,7 @@ public abstract class Decompiler extends Thread {
   public static ClassNode last;
   public static String lastOutput;
 
+  
   public Decompiler(JByteMod jbm, DecompilerPanel dp) {
     this.jbm = jbm;
     this.dp = dp;

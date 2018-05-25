@@ -17,14 +17,74 @@ import me.grax.jbytemod.ui.DecompilerPanel;
 
 public class CFRDecompiler extends Decompiler {
 
+  public static final HashMap<String, String> options = new HashMap<>();
+
   public CFRDecompiler(JByteMod jbm, DecompilerPanel dp) {
     super(jbm, dp);
+  }
+
+  static {
+    options.put("aexagg", "false");
+    options.put("allowcorrecting", "true");
+    options.put("arrayiter", "true");
+    options.put("caseinsensitivefs", "false");
+    options.put("clobber", "false");
+    options.put("collectioniter", "true");
+    options.put("commentmonitors", "false");
+    options.put("decodeenumswitch", "true");
+    options.put("decodefinally", "true");
+    options.put("decodelambdas", "true");
+    options.put("decodestringswitch", "true");
+    options.put("dumpclasspath", "false");
+    options.put("eclipse", "true");
+    options.put("elidescala", "false");
+    options.put("forcecondpropagate", "false");
+    options.put("forceexceptionprune", "false");
+    options.put("forcereturningifs", "false");
+    options.put("forcetopsort", "false");
+    options.put("forcetopsortaggress", "false");
+    options.put("forloopaggcapture", "false");
+    options.put("hidebridgemethods", "true");
+    options.put("hidelangimports", "true");
+    options.put("hidelongstrings", "false");
+    options.put("hideutf", "true");
+    options.put("innerclasses", "true");
+    options.put("j14classobj", "false");
+    options.put("labelledblocks", "true");
+    options.put("lenient", "false");
+    options.put("liftconstructorinit", "true");
+    options.put("override", "true");
+    options.put("pullcodecase", "false");
+    options.put("recover", "true");
+    options.put("recovertypeclash", "false");
+    options.put("recovertypehints", "false");
+    options.put("relinkconststring", "true");
+    options.put("removebadgenerics", "true");
+    options.put("removeboilerplate", "true");
+    options.put("removedeadmethods", "true");
+    options.put("removeinnerclasssynthetics", "true");
+    options.put("rename", "false");
+    options.put("renamedupmembers", "false");
+    options.put("renameenumidents", "false");
+    options.put("renameillegalidents", "false");
+    options.put("showinferrable", "false");
+    options.put("silent", "false");
+    options.put("stringbuffer", "false");
+    options.put("stringbuilder", "true");
+    options.put("sugarasserts", "true");
+    options.put("sugarboxing", "true");
+    options.put("sugarenums", "true");
+    options.put("tidymonitors", "true");
+    options.put("usenametable", "true");
   }
 
   public String decompile(byte[] b) {
     try {
       HashMap<String, String> ops = new HashMap<>();
       ops.put("comments", "false");
+      for (String key : options.keySet()) {
+        ops.put(key, String.valueOf(JByteMod.ops.get("cfr_" + key).getBoolean()));
+      }
       PluginRunner runner = new PluginRunner(ops, new ClassFileSource() {
 
         @Override

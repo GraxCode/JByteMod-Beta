@@ -3,14 +3,20 @@ package me.grax.jbytemod.res;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import com.strobel.decompiler.DecompilerSettings;
+
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.decompiler.CFRDecompiler;
+import me.grax.jbytemod.decompiler.FernflowerDecompiler;
 import me.grax.jbytemod.res.Option.Type;
 import me.grax.jbytemod.utils.ErrorDisplay;
 
@@ -18,16 +24,17 @@ public class Options {
   private static final File propFile = new File(JByteMod.workingDir, JByteMod.configPath);
 
   public List<Option> bools = new ArrayList<>();
-  public List<Option> defaults = Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN), new Option("use_rt", false, Type.BOOLEAN),
-      new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN),
+  public List<Option> defaults = new ArrayList<>(Arrays.asList(new Option("sort_methods", false, Type.BOOLEAN),
+      new Option("use_rt", false, Type.BOOLEAN), new Option("compute_maxs", true, Type.BOOLEAN), new Option("select_code_tab", true, Type.BOOLEAN),
       new Option("memory_warning", true, Type.BOOLEAN), new Option("python_path", "", Type.STRING),
       new Option("hints", false, Type.BOOLEAN, "editor_group"), new Option("copy_formatted", false, Type.BOOLEAN, "editor_group"),
       new Option("analyze_errors", true, Type.BOOLEAN, "editor_group"), new Option("simplify_graph", true, Type.BOOLEAN, "graph_group"),
       new Option("remove_redundant", false, Type.BOOLEAN, "graph_group"), new Option("max_redundant_input", 2, Type.INT, "graph_group"),
       new Option("decompile_graph", true, Type.BOOLEAN, "graph_group"), new Option("primary_color", "#557799", Type.STRING, "color_group"),
-      new Option("secondary_color", "#995555", Type.STRING, "color_group"), new Option("use_weblaf", true, Type.BOOLEAN, "style_group"));
+      new Option("secondary_color", "#995555", Type.STRING, "color_group"), new Option("use_weblaf", true, Type.BOOLEAN, "style_group")));
 
   public Options() {
+    initializeDecompilerOptions();
     if (propFile.exists()) {
       JByteMod.LOGGER.log("Loading settings... ");
       try {
@@ -64,6 +71,26 @@ public class Options {
       JByteMod.LOGGER.warn("Property File \"" + propFile.getName() + "\" does not exist, creating...");
       this.initWithDefaults(false);
       this.save();
+    }
+  }
+
+  private void initializeDecompilerOptions() {
+    for (Entry<String, Boolean> e : FernflowerDecompiler.options.entrySet()) {
+      defaults.add(new Option("ff_" + e.getKey(), e.getValue(), Type.BOOLEAN, "decompiler_fernflower"));
+    }
+    for (Entry<String, String> e : CFRDecompiler.options.entrySet()) {
+      defaults.add(new Option("cfr_" + e.getKey(), Boolean.valueOf(e.getValue()), Type.BOOLEAN, "decompiler_cfr"));
+    }
+    try {
+      DecompilerSettings s = new DecompilerSettings();
+      for (Field f : s.getClass().getDeclaredFields()) {
+        if (f.getType() == boolean.class) {
+          f.setAccessible(true);
+          defaults.add(new Option("procyon" + f.getName(), f.getBoolean(s), Type.BOOLEAN, "decompiler_procyon"));
+        }
+      }
+    } catch (Throwable t) {
+      t.printStackTrace();
     }
   }
 
