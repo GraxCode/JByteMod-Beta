@@ -18,8 +18,8 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.lists.entries.SearchEntry;
 import me.grax.jbytemod.utils.list.LazyListModel;
-import me.grax.jbytemod.utils.list.SearchEntry;
 import me.grax.jbytemod.utils.task.search.LdcTask;
 import me.grax.jbytemod.utils.task.search.ReferenceTask;
 

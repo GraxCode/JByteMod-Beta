@@ -37,13 +37,13 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JSearch;
+import me.grax.jbytemod.ui.dialogue.InsnEditDialogue;
+import me.grax.jbytemod.ui.lists.entries.FieldEntry;
+import me.grax.jbytemod.ui.lists.entries.InstrEntry;
+import me.grax.jbytemod.ui.lists.entries.PrototypeEntry;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.HtmlSelection;
-import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
-import me.grax.jbytemod.utils.list.FieldEntry;
-import me.grax.jbytemod.utils.list.InstrEntry;
 import me.grax.jbytemod.utils.list.LazyListModel;
-import me.grax.jbytemod.utils.list.PrototypeEntry;
 import me.lpk.util.OpUtils;
 
 public class MyCodeList extends JList<InstrEntry> {

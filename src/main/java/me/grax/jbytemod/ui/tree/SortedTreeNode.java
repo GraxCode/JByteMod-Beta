@@ -1,4 +1,4 @@
-package me.grax.jbytemod.utils.tree;
+package me.grax.jbytemod.ui.tree;
 
 import java.util.Collections;
 import java.util.Comparator;

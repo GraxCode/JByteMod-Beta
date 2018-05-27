@@ -52,6 +52,7 @@ import me.grax.jbytemod.ui.lists.LVPList;
 import me.grax.jbytemod.ui.lists.MyCodeList;
 import me.grax.jbytemod.ui.lists.SearchList;
 import me.grax.jbytemod.ui.lists.TCBList;
+import me.grax.jbytemod.ui.tree.SortedTreeNode;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.FileUtils;
 import me.grax.jbytemod.utils.asm.FrameGen;
@@ -60,7 +61,6 @@ import me.grax.jbytemod.utils.gui.LookUtils;
 import me.grax.jbytemod.utils.task.AttachTask;
 import me.grax.jbytemod.utils.task.RetransformTask;
 import me.grax.jbytemod.utils.task.SaveTask;
-import me.grax.jbytemod.utils.tree.SortedTreeNode;
 import me.lpk.util.ASMUtils;
 import me.lpk.util.OpUtils;
 

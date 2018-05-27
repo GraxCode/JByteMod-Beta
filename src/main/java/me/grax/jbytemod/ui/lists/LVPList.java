@@ -17,9 +17,9 @@ import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.dialogue.InsnEditDialogue;
+import me.grax.jbytemod.ui.lists.entries.LVPEntry;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
-import me.grax.jbytemod.utils.list.LVPEntry;
 
 public class LVPList extends JList<LVPEntry> {
 

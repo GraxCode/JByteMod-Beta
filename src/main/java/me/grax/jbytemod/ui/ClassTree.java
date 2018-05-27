@@ -27,12 +27,11 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarArchive;
+import me.grax.jbytemod.ui.dialogue.InsnEditDialogue;
+import me.grax.jbytemod.ui.tree.SortedTreeNode;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.MethodUtils;
 import me.grax.jbytemod.utils.asm.FrameGen;
-import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
-import me.grax.jbytemod.utils.gui.CellRenderer;
-import me.grax.jbytemod.utils.tree.SortedTreeNode;
 import me.lpk.util.drop.IDropUser;
 import me.lpk.util.drop.JarDropHandler;
 
@@ -46,7 +45,7 @@ public class ClassTree extends JTree implements IDropUser {
     this.jbm = jam;
     this.setRootVisible(false);
     this.setShowsRootHandles(true);
-    this.setCellRenderer(new CellRenderer());
+    this.setCellRenderer(new TreeCellRenderer());
     this.addTreeSelectionListener(new TreeSelectionListener() {
       public void valueChanged(TreeSelectionEvent e) {
         SortedTreeNode node = (SortedTreeNode) ClassTree.this.getLastSelectedPathComponent();

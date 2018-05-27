@@ -23,8 +23,8 @@ import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.analysis.errors.EmptyMistake;
 import me.grax.jbytemod.analysis.errors.ErrorAnalyzer;
 import me.grax.jbytemod.analysis.errors.Mistake;
+import me.grax.jbytemod.ui.lists.entries.InstrEntry;
 import me.grax.jbytemod.utils.gui.SwingUtils;
-import me.grax.jbytemod.utils.list.InstrEntry;
 import me.grax.jbytemod.utils.list.LazyListModel;
 
 public class ErrorList extends JList<Mistake> {

@@ -1,4 +1,4 @@
-package me.grax.jbytemod.utils.list;
+package me.grax.jbytemod.ui.lists.entries;
 
 public class PrototypeEntry extends InstrEntry {
 

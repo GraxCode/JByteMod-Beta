@@ -1,4 +1,4 @@
-package me.grax.jbytemod.utils.gui;
+package me.grax.jbytemod.ui;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -16,17 +16,17 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import me.grax.jbytemod.utils.tree.SortedTreeNode;
+import me.grax.jbytemod.ui.tree.SortedTreeNode;
 import me.lpk.util.AccessHelper;
 
-public class CellRenderer extends DefaultTreeCellRenderer implements Opcodes {
+public class TreeCellRenderer extends DefaultTreeCellRenderer implements Opcodes {
   private ImageIcon pack, clazz, enu, itf, file;
   private ImageIcon mpri, mpro, mpub, mdef; //method access
   private ImageIcon abs, fin, nat, stat, syn; //general access
 
   private HashMap<Integer, ImageIcon> methodIcons = new HashMap<>();
 
-  public CellRenderer() {
+  public TreeCellRenderer() {
     this.pack = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/package.png")));
     this.file = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/file.png")));
 

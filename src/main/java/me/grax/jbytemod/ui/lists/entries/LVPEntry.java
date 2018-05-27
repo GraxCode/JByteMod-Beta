@@ -1,4 +1,4 @@
-package me.grax.jbytemod.utils.list;
+package me.grax.jbytemod.ui.lists.entries;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LocalVariableNode;

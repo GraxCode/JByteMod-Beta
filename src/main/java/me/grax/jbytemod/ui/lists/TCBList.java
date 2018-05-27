@@ -17,9 +17,9 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.dialogue.InsnEditDialogue;
+import me.grax.jbytemod.ui.lists.entries.TCBEntry;
 import me.grax.jbytemod.utils.ErrorDisplay;
-import me.grax.jbytemod.utils.dialogue.InsnEditDialogue;
-import me.grax.jbytemod.utils.list.TCBEntry;
 
 public class TCBList extends JList<TCBEntry> {
 

@@ -51,9 +51,9 @@ import me.grax.jbytemod.plugin.Plugin;
 import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
+import me.grax.jbytemod.ui.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.ErrorDisplay;
 import me.grax.jbytemod.utils.attach.AttachUtils;
-import me.grax.jbytemod.utils.dialogue.ClassDialogue;
 
 public class MyMenuBar extends JMenuBar {
 

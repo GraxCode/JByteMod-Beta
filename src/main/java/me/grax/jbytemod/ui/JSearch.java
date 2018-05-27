@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.lists.MyCodeList;
-import me.grax.jbytemod.utils.list.InstrEntry;
+import me.grax.jbytemod.ui.lists.entries.InstrEntry;
 import me.grax.jbytemod.utils.list.LazyListModel;
 
 public class JSearch extends JDialog implements ActionListener {

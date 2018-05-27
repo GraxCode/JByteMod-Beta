@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.ClassNode;
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
 import me.grax.jbytemod.ui.JListEditor;
-import me.grax.jbytemod.utils.dialogue.ClassDialogue;
+import me.grax.jbytemod.ui.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 
 public class CNSettings extends MyInternalFrame {

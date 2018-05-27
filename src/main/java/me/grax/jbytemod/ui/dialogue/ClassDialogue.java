@@ -1,4 +1,4 @@
-package me.grax.jbytemod.utils.dialogue;
+package me.grax.jbytemod.ui.dialogue;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
