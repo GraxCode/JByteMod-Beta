@@ -21,10 +21,23 @@ import me.lpk.util.AccessHelper;
 
 public class TreeCellRenderer extends DefaultTreeCellRenderer implements Opcodes {
   private ImageIcon pack, clazz, enu, itf, file;
-  private ImageIcon mpri, mpro, mpub, mdef; //method access
-  private ImageIcon abs, fin, nat, stat, syn; //general access
+  public static ImageIcon mpri, mpro, mpub, mdef; //method access
+  public static ImageIcon abs, fin, nat, stat, syn; //general access
 
   private HashMap<Integer, ImageIcon> methodIcons = new HashMap<>();
+
+  static {
+    TreeCellRenderer.mpri = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/method/methpri.png")));
+    TreeCellRenderer.mpro = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/method/methpro.png")));
+    TreeCellRenderer.mpub = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/method/methpub.png")));
+    TreeCellRenderer.mdef = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/method/methdef.png")));
+
+    TreeCellRenderer.abs = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/access/abstract.png")));
+    TreeCellRenderer.fin = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/access/final.png")));
+    TreeCellRenderer.nat = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/access/native.png")));
+    TreeCellRenderer.stat = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/access/static.png")));
+    TreeCellRenderer.syn = new ImageIcon(Toolkit.getDefaultToolkit().getImage(TreeCellRenderer.class.getResource("/resources/access/synthetic.png")));
+  }
 
   public TreeCellRenderer() {
     this.pack = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/package.png")));
@@ -33,17 +46,6 @@ public class TreeCellRenderer extends DefaultTreeCellRenderer implements Opcodes
     this.clazz = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/java.png")));
     this.enu = combine(clazz, new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/classtype/enum.png"))));
     this.itf = combine(clazz, new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/classtype/interface.png"))));
-
-    this.mpri = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/method/methpri.png")));
-    this.mpro = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/method/methpro.png")));
-    this.mpub = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/method/methpub.png")));
-    this.mdef = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/method/methdef.png")));
-
-    this.abs = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/access/abstract.png")));
-    this.fin = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/access/final.png")));
-    this.nat = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/access/native.png")));
-    this.stat = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/access/static.png")));
-    this.syn = new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/access/synthetic.png")));
 
     methodIcons.put(ACC_PUBLIC, mpub);
     methodIcons.put(ACC_PROTECTED, mpro);
@@ -93,13 +95,13 @@ public class TreeCellRenderer extends DefaultTreeCellRenderer implements Opcodes
   private ImageIcon generateIcon(int access) {
     ImageIcon template = null;
     if (AccessHelper.isPublic(access)) {
-      template = this.mpub;
+      template = mpub;
     } else if (AccessHelper.isPrivate(access)) {
-      template = this.mpri;
+      template = mpri;
     } else if (AccessHelper.isProtected(access)) {
-      template = this.mpro;
+      template = mpro;
     } else {
-      template = this.mdef;
+      template = mdef;
     }
     if (AccessHelper.isAbstract(access)) {
       template = combineAccess(template, abs, true);
@@ -122,7 +124,7 @@ public class TreeCellRenderer extends DefaultTreeCellRenderer implements Opcodes
     return template;
   }
 
-  private static ImageIcon combineAccess(ImageIcon icon1, ImageIcon icon2, boolean right) {
+  public static ImageIcon combineAccess(ImageIcon icon1, ImageIcon icon2, boolean right) {
     Image img1 = icon1.getImage();
     Image img2 = icon2.getImage();
 
@@ -137,7 +139,7 @@ public class TreeCellRenderer extends DefaultTreeCellRenderer implements Opcodes
     return new ImageIcon(image);
   }
 
-  private static ImageIcon combine(ImageIcon icon1, ImageIcon icon2) {
+  public static ImageIcon combine(ImageIcon icon1, ImageIcon icon2) {
     Image img1 = icon1.getImage();
     Image img2 = icon2.getImage();
 

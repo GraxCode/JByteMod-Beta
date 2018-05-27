@@ -43,6 +43,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.ui.JAccessSelectorPanel;
 import me.grax.jbytemod.ui.JFrameList;
 import me.grax.jbytemod.ui.JLDCEditor;
 import me.grax.jbytemod.utils.InstrUtils;
@@ -315,9 +316,8 @@ public class InsnEditDialogue extends ClassDialogue {
       }
       return jtf.getText();
     } else if ("access".equals(name)) {
-      JPanel panel = (JPanel) wp.getComponent(0);
-      JFormattedTextField jftf = (JFormattedTextField) panel.getComponent(0);
-      return (int) jftf.getValue();
+      JAccessSelectorPanel panel = (JAccessSelectorPanel) wp.getComponent(0);
+      return (int) panel.getAccess();
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = (JTextField) wp.getComponent(0);
       return jtf.getText();
@@ -380,13 +380,7 @@ public class InsnEditDialogue extends ClassDialogue {
       return panel;
     } else if ("access".equals(name)) {
       int accezz = Integer.parseInt(String.valueOf(o));
-      JFormattedTextField access = ClassDialogue.createNumberField();
-      access.setValue(accezz);
-      JPanel btnPanel = SwingUtils.withButton(access, "...", e -> {
-        JAccessHelper jah = new JAccessHelper(accezz, access);
-        jah.setVisible(true);
-      });
-      return btnPanel;
+      return new JAccessSelectorPanel(accezz);
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = new JTextField((String) o);
       jtf.setToolTipText(textFieldToolTips.get(name));
