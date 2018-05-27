@@ -9,7 +9,7 @@ public class Option {
   private Type type;
 
   public Option(String name, Object value, Type type) {
-    this(name, value, type, "general_group");
+    this(name, value, type, "general");
   }
 
   public Option(String name, Object value, Type type, String group) {

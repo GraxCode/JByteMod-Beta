@@ -10,6 +10,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -309,13 +310,35 @@ public class MyMenuBar extends JMenuBar {
     LanguageRes lr = JByteMod.res;
     Options o = JByteMod.ops;
     HashMap<String, JMenu> menus = new LinkedHashMap<>();
+    HashMap<String, JMenu> roots = new LinkedHashMap<>();
     for (Option op : o.bools) {
-      String group = lr.getResource(op.getGroup());
+      String group = op.getGroup();
+      String[] groups = group.split("_");
       JMenu menu = null;
       if (menus.containsKey(group)) {
         menu = menus.get(group);
       } else {
-        menus.put(group, menu = new JMenu(group));
+        String full = "";
+        for (String g : groups) {
+          if (!full.isEmpty()) {
+            full += "_";
+          }
+          full += g;
+          if (menus.containsKey(full)) {
+            menu = menus.get(full);
+            continue;
+          }
+          if (menu == null) {
+            menu = new JMenu(lr.getResource(g + "_group"));
+            roots.put(full, menu);
+            menus.put(full, menu);
+          } else {
+            JMenu subMenu = new JMenu(lr.getResource(g + "_group"));
+            menu.add(subMenu);
+            menu = subMenu;
+            menus.put(full, menu);
+          }
+        }
       }
       switch (op.getType()) {
       case BOOLEAN:
@@ -366,7 +389,7 @@ public class MyMenuBar extends JMenuBar {
         break;
       }
     }
-    for (JMenu m : menus.values()) {
+    for (JMenu m : roots.values()) {
       settings.add(m);
     }
     return settings;
