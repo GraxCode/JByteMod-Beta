@@ -18,6 +18,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.ui.JAnnotationEditor;
 import me.grax.jbytemod.ui.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.gui.SwingUtils;
 
@@ -25,7 +26,7 @@ public class MNSettings extends MyInternalFrame {
   /**
    * Save position
    */
-  private static Rectangle bounds = new Rectangle(670, 10, 1280 / 4, 720 / 3 + 30);
+  private static Rectangle bounds = new Rectangle(670, 10, 1280 / 4, 720 / 3 + 80);
 
   public MNSettings(ClassNode cn, MethodNode mn) {
     super("Method Settings");
@@ -63,6 +64,20 @@ public class MNSettings extends MyInternalFrame {
     JFormattedTextField maxS = ClassDialogue.createNumberField();
     maxS.setValue(mn.maxStack);
     input.add(maxS);
+    labels.add(new JLabel("Annotations:"));
+    JButton annotations = new JButton(JByteMod.res.getResource("edit"));
+    annotations.addActionListener(a -> {
+      if (!JAnnotationEditor.isOpen("visibleAnnotations"))
+        new JAnnotationEditor("Annotations", mn, "visibleAnnotations").setVisible(true);
+    });
+    input.add(annotations);
+    labels.add(new JLabel("Invis Annotations:"));
+    JButton invisAnnotations = new JButton(JByteMod.res.getResource("edit"));
+    invisAnnotations.addActionListener(a -> {
+      if (!JAnnotationEditor.isOpen("invisibleAnnotations"))
+        new JAnnotationEditor("Invis Annotations", mn, "invisibleAnnotations").setVisible(true);
+    });
+    input.add(invisAnnotations);
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {

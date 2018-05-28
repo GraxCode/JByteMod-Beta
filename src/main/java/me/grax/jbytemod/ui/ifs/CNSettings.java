@@ -18,6 +18,7 @@ import org.objectweb.asm.tree.ClassNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.JAccessHelper;
+import me.grax.jbytemod.ui.JAnnotationEditor;
 import me.grax.jbytemod.ui.JListEditor;
 import me.grax.jbytemod.ui.dialogue.ClassDialogue;
 import me.grax.jbytemod.utils.gui.SwingUtils;
@@ -26,7 +27,7 @@ public class CNSettings extends MyInternalFrame {
   /**
    * Save position
    */
-  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 150);
+  private static Rectangle bounds = new Rectangle(10, 10, 1280 / 4, 720 / 3 + 200);
 
   public CNSettings(ClassNode cn) {
     super("Class Settings");
@@ -46,6 +47,9 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Class SourceFile:"));
     JTextField sf = new JTextField(cn.sourceFile);
     input.add(sf);
+    labels.add(new JLabel("Class SourceDebug:"));
+    JTextField sd = new JTextField(cn.sourceDebug);
+    input.add(sd);
     labels.add(new JLabel("Class Access:"));
     JFormattedTextField access = ClassDialogue.createNumberField();
     access.setValue(cn.access);
@@ -83,6 +87,20 @@ public class CNSettings extends MyInternalFrame {
     labels.add(new JLabel("Outer Method Desc:"));
     JTextField outerdesc = new JTextField(cn.outerMethodDesc);
     input.add(outerdesc);
+    labels.add(new JLabel("Annotations:"));
+    JButton annotations = new JButton(JByteMod.res.getResource("edit"));
+    annotations.addActionListener(a -> {
+      if (!JAnnotationEditor.isOpen("visibleAnnotations"))
+        new JAnnotationEditor("Annotations", cn, "visibleAnnotations").setVisible(true);
+    });
+    input.add(annotations);
+    labels.add(new JLabel("Invis Annotations:"));
+    JButton invisAnnotations = new JButton(JByteMod.res.getResource("edit"));
+    invisAnnotations.addActionListener(a -> {
+      if (!JAnnotationEditor.isOpen("invisibleAnnotations"))
+        new JAnnotationEditor("Invis Annotations", cn, "invisibleAnnotations").setVisible(true);
+    });
+    input.add(invisAnnotations);
     this.add(panel, BorderLayout.CENTER);
     JButton update = new JButton("Update");
     update.addActionListener(new ActionListener() {
@@ -97,6 +115,12 @@ public class CNSettings extends MyInternalFrame {
         cn.sourceFile = sf.getText();
         cn.access = (int) access.getValue();
         cn.version = (int) version.getValue();
+        String srcDebug = sd.getText();
+        if (srcDebug.isEmpty()) {
+          cn.sourceDebug = null;
+        } else {
+          cn.sourceDebug = srcDebug;
+        }
         String sig = signature.getText();
         if (sig.isEmpty()) {
           cn.signature = null;

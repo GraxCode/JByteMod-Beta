@@ -24,6 +24,7 @@ import javax.swing.text.PlainDocument;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 
 import me.grax.jbytemod.JByteMod;
@@ -155,7 +156,22 @@ public class ClassDialogue {
         }
       } else if (hasNoChilds(f.getType())) {
         try {
-          rightInput.add(wrap(f, getComponent(f)));
+        	if(f.getDeclaringClass() == IntInsnNode.class && f.getName().equals("operand"))
+        	{
+        		NumberFormat format = NumberFormat.getInstance();
+        		format.setGroupingUsed(false);
+        		NumberFormatter formatter = new NumberFormatter(format);
+        		formatter.setValueClass(Integer.class);
+        		formatter.setMinimum(Integer.MIN_VALUE);
+        		formatter.setMaximum(Integer.MAX_VALUE);
+        		formatter.setAllowsInvalid(false);
+        		formatter.setCommitsOnValidEdit(true);
+        		formatter.setOverwriteMode(true);
+        		JFormattedTextField numberField = new JFormattedTextField(formatter);
+        		numberField.setValue(f.get(object));
+        		rightInput.add(wrap(f, numberField));
+        	}else
+        		rightInput.add(wrap(f, getComponent(f)));
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
@@ -706,7 +722,7 @@ public class ClassDialogue {
     }
   }
 
-  public class JCharField extends JTextField {
+  public static class JCharField extends JTextField {
     private static final long serialVersionUID = 1L;
     private Object c;
 
