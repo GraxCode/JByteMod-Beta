@@ -3,6 +3,7 @@ package me.grax.jbytemod.analysis.errors;
 import java.util.HashMap;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.IincInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -14,8 +15,10 @@ import me.grax.jbytemod.JByteMod;
 
 public class ErrorAnalyzer {
   private MethodNode mn;
+  private ClassNode cn;
 
-  public ErrorAnalyzer(MethodNode mn) {
+  public ErrorAnalyzer(ClassNode cn, MethodNode mn) {
+    this.cn = cn;
     this.mn = mn;
   }
 
@@ -29,7 +32,7 @@ public class ErrorAnalyzer {
     //asm verification
     final Analyzer a = new Analyzer(new BasicVerifier());
     try {
-      a.analyze(mn.owner, mn);
+      a.analyze(cn.name, mn);
     } catch (AnalyzerException e) {
       put(map, e.node, new InsnError(e.getMessage()));
     } catch (Exception e) {

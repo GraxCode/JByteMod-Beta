@@ -98,9 +98,6 @@ public class LoadTask extends SwingWorker<Void, Integer> {
           try {
             final ClassNode cn = ASMUtils.getNode(bytes);
             if (cn != null) { // && (cn.name.equals("java/lang/Object") ? true : cn.superName != null)
-              for (MethodNode mn : cn.methods) {
-                mn.owner = cn.name;
-              }
               classes.put(cn.name, cn);
             }
           } catch (Exception e) {

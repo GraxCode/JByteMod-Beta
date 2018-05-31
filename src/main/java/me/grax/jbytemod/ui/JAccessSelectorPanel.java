@@ -26,18 +26,17 @@ import me.lpk.util.AccessHelper;
 
 public class JAccessSelectorPanel extends JPanel implements Opcodes {
 
-  private int accezz;
   private VisibilityButton visibility;
   private ExtrasButton extras;
   private OtherButton other;
+  private JLabel label;
 
   public JAccessSelectorPanel(int accezz) {
-    this.accezz = accezz;
     this.setLayout(new GridLayout(1, 4));
     this.add(visibility = new VisibilityButton(accezz));
     this.add(extras = new ExtrasButton(accezz));
     this.add(other = new OtherButton(accezz));
-    this.add(new JLabel(""));
+    this.add(label = new JLabel(String.valueOf(accezz)));
   }
 
   public int getAccess() {
@@ -45,7 +44,6 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
   }
 
   public void setAccess(int accezz) {
-    this.accezz = accezz;
     visibility.updateVisibility(accezz);
     extras.updateVisibility(accezz);
     other.updateVisibility(accezz);
@@ -78,6 +76,8 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
         visibility = 0; //default
         this.setIcon(TreeCellRenderer.mdef);
       }
+      if (label != null)
+        label.setText(String.valueOf(getAccess()));
     }
 
     private WebButtonPopup generatePopupMenu() {
@@ -200,11 +200,8 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
         }
       }
       this.setIcon(preview);
-      if (empty) {
-        this.setText("");
-      } else {
-        this.setText("");
-      }
+      if (label != null)
+        label.setText(String.valueOf(getAccess()));
     }
 
     private WebButtonPopup generatePopupMenu() {
@@ -300,24 +297,10 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
 
   }
 
-  public static class OtherButton extends WebButton {
+  public class OtherButton extends WebButton {
     private int visibility;
 
     public OtherButton(int access) {
-      updateVisibility(access);
-      this.addMouseListener(new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
-          WebButtonPopup popupMenu = generatePopupMenu();
-          popupMenu.showPopup();
-        }
-      });
-    }
-
-    private static final List<String> alreadyCovered = Arrays.asList("ACC_PUBLIC", "ACC_PRIVATE", "ACC_PROTECTED", "ACC_STATIC", "ACC_FINAL",
-        "ACC_NATIVE", "ACC_ABSTRACT", "ACC_SYNTHETIC", "ACC_STATIC_PHASE", "ACC_TRANSITIVE");
-
-    private static final HashMap<String, Integer> otherTypes = new HashMap<>();
-    static {
       try {
         for (Field d : Opcodes.class.getDeclaredFields()) {
           if (d.getName().startsWith("ACC_") && !alreadyCovered.contains(d.getName())) {
@@ -328,7 +311,19 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
       } catch (Exception e) {
         e.printStackTrace();
       }
+      updateVisibility(access);
+      this.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+          WebButtonPopup popupMenu = generatePopupMenu();
+          popupMenu.showPopup();
+        }
+      });
     }
+
+    private final List<String> alreadyCovered = Arrays.asList("ACC_PUBLIC", "ACC_PRIVATE", "ACC_PROTECTED", "ACC_STATIC", "ACC_FINAL", "ACC_NATIVE",
+        "ACC_ABSTRACT", "ACC_SYNTHETIC", "ACC_STATIC_PHASE", "ACC_TRANSITIVE");
+
+    private final HashMap<String, Integer> otherTypes = new HashMap<>();
 
     public void updateVisibility(int access) {
       visibility = 0;
@@ -338,13 +333,16 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
         }
       }
       this.setText("...");
+      if (label != null)
+        label.setText(String.valueOf(getAccess()));
     }
 
     private WebButtonPopup generatePopupMenu() {
       WebButtonPopup pm = new WebButtonPopup(this, PopupWay.downCenter);
       JPanel list = new JPanel(new GridLayout(7, 1));
       for (Entry<String, Integer> acc : otherTypes.entrySet()) {
-        JToggleButton jtb = new JToggleButton(acc.getKey().substring(0, 1).toUpperCase() + acc.getKey().substring(1, Math.min(acc.getKey().length(), 7)));
+        JToggleButton jtb = new JToggleButton(
+            acc.getKey().substring(0, 1).toUpperCase() + acc.getKey().substring(1, Math.min(acc.getKey().length(), 7)));
         jtb.setSelected((visibility & acc.getValue()) != 0);
         jtb.addActionListener(e -> {
           if ((visibility & acc.getValue()) != 0) {

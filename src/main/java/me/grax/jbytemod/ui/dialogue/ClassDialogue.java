@@ -182,7 +182,7 @@ public class ClassDialogue {
           edit.addActionListener(e -> {
             try {
               //should still be the same class type
-              ClassDialogue dialogue = ClassDialogue.this.init(value == null ? new String() : value);
+              ClassDialogue dialogue = ClassDialogue.this.init(value == null ? f.getType().newInstance() : value);
               if (dialogue.open()) {
                 f.set(object, dialogue.getObject());
               }
@@ -196,7 +196,7 @@ public class ClassDialogue {
             try {
               if (jcb.isSelected()) {
                 if (f.get(object) == null) {
-                  f.set(object, new String());
+                  f.set(object, f.getType().newInstance());
                 }
                 edit.setEnabled(true);
               } else {

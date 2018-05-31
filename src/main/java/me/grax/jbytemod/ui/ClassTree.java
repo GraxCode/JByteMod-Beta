@@ -223,7 +223,7 @@ public class ClassTree extends JTree implements IDropUser {
                 public void actionPerformed(ActionEvent e) {
                   if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_dead_code"),
                       JByteMod.res.getResource("confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    MethodUtils.removeDeadCode(mn);
+                    MethodUtils.removeDeadCode(cn, mn);
                     jbm.selectMethod(cn, mn);
                   }
                 }

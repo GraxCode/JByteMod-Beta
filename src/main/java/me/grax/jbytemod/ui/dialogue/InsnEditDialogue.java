@@ -111,7 +111,7 @@ public class InsnEditDialogue extends ClassDialogue {
       JPanel rightInput = new JPanel();
       JButton handleButton = new JButton("Edit Handle");
       handle = new Handle(1, "", "", "", false);
-      
+
       mainPanel.setLayout(new BorderLayout());
       leftText.setLayout(new GridLayout(0, 1));
       rightInput.setLayout(new GridLayout(0, 1));
@@ -135,14 +135,14 @@ public class InsnEditDialogue extends ClassDialogue {
         handle = (Handle) ldc.cst;
       }
       handleButton.addActionListener(e -> {
-    	  try {
-    		  InsnEditDialogue dialogue = new InsnEditDialogue(mn, handle);
-              if (dialogue.open()) {
-                handle = (Handle) dialogue.getObject();
-              }
-            } catch (Exception ex) {
-              ex.printStackTrace();
-            }
+        try {
+          InsnEditDialogue dialogue = new InsnEditDialogue(mn, handle);
+          if (dialogue.open()) {
+            handle = (Handle) dialogue.getObject();
+          }
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
       });
       rightInput.add(ldctype);
       leftText.add(new JLabel("Ldc Value: "));
@@ -162,24 +162,24 @@ public class InsnEditDialogue extends ClassDialogue {
         rightInput.add(cst);
       }
       ldctype.addItemListener(i -> {
-    	  if (ldctype.getSelectedItem().equals("Handle")) {
-    		  cst.setEnabled(false);
-    		  if (rightInput.getComponent(1) instanceof JPanel)
-    			  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
-    		  handleButton.setEnabled(true);
-    	  } else {
-    		  cst.setEnabled(true);
-    		  if (rightInput.getComponent(1) instanceof JPanel)
-    			  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(true);
-    		  handleButton.setEnabled(false);
-    	  }
+        if (ldctype.getSelectedItem().equals("Handle")) {
+          cst.setEnabled(false);
+          if (rightInput.getComponent(1) instanceof JPanel)
+            ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
+          handleButton.setEnabled(true);
+        } else {
+          cst.setEnabled(true);
+          if (rightInput.getComponent(1) instanceof JPanel)
+            ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(true);
+          handleButton.setEnabled(false);
+        }
       });
       if (!ldctype.getSelectedItem().equals("Handle")) {
-    	  handleButton.setEnabled(false);
+        handleButton.setEnabled(false);
       } else {
-    	  cst.setEnabled(false);
-    	  if (rightInput.getComponent(1) instanceof JPanel)
-			  ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
+        cst.setEnabled(false);
+        if (rightInput.getComponent(1) instanceof JPanel)
+          ((JPanel) rightInput.getComponent(1)).getComponent(1).setEnabled(false);
       }
       mainPanel.add(leftText, BorderLayout.WEST);
       mainPanel.add(rightInput, BorderLayout.CENTER);
@@ -207,8 +207,8 @@ public class InsnEditDialogue extends ClassDialogue {
             ldc.cst = Type.getType(cst.getText());
             break;
           case "Handle":
-        	ldc.cst = handle;
-        	break;
+            ldc.cst = handle;
+            break;
           }
         } catch (Exception e) {
           e.printStackTrace();
@@ -261,7 +261,8 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean ignore(String name) {
     return name.equals("itf") || name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
         || name.equals("localVariables") || name.equals("instructions") || name.equals("preLoad") || name.equals("attrs") || name.equals("extraBytes")
-        || name.equals("methods") || name.equals("fields") || name.equals("local") || name.equals("stack") || name.equals("hash");
+        || name.equals("methods") || name.equals("fields") || name.equals("local") || name.equals("stack") || name.equals("hash")
+        || name.equals("parameters") || name.equals("exceptions") || name.equals("innerClasses") || name.equals("module");
   }
 
   @Override

@@ -13,6 +13,7 @@ import static org.objectweb.asm.Opcodes.LRETURN;
 import static org.objectweb.asm.Opcodes.RETURN;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.LabelNode;
@@ -81,10 +82,10 @@ public class MethodUtils {
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  public static void removeDeadCode(MethodNode mn) {
+  public static void removeDeadCode(ClassNode cn, MethodNode mn) {
     Analyzer analyzer = new Analyzer(new BasicInterpreter());
     try {
-      analyzer.analyze(mn.owner, mn);
+      analyzer.analyze(cn.name, mn);
     } catch (AnalyzerException e) {
       ErrorDisplay.error("Could not analyze the code: " + e.getMessage());
       return;

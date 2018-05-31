@@ -77,7 +77,7 @@ public class ErrorList extends JList<Mistake> {
         JByteMod.LOGGER.warn("Not analyzing mistakes, too many instructions!");
         return;
       }
-      ErrorAnalyzer ea = new ErrorAnalyzer(jbm.getCurrentMethod());
+      ErrorAnalyzer ea = new ErrorAnalyzer(jbm.getCurrentNode(), jbm.getCurrentMethod());
       HashMap<AbstractInsnNode, Mistake> mistakes = ea.findErrors();
       for (int i = 0; i < clm.getSize(); i++) {
         AbstractInsnNode ain = clm.getElementAt(i).getInstr();
