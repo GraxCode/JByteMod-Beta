@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -35,6 +34,7 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
     this.add(visibility = new VisibilityButton(accezz));
     this.add(extras = new ExtrasButton(accezz));
     this.add(other = new OtherButton(accezz));
+    this.add(new JPanel());
   }
 
   public int getAccess() {

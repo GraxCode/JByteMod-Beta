@@ -18,12 +18,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
+
+import com.alee.utils.SwingUtils;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarArchive;
@@ -56,15 +59,7 @@ public class ClassTree extends JTree implements IDropUser {
         } else if (node.getCn() != null) {
           jam.selectClass(node.getCn());
         } else {
-          ClassTree.this.clearSelection();
-          if (node.isLeaf()) {
-            return;
-          }
-          if (ClassTree.this.isExpanded(e.getPath())) {
-            ClassTree.this.collapsePath(e.getPath());
-          } else {
-            ClassTree.this.expandPath(e.getPath());
-          }
+          
         }
       }
     });
@@ -265,9 +260,61 @@ public class ClassTree extends JTree implements IDropUser {
                   FrameGen.regenerateFrames(jbm, cn);
                 }
               });
+              JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
+              remove.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_remove"),
+                      JByteMod.res.getResource("confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    jbm.getFile().getClasses().remove(cn.name);
+                    TreeNode parent = stn.getParent();
+                    model.removeNodeFromParent(stn);
+                    while(parent != null && !parent.children().hasMoreElements() && parent != model.getRoot()) {
+                      TreeNode par = parent.getParent();
+                      model.removeNodeFromParent((MutableTreeNode) parent);
+                      parent = par;
+                    }
+                  }
+                }
+              });
+              menu.add(remove);
               tools.add(frames);
               menu.add(tools);
               menu.show(ClassTree.this, me.getX(), me.getY());
+            } else {
+              JPopupMenu menu = new JPopupMenu();
+              JMenuItem remove = new JMenuItem(JByteMod.res.getResource("remove"));
+              remove.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  if (JOptionPane.showConfirmDialog(JByteMod.instance, JByteMod.res.getResource("confirm_remove"),
+                      JByteMod.res.getResource("confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    TreeNode parent = stn.getParent();
+                    deleteItselfAndChilds(stn);
+                    while(parent != null && !parent.children().hasMoreElements() && parent != model.getRoot()) {
+                      TreeNode par = parent.getParent();
+                      model.removeNodeFromParent((MutableTreeNode) parent);
+                      parent = par;
+                    }
+                  }
+                }
+              });
+              menu.add(remove);
+              menu.show(ClassTree.this, me.getX(), me.getY());
+            }
+          }
+        } else {
+          TreePath tp = ClassTree.this.getPathForLocation(me.getX(), me.getY());
+          if (tp != null && tp.getParentPath() != null) {
+            ClassTree.this.setSelectionPath(tp);
+            if (ClassTree.this.getLastSelectedPathComponent() == null) {
+              return;
+            }
+            SortedTreeNode stn = (SortedTreeNode) ClassTree.this.getLastSelectedPathComponent();
+            if (stn.getMn() == null && stn.getCn() == null) {
+              if (ClassTree.this.isExpanded(tp)) {
+                ClassTree.this.collapsePath(tp);
+              } else {
+                ClassTree.this.expandPath(tp);
+              }
             }
           }
         }
@@ -307,6 +354,18 @@ public class ClassTree extends JTree implements IDropUser {
         changedChilds(n);
       }
     }
+  }
+
+  public void deleteItselfAndChilds(SortedTreeNode node) {
+    if (node.getChildCount() >= 0) {
+      for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
+        TreeNode n = (TreeNode) e.nextElement();
+        deleteItselfAndChilds((SortedTreeNode) n);
+      }
+    }
+    if (node.getCn() != null)
+      jbm.getFile().getClasses().remove(node.getCn().name);
+    model.removeNodeFromParent(node);
   }
 
   public void collapseAll() {
