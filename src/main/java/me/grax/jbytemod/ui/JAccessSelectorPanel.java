@@ -29,14 +29,12 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
   private VisibilityButton visibility;
   private ExtrasButton extras;
   private OtherButton other;
-  private JLabel label;
 
   public JAccessSelectorPanel(int accezz) {
     this.setLayout(new GridLayout(1, 4));
     this.add(visibility = new VisibilityButton(accezz));
     this.add(extras = new ExtrasButton(accezz));
     this.add(other = new OtherButton(accezz));
-    this.add(label = new JLabel(String.valueOf(accezz)));
   }
 
   public int getAccess() {
@@ -76,8 +74,6 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
         visibility = 0; //default
         this.setIcon(TreeCellRenderer.mdef);
       }
-      if (label != null)
-        label.setText(String.valueOf(getAccess()));
     }
 
     private WebButtonPopup generatePopupMenu() {
@@ -200,8 +196,6 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
         }
       }
       this.setIcon(preview);
-      if (label != null)
-        label.setText(String.valueOf(getAccess()));
     }
 
     private WebButtonPopup generatePopupMenu() {
@@ -333,8 +327,6 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
         }
       }
       this.setText("...");
-      if (label != null)
-        label.setText(String.valueOf(getAccess()));
     }
 
     private WebButtonPopup generatePopupMenu() {

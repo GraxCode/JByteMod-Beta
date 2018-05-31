@@ -319,6 +319,9 @@ public class InsnEditDialogue extends ClassDialogue {
     } else if ("access".equals(name)) {
       JAccessSelectorPanel panel = (JAccessSelectorPanel) wp.getComponent(0);
       return (int) panel.getAccess();
+    } else if ("version".equals(name)) {
+      JComboBox<String> version = (JComboBox<String>) wp.getComponent(0);
+      return (int) version.getSelectedIndex() + 46;
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = (JTextField) wp.getComponent(0);
       return jtf.getText();
@@ -330,7 +333,7 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean isModifiedSpecial(String name, Class<?> type) {
     return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
         || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
-        || (canBeNull.contains(name)) || (name.equals("access")) || (textFieldToolTips.containsKey(name));
+        || (canBeNull.contains(name)) || (name.equals("access")) || (name.equals("version")) || (textFieldToolTips.containsKey(name));
   }
 
   /**
@@ -382,6 +385,11 @@ public class InsnEditDialogue extends ClassDialogue {
     } else if ("access".equals(name)) {
       int accezz = Integer.parseInt(String.valueOf(o));
       return new JAccessSelectorPanel(accezz);
+    } else if ("version".equals(name)) {
+      JComboBox<String> versions = new JComboBox<>(new String[] { "Java 1.2 (46)", "Java 1.3 (47)", "Java 1.4 (48)", "Java 5 (49)", "Java 6 (50)",
+          "Java 7 (51)", "Java 8 (52)", "Java 9 (53)", "Java 10 (54)", "Java 11 (55)" });
+      versions.setSelectedIndex(Integer.parseInt(String.valueOf(o)) - 46);
+      return versions;
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = new JTextField((String) o);
       jtf.setToolTipText(textFieldToolTips.get(name));
