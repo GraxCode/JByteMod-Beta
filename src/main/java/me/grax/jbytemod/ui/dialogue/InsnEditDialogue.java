@@ -87,7 +87,7 @@ public class InsnEditDialogue extends ClassDialogue {
     handles = new String[] { "h_getfield", "h_getstatic", "h_putfield", "h_putstatic", "h_invokevirtual", "h_invokestatic", "h_invokespecial",
         "h_newinvokespecial", "h_invokeinterface" };
     frames = new String[] { "f_new", "f_full", "f_append", "f_chop", "f_same", "f_same1" };
-    canBeNull = Arrays.asList("signature", "sourceFile", "sourceDebug", "outerClass", "outerMethod", "outerMethodDesc");
+    canBeNull = Arrays.asList("signature", "superName", "sourceFile", "sourceDebug", "outerClass", "outerMethod", "outerMethodDesc");
     textFieldToolTips = new HashMap<>();
     textFieldToolTips.put("desc", "e.g. ()V");
   }

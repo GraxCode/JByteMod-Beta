@@ -59,7 +59,7 @@ public class ClassTree extends JTree implements IDropUser {
         } else if (node.getCn() != null) {
           jam.selectClass(node.getCn());
         } else {
-          
+
         }
       }
     });
@@ -233,6 +233,7 @@ public class ClassTree extends JTree implements IDropUser {
               insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                   MethodNode mn = new MethodNode(1, "", "()V", null, null);
+                  mn.maxLocals = 1;
                   if (new InsnEditDialogue(mn, mn).open()) {
                     if (mn.name.isEmpty() || mn.desc.isEmpty()) {
                       ErrorDisplay.error("Method name / desc cannot be empty");
@@ -268,7 +269,7 @@ public class ClassTree extends JTree implements IDropUser {
                     jbm.getFile().getClasses().remove(cn.name);
                     TreeNode parent = stn.getParent();
                     model.removeNodeFromParent(stn);
-                    while(parent != null && !parent.children().hasMoreElements() && parent != model.getRoot()) {
+                    while (parent != null && !parent.children().hasMoreElements() && parent != model.getRoot()) {
                       TreeNode par = parent.getParent();
                       model.removeNodeFromParent((MutableTreeNode) parent);
                       parent = par;
@@ -289,7 +290,7 @@ public class ClassTree extends JTree implements IDropUser {
                       JByteMod.res.getResource("confirm"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     TreeNode parent = stn.getParent();
                     deleteItselfAndChilds(stn);
-                    while(parent != null && !parent.children().hasMoreElements() && parent != model.getRoot()) {
+                    while (parent != null && !parent.children().hasMoreElements() && parent != model.getRoot()) {
                       TreeNode par = parent.getParent();
                       model.removeNodeFromParent((MutableTreeNode) parent);
                       parent = par;
@@ -298,6 +299,20 @@ public class ClassTree extends JTree implements IDropUser {
                 }
               });
               menu.add(remove);
+              JMenuItem add = new JMenuItem(JByteMod.res.getResource("add"));
+              add.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  ClassNode cn = new ClassNode();
+                  cn.version = 52;
+                  cn.name = getPath(stn);
+                  cn.superName = "java/lang/Object";
+                  if (new InsnEditDialogue(mn, cn).open()) {
+                    jbm.getFile().getClasses().put(cn.name, cn);
+                    jbm.refreshTree();
+                  }
+                }
+              });
+              menu.add(add);
               menu.show(ClassTree.this, me.getX(), me.getY());
             }
           }
@@ -320,6 +335,15 @@ public class ClassTree extends JTree implements IDropUser {
         }
       }
     });
+  }
+
+  private String getPath(SortedTreeNode stn) {
+    String path = "";
+    while (stn != null && stn != model.getRoot()) {
+      path = stn.toString() + "/" + path;
+      stn = (SortedTreeNode) stn.getParent();
+    }
+    return path;
   }
 
   private void sort(DefaultTreeModel model, SortedTreeNode node, boolean sm) {
