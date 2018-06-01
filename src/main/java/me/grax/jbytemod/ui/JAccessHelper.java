@@ -122,7 +122,7 @@ public class JAccessHelper extends JDialog {
     }
   }
 
-  public JAccessHelper(int accezz, JFormattedTextField tf) {
+  public JAccessHelper(int accezz, ActionListener tf) {
     try {
       setBounds(100, 100, 420, 220);
       setResizable(false);
@@ -146,7 +146,7 @@ public class JAccessHelper extends JDialog {
               }
               jtf.setText(String.valueOf(acc));
               if (tf != null) {
-                tf.setValue(acc);
+                tf.actionPerformed(new ActionEvent(this, 0, String.valueOf(acc)));
               }
             }
           });

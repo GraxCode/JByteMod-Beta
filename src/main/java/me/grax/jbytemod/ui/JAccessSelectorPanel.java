@@ -2,6 +2,7 @@ package me.grax.jbytemod.ui;
 
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -28,13 +30,21 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
   private VisibilityButton visibility;
   private ExtrasButton extras;
   private OtherButton other;
+  private JButton accessHelper;
 
   public JAccessSelectorPanel(int accezz) {
     this.setLayout(new GridLayout(1, 4));
     this.add(visibility = new VisibilityButton(accezz));
     this.add(extras = new ExtrasButton(accezz));
     this.add(other = new OtherButton(accezz));
-    this.add(new JPanel());
+    accessHelper = new JButton(
+        new ImageIcon(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/toolbar/table.png"))));
+    accessHelper.addActionListener(e -> {
+      new JAccessHelper(getAccess(), ae -> {
+        setAccess(Integer.parseInt(ae.getActionCommand()));
+      }).setVisible(true);
+    });
+    this.add(accessHelper);
   }
 
   public int getAccess() {
