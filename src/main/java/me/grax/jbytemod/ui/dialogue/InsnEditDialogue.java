@@ -2,6 +2,7 @@ package me.grax.jbytemod.ui.dialogue;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,10 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.IincInsnNode;
@@ -45,7 +49,9 @@ import me.grax.jbytemod.ui.JAccessSelectorPanel;
 import me.grax.jbytemod.ui.JFrameList;
 import me.grax.jbytemod.ui.JLDCEditor;
 import me.grax.jbytemod.utils.InstrUtils;
+import me.grax.jbytemod.utils.asm.Loader;
 import me.grax.jbytemod.utils.gui.SwingUtils;
+import me.lpk.util.AccessHelper;
 import me.lpk.util.OpUtils;
 
 public class InsnEditDialogue extends ClassDialogue {
@@ -92,6 +98,8 @@ public class InsnEditDialogue extends ClassDialogue {
 
   private MethodNode mn;
   private Handle handle;
+  private JTextField ownerField;
+  private JTextField nameField;
 
   public InsnEditDialogue(MethodNode mn, Object object) {
     super(object);
@@ -320,6 +328,16 @@ public class InsnEditDialogue extends ClassDialogue {
     } else if ("version".equals(name)) {
       JComboBox<String> version = (JComboBox<String>) wp.getComponent(0);
       return (int) version.getSelectedIndex() + 46;
+    } else if ("owner".equals(name)) {
+      JTextField jtf = (JTextField) wp.getComponent(0);
+      return jtf.getText();
+    } else if ("name".equals(name)) {
+      JTextField jtf = (JTextField) wp.getComponent(0);
+      return jtf.getText();
+    } else if (getObject() instanceof MethodInsnNode && "desc".equals(name)) {
+      JPanel panel = (JPanel) wp.getComponent(0);
+      JTextField jtf = (JTextField) panel.getComponent(0);
+      return jtf.getText();
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = (JTextField) wp.getComponent(0);
       return jtf.getText();
@@ -331,7 +349,8 @@ public class InsnEditDialogue extends ClassDialogue {
   protected boolean isModifiedSpecial(String name, Class<?> type) {
     return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
         || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
-        || (canBeNull.contains(name)) || (name.equals("access")) || (name.equals("version")) || (textFieldToolTips.containsKey(name));
+        || (canBeNull.contains(name)) || (name.equals("access")) || (name.equals("version")) || (textFieldToolTips.containsKey(name))
+        || ((getObject() instanceof MethodInsnNode) && ((name.equals("name")) || (name.equals("owner"))));
   }
 
   /**
@@ -388,6 +407,52 @@ public class InsnEditDialogue extends ClassDialogue {
           "Java 7 (51)", "Java 8 (52)", "Java 9 (53)", "Java 10 (54)", "Java 11 (55)" });
       versions.setSelectedIndex(Integer.parseInt(String.valueOf(o)) - 46);
       return versions;
+    } else if ("name".equals(name)) {
+      nameField = new JTextField(o.toString());
+      nameField.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+          setToolTip();
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+          setToolTip();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+          setToolTip();
+        }
+
+        private void setToolTip() {
+          boolean set = false;
+          if (ownerField != null && !ownerField.getText().isEmpty() && !nameField.getText().isEmpty()) {
+            ClassNode node = JByteMod.instance.getFile().getClasses().get(ownerField.getText());
+            if (node == null) {
+              try {
+                node = Loader.classToNode(ownerField.getText());
+              } catch (Exception e1) {
+              }
+            }
+            if (node != null) {
+              for (MethodNode mn : node.methods) {
+                if (mn.name.startsWith(nameField.getText())) {
+                  nameField.setToolTipText(node.name + "." + mn.name);
+                  set = true;
+                  break;
+                }
+              }
+            }
+          }
+          if(!set) {
+            nameField.setToolTipText("");
+          }
+        }
+      });
+      return nameField;
+    } else if ("owner".equals(name)) {
+      return ownerField = new JTextField(o.toString());
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = new JTextField((String) o);
       jtf.setToolTipText(textFieldToolTips.get(name));
@@ -410,6 +475,52 @@ public class InsnEditDialogue extends ClassDialogue {
             }
           }
         });
+        if ((getObject() instanceof MethodInsnNode)) {
+          JPanel panel = new JPanel();
+          panel.setLayout(new BorderLayout());
+          panel.add(jtf, BorderLayout.CENTER);
+          JButton descComputeButton = new JButton("⏎");
+          descComputeButton.setFont(new Font(null, Font.PLAIN, descComputeButton.getFont().getSize()));
+          descComputeButton.addActionListener(e -> {
+            if (nameField != null && ownerField != null) {
+              jtf.setText("");
+              String mName = nameField.getText();
+              String mOwner = ownerField.getText();
+              if (!mName.isEmpty() && !mOwner.isEmpty()) {
+                ClassNode node = JByteMod.instance.getFile().getClasses().get(mOwner);
+                if (node == null) {
+                  try {
+                    node = Loader.classToNode(mOwner);
+                  } catch (Exception e1) {
+                  }
+                }
+                if (node != null) {
+                  ArrayList<String> descs = new ArrayList<>();
+                  for (MethodNode mn : node.methods) {
+                    if (mn.name.equals(mName)) {
+                      if (!descs.contains(mn.desc))
+                        descs.add(mn.desc + (AccessHelper.isStatic(mn.access) ? " <i>(static)</>" : ""));
+                    }
+                  }
+                  if (descs.size() == 1) {
+                    jtf.setText(descs.get(0));
+                  } else if (descs.size() > 1) {
+                    String selected = new JChooseString("Choose desc", descs).getSelected();
+                    if (selected.endsWith(" (static)")) {
+                      selected = selected.substring(0, selected.length() - 9);
+                    }
+                    jtf.setText(selected);
+                  }
+                } else {
+                  JOptionPane.showMessageDialog(null, "Couldn't find that method");
+                }
+              }
+            }
+          });
+          descComputeButton.setToolTipText("Determine desc by owner and name");
+          panel.add(descComputeButton, BorderLayout.EAST);
+          return panel;
+        }
       }
       return jtf;
     }
