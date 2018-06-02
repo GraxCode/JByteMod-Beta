@@ -14,12 +14,6 @@ public class JarArchive {
   protected Map<String, byte[]> output;
   private boolean singleEntry;
 
-  public JarArchive(Map<String, ClassNode> classes, Map<String, byte[]> output) {
-    super();
-    this.classes = classes;
-    this.output = output;
-  }
-
   public JarArchive(ClassNode cn) {
     super();
     this.classes = new HashMap<>();
@@ -35,8 +29,10 @@ public class JarArchive {
     }
   }
 
-  public boolean isSingleEntry() {
-    return singleEntry;
+  public JarArchive(Map<String, ClassNode> classes, Map<String, byte[]> output) {
+    super();
+    this.classes = classes;
+    this.output = output;
   }
 
   public Map<String, ClassNode> getClasses() {
@@ -45,6 +41,10 @@ public class JarArchive {
 
   public Map<String, byte[]> getOutput() {
     return output;
+  }
+
+  public boolean isSingleEntry() {
+    return singleEntry;
   }
 
   public void setClasses(Map<String, ClassNode> classes) {

@@ -78,35 +78,34 @@ public class JByteMod extends JFrame {
 
   private static Instrumentation agentInstrumentation;
 
-  private JPanel contentPane;
-  private ClassTree jarTree;
-  private MyCodeList clist;
-  private PageEndPanel pp;
-  private SearchList slist;
-  private DecompilerPanel dp;
-  private TCBList tcblist;
-  private MyTabbedPane tabbedPane;
-  private InfoPanel sp;
-  private LVPList lvplist;
-  private ControlFlowPanel cfp;
-  private MyMenuBar myMenuBar;
-
-  private ClassNode currentNode;
-  private MethodNode currentMethod;
-
   public static JByteMod instance;
   public static Color border;
-  private PluginManager pluginManager;
-  private File filePath;
-
   private static final String jbytemod = "JByteMod 1.8.1";
-
   static {
     try {
       System.loadLibrary("attach");
     } catch (Throwable t) {
       t.printStackTrace();
     }
+  }
+
+  public static void agentmain(String agentArgs, Instrumentation ins) {
+    if (!ins.isRedefineClassesSupported()) {
+      JOptionPane.showMessageDialog(null, "Class redefinition is disabled, cannot attach!");
+      return;
+    }
+    agentInstrumentation = ins;
+    workingDir = new File(agentArgs);
+    initialize();
+    if (!lafInit) {
+      LookUtils.setLAF();
+      lafInit = true;
+    }
+    JByteMod.file = new RuntimeJarArchive(ins);
+    JByteMod frame = new JByteMod(true);
+    frame.setTitleSuffix("Agent");
+    instance = frame;
+    frame.setVisible(true);
   }
 
   private static void initialize() {
@@ -186,6 +185,43 @@ public class JByteMod extends JFrame {
     });
   }
 
+  public static void resetLAF() {
+    lafInit = false;
+  }
+
+  public static void restartGUI() {
+    instance.dispose();
+    instance = null;
+    System.gc();
+    JByteMod.main(new String[0]);
+  }
+
+  private JPanel contentPane;
+  private ClassTree jarTree;
+  private MyCodeList clist;
+
+  private PageEndPanel pp;
+  private SearchList slist;
+
+  private DecompilerPanel dp;
+  private TCBList tcblist;
+  private MyTabbedPane tabbedPane;
+  private InfoPanel sp;
+
+  private LVPList lvplist;
+
+  private ControlFlowPanel cfp;
+
+  private MyMenuBar myMenuBar;
+
+  private ClassNode currentNode;
+
+  private MethodNode currentMethod;
+
+  private PluginManager pluginManager;
+
+  private File filePath;
+
   /**
    * Create the frame.
    */
@@ -241,15 +277,54 @@ public class JByteMod extends JFrame {
     }
   }
 
+  public void applyChangesAgent() {
+    if (agentInstrumentation == null) {
+      throw new RuntimeException();
+    }
+    new RetransformTask(this, agentInstrumentation, file).execute();
+  }
+
+  public void attachTo(VirtualMachine vm) throws Exception {
+    if (JOptionPane.showConfirmDialog(JByteMod.this, res.getResource("exit_warn"), res.getResource("is_sure"),
+        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+      new AttachTask(this, vm).execute();
+    }
+  }
+
   public void changeUI(String clazz) {
     LookUtils.changeLAF(clazz);
   }
 
-  @Override
-  public void setVisible(boolean b) {
-    this.setPluginManager(new PluginManager(this));
-    this.myMenuBar.addPluginMenu(pluginManager.getPlugins());
-    super.setVisible(b);
+  public ControlFlowPanel getCFP() {
+    return this.cfp;
+  }
+
+  public MyCodeList getCodeList() {
+    return clist;
+  }
+
+  public MethodNode getCurrentMethod() {
+    return currentMethod;
+  }
+
+  public ClassNode getCurrentNode() {
+    return currentNode;
+  }
+
+  public JarArchive getFile() {
+    return file;
+  }
+
+  public File getFilePath() {
+    return filePath;
+  }
+
+  public ClassTree getJarTree() {
+    return jarTree;
+  }
+
+  public LVPList getLVPList() {
+    return lvplist;
   }
 
   public MyMenuBar getMyMenuBar() {
@@ -260,8 +335,20 @@ public class JByteMod extends JFrame {
     return pluginManager;
   }
 
-  public void setPluginManager(PluginManager pluginManager) {
-    this.pluginManager = pluginManager;
+  public PageEndPanel getPP() {
+    return pp;
+  }
+
+  public SearchList getSearchList() {
+    return slist;
+  }
+
+  public MyTabbedPane getTabbedPane() {
+    return tabbedPane;
+  }
+
+  public TCBList getTCBList() {
+    return tcblist;
   }
 
   /**
@@ -293,12 +380,11 @@ public class JByteMod extends JFrame {
     }
   }
 
-  public File getFilePath() {
-    return filePath;
-  }
-
-  private void setTitleSuffix(String suffix) {
-    this.setTitle(jbytemod + " - " + suffix);
+  public void refreshAgentClasses() {
+    if (agentInstrumentation == null) {
+      throw new RuntimeException();
+    }
+    this.refreshTree();
   }
 
   public void refreshTree() {
@@ -312,6 +398,39 @@ public class JByteMod extends JFrame {
     } catch (Throwable t) {
       new ErrorDisplay(t);
     }
+  }
+
+  public void selectClass(ClassNode cn) {
+    if (ops.get("select_code_tab").getBoolean()) {
+      tabbedPane.setSelectedIndex(0);
+    }
+    this.currentNode = cn;
+    this.currentMethod = null;
+    sp.selectClass(cn);
+    clist.loadFields(cn);
+    tabbedPane.selectClass(cn);
+    lastSelectedTreeEntries.put(cn, null);
+    if (lastSelectedTreeEntries.size() > 5) {
+      lastSelectedTreeEntries.remove(lastSelectedTreeEntries.keySet().iterator().next());
+    }
+  }
+
+  private boolean selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
+    for (int i = 0; i < tm.getChildCount(node); i++) {
+      SortedTreeNode child = (SortedTreeNode) tm.getChild(node, i);
+      if (child.getMn() != null && child.getMn().equals(mn)) {
+        TreePath tp = new TreePath(tm.getPathToRoot(child));
+        jarTree.setSelectionPath(tp);
+        jarTree.scrollPathToVisible(tp);
+        return true;
+      }
+      if (!child.isLeaf()) {
+        if (selectEntry(mn, tm, child)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
@@ -336,19 +455,51 @@ public class JByteMod extends JFrame {
     }
   }
 
-  public void selectClass(ClassNode cn) {
-    if (ops.get("select_code_tab").getBoolean()) {
-      tabbedPane.setSelectedIndex(0);
-    }
-    this.currentNode = cn;
-    this.currentMethod = null;
-    sp.selectClass(cn);
-    clist.loadFields(cn);
-    tabbedPane.selectClass(cn);
-    lastSelectedTreeEntries.put(cn, null);
-    if (lastSelectedTreeEntries.size() > 5) {
-      lastSelectedTreeEntries.remove(lastSelectedTreeEntries.keySet().iterator().next());
-    }
+  public void setCFP(ControlFlowPanel cfp) {
+    this.cfp = cfp;
+  }
+
+  public void setCodeList(MyCodeList list) {
+    this.clist = list;
+  }
+
+  public void setDP(DecompilerPanel dp) {
+    this.dp = dp;
+  }
+
+  private void setLVPList(LVPList lvp) {
+    this.lvplist = lvp;
+  }
+
+  public void setPluginManager(PluginManager pluginManager) {
+    this.pluginManager = pluginManager;
+  }
+
+  public void setSearchlist(SearchList searchList) {
+    this.slist = searchList;
+  }
+
+  public void setSP(InfoPanel sp) {
+    this.sp = sp;
+  }
+
+  public void setTabbedPane(MyTabbedPane tp) {
+    this.tabbedPane = tp;
+  }
+
+  public void setTCBList(TCBList tcb) {
+    this.tcblist = tcb;
+  }
+
+  private void setTitleSuffix(String suffix) {
+    this.setTitle(jbytemod + " - " + suffix);
+  }
+
+  @Override
+  public void setVisible(boolean b) {
+    this.setPluginManager(new PluginManager(this));
+    this.myMenuBar.addPluginMenu(pluginManager.getPlugins());
+    super.setVisible(b);
   }
 
   public void treeSelection(ClassNode cn, MethodNode mn) {
@@ -359,150 +510,5 @@ public class JByteMod extends JFrame {
         jarTree.repaint();
       }
     }).start();
-  }
-
-  private boolean selectEntry(MethodNode mn, DefaultTreeModel tm, SortedTreeNode node) {
-    for (int i = 0; i < tm.getChildCount(node); i++) {
-      SortedTreeNode child = (SortedTreeNode) tm.getChild(node, i);
-      if (child.getMn() != null && child.getMn().equals(mn)) {
-        TreePath tp = new TreePath(tm.getPathToRoot(child));
-        jarTree.setSelectionPath(tp);
-        jarTree.scrollPathToVisible(tp);
-        return true;
-      }
-      if (!child.isLeaf()) {
-        if (selectEntry(mn, tm, child)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  public ClassNode getCurrentNode() {
-    return currentNode;
-  }
-
-  public MethodNode getCurrentMethod() {
-    return currentMethod;
-  }
-
-  public JarArchive getFile() {
-    return file;
-  }
-
-  public MyCodeList getCodeList() {
-    return clist;
-  }
-
-  public void setCodeList(MyCodeList list) {
-    this.clist = list;
-  }
-
-  public PageEndPanel getPP() {
-    return pp;
-  }
-
-  public void setSearchlist(SearchList searchList) {
-    this.slist = searchList;
-  }
-
-  public SearchList getSearchList() {
-    return slist;
-  }
-
-  public ClassTree getJarTree() {
-    return jarTree;
-  }
-
-  public void setDP(DecompilerPanel dp) {
-    this.dp = dp;
-  }
-
-  public void setTCBList(TCBList tcb) {
-    this.tcblist = tcb;
-  }
-
-  private void setLVPList(LVPList lvp) {
-    this.lvplist = lvp;
-  }
-
-  public LVPList getLVPList() {
-    return lvplist;
-  }
-
-  public void setTabbedPane(MyTabbedPane tp) {
-    this.tabbedPane = tp;
-  }
-
-  public MyTabbedPane getTabbedPane() {
-    return tabbedPane;
-  }
-
-  public TCBList getTCBList() {
-    return tcblist;
-  }
-
-  public void setSP(InfoPanel sp) {
-    this.sp = sp;
-  }
-
-  public void setCFP(ControlFlowPanel cfp) {
-    this.cfp = cfp;
-  }
-
-  public ControlFlowPanel getCFP() {
-    return this.cfp;
-  }
-
-  public static void restartGUI() {
-    instance.dispose();
-    instance = null;
-    System.gc();
-    JByteMod.main(new String[0]);
-  }
-
-  public static void resetLAF() {
-    lafInit = false;
-  }
-
-  public void attachTo(VirtualMachine vm) throws Exception {
-    if (JOptionPane.showConfirmDialog(JByteMod.this, res.getResource("exit_warn"), res.getResource("is_sure"),
-        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-      new AttachTask(this, vm).execute();
-    }
-  }
-
-  public static void agentmain(String agentArgs, Instrumentation ins) {
-    if (!ins.isRedefineClassesSupported()) {
-      JOptionPane.showMessageDialog(null, "Class redefinition is disabled, cannot attach!");
-      return;
-    }
-    agentInstrumentation = ins;
-    workingDir = new File(agentArgs);
-    initialize();
-    if (!lafInit) {
-      LookUtils.setLAF();
-      lafInit = true;
-    }
-    JByteMod.file = new RuntimeJarArchive(ins);
-    JByteMod frame = new JByteMod(true);
-    frame.setTitleSuffix("Agent");
-    instance = frame;
-    frame.setVisible(true);
-  }
-
-  public void refreshAgentClasses() {
-    if (agentInstrumentation == null) {
-      throw new RuntimeException();
-    }
-    this.refreshTree();
-  }
-
-  public void applyChangesAgent() {
-    if (agentInstrumentation == null) {
-      throw new RuntimeException();
-    }
-    new RetransformTask(this, agentInstrumentation, file).execute();
   }
 }
