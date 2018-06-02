@@ -26,8 +26,6 @@ import javax.swing.tree.TreeSelectionModel;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import com.alee.utils.SwingUtils;
-
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarArchive;
 import me.grax.jbytemod.ui.dialogue.InsnEditDialogue;

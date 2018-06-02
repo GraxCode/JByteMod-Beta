@@ -1,85 +1,90 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package org.objectweb.asm.signature;
 
 import org.objectweb.asm.Opcodes;
 
 /**
- * A signature visitor that generates signatures in string format.
- * 
+ * A SignatureVisitor that generates signature literals, as defined in the Java Virtual Machine
+ * Specification (JVMS).
+ *
+ * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.9.1">JVMS
+ *     4.7.9.1</a>
  * @author Thomas Hallgren
  * @author Eric Bruneton
  */
 public class SignatureWriter extends SignatureVisitor {
 
-  /**
-   * Builder used to construct the signature.
-   */
-  private final StringBuilder buf = new StringBuilder();
+  /** The builder used to construct the visited signature. */
+  private final StringBuilder stringBuilder = new StringBuilder();
 
-  /**
-   * Indicates if the signature contains formal type parameters.
-   */
+  /** Whether the visited signature contains formal type parameters. */
   private boolean hasFormals;
 
-  /**
-   * Indicates if the signature contains method parameter types.
-   */
+  /** Whether the visited signature contains method parameter types. */
   private boolean hasParameters;
 
   /**
-   * Stack used to keep track of class types that have arguments. Each element
-   * of this stack is a boolean encoded in one bit. The top of the stack is the
-   * lowest order bit. Pushing false = *2, pushing true = *2+1, popping = /2.
+   * The stack used to keep track of class types that have arguments. Each element of this stack is
+   * a boolean encoded in one bit. The top of the stack is the least significant bit. Pushing false
+   * = *2, pushing true = *2+1, popping = /2.
+   *
+   * <p>Class type arguments must be surrounded with '&lt;' and '&gt;' and, because
+   *
+   * <ol>
+   *   <li>class types can be nested (because type arguments can themselves be class types),
+   *   <li>SignatureWriter always returns 'this' in each visit* method (to avoid allocating new
+   *       SignatureWriter instances),
+   * </ol>
+   *
+   * we need a stack to properly balance these 'parentheses'. A new element is pushed on this stack
+   * for each new visited type, and popped when the visit of this type ends (either is visitEnd, or
+   * because visitInnerClassType is called).
    */
   private int argumentStack;
 
-  /**
-   * Constructs a new {@link SignatureWriter} object.
-   */
+  /** Constructs a new {@link SignatureWriter}. */
   public SignatureWriter() {
     super(Opcodes.ASM6);
   }
 
-  // ------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
   // Implementation of the SignatureVisitor interface
-  // ------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
 
   @Override
   public void visitFormalTypeParameter(final String name) {
     if (!hasFormals) {
       hasFormals = true;
-      buf.append('<');
+      stringBuilder.append('<');
     }
-    buf.append(name);
-    buf.append(':');
+    stringBuilder.append(name);
+    stringBuilder.append(':');
   }
 
   @Override
@@ -89,7 +94,7 @@ public class SignatureWriter extends SignatureVisitor {
 
   @Override
   public SignatureVisitor visitInterfaceBound() {
-    buf.append(':');
+    stringBuilder.append(':');
     return this;
   }
 
@@ -109,7 +114,7 @@ public class SignatureWriter extends SignatureVisitor {
     endFormals();
     if (!hasParameters) {
       hasParameters = true;
-      buf.append('(');
+      stringBuilder.append('(');
     }
     return this;
   }
@@ -118,68 +123,78 @@ public class SignatureWriter extends SignatureVisitor {
   public SignatureVisitor visitReturnType() {
     endFormals();
     if (!hasParameters) {
-      buf.append('(');
+      stringBuilder.append('(');
     }
-    buf.append(')');
+    stringBuilder.append(')');
     return this;
   }
 
   @Override
   public SignatureVisitor visitExceptionType() {
-    buf.append('^');
+    stringBuilder.append('^');
     return this;
   }
 
   @Override
   public void visitBaseType(final char descriptor) {
-    buf.append(descriptor);
+    stringBuilder.append(descriptor);
   }
 
   @Override
   public void visitTypeVariable(final String name) {
-    buf.append('T');
-    buf.append(name);
-    buf.append(';');
+    stringBuilder.append('T');
+    stringBuilder.append(name);
+    stringBuilder.append(';');
   }
 
   @Override
   public SignatureVisitor visitArrayType() {
-    buf.append('[');
+    stringBuilder.append('[');
     return this;
   }
 
   @Override
   public void visitClassType(final String name) {
-    buf.append('L');
-    buf.append(name);
+    stringBuilder.append('L');
+    stringBuilder.append(name);
+    // Pushes 'false' on the stack, meaning that this type does not have type arguments (as far as
+    // we can tell at this point).
     argumentStack *= 2;
   }
 
   @Override
   public void visitInnerClassType(final String name) {
     endArguments();
-    buf.append('.');
-    buf.append(name);
+    stringBuilder.append('.');
+    stringBuilder.append(name);
+    // Pushes 'false' on the stack, meaning that this type does not have type arguments (as far as
+    // we can tell at this point).
     argumentStack *= 2;
   }
 
   @Override
   public void visitTypeArgument() {
+    // If the top of the stack is 'false', this means we are visiting the first type argument of the
+    // currently visited type. We therefore need to append a '<', and to replace the top stack
+    // element with 'true' (meaning that the current type does have type arguments).
     if (argumentStack % 2 == 0) {
-      ++argumentStack;
-      buf.append('<');
+      argumentStack |= 1;
+      stringBuilder.append('<');
     }
-    buf.append('*');
+    stringBuilder.append('*');
   }
 
   @Override
   public SignatureVisitor visitTypeArgument(final char wildcard) {
+    // If the top of the stack is 'false', this means we are visiting the first type argument of the
+    // currently visited type. We therefore need to append a '<', and to replace the top stack
+    // element with 'true' (meaning that the current type does have type arguments).
     if (argumentStack % 2 == 0) {
-      ++argumentStack;
-      buf.append('<');
+      argumentStack |= 1;
+      stringBuilder.append('<');
     }
     if (wildcard != '=') {
-      buf.append(wildcard);
+      stringBuilder.append(wildcard);
     }
     return this;
   }
@@ -187,39 +202,38 @@ public class SignatureWriter extends SignatureVisitor {
   @Override
   public void visitEnd() {
     endArguments();
-    buf.append(';');
+    stringBuilder.append(';');
   }
 
   /**
    * Returns the signature that was built by this signature writer.
-   * 
+   *
    * @return the signature that was built by this signature writer.
    */
   @Override
   public String toString() {
-    return buf.toString();
+    return stringBuilder.toString();
   }
 
-  // ------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
   // Utility methods
-  // ------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
 
-  /**
-   * Ends the formal type parameters section of the signature.
-   */
+  /** Ends the formal type parameters section of the signature. */
   private void endFormals() {
     if (hasFormals) {
       hasFormals = false;
-      buf.append('>');
+      stringBuilder.append('>');
     }
   }
 
-  /**
-   * Ends the type arguments of a class or inner class type.
-   */
+  /** Ends the type arguments of a class or inner class type. */
   private void endArguments() {
-    if (argumentStack % 2 != 0) {
-      buf.append('>');
+    // If the top of the stack is 'true', this means that some type arguments have been visited for
+    // the type whose visit is now ending. We therefore need to append a '>', and to pop one element
+    // from the stack.
+    if (argumentStack % 2 == 1) {
+      stringBuilder.append('>');
     }
     argumentStack /= 2;
   }

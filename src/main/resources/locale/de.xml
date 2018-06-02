@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-   <string name="exit_warn">Wollen Sie JByteMod wirklich schließen? Alle Änderungen werden verloren gehen.</string>
+   <string name="exit_warn">Wollen Sie JByteMod wirklich schließen? Alle Änderungen gehen verloren.</string>
    <string name="is_sure">Sind Sie sich sicher?</string>
    <string name="jar_warn">Andere Dateien als JAR-Dateien werden noch nicht unterstützt, bitte wählen Sie ein Java Archive.</string>
    <string name="about">Über</string>
