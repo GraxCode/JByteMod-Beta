@@ -35,7 +35,6 @@ import javax.swing.text.PlainDocument;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 
 import me.grax.jbytemod.JByteMod;
@@ -159,30 +158,17 @@ public class ClassDialogue {
     rightInput.setLayout(new GridLayout(0, 1));
     addSpecialInputs(object, leftText, rightInput);
     for (Field f : fields) {
+      //determine if field has special input method
       if (isModifiedSpecial(f.getName(), f.getType())) {
         try {
+          //add special input method
           rightInput.add(wrap(f, getModifiedSpecial(f.get(object), f.getName(), f.getType())));
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }
       } else if (hasNoChilds(f.getType())) {
         try {
-        	if(f.getDeclaringClass() == IntInsnNode.class && f.getName().equals("operand"))
-        	{
-        		NumberFormat format = NumberFormat.getInstance();
-        		format.setGroupingUsed(false);
-        		NumberFormatter formatter = new NumberFormatter(format);
-        		formatter.setValueClass(Integer.class);
-        		formatter.setMinimum(Integer.MIN_VALUE);
-        		formatter.setMaximum(Integer.MAX_VALUE);
-        		formatter.setAllowsInvalid(false);
-        		formatter.setCommitsOnValidEdit(true);
-        		formatter.setOverwriteMode(true);
-        		JFormattedTextField numberField = new JFormattedTextField(formatter);
-        		numberField.setValue(f.get(object));
-        		rightInput.add(wrap(f, numberField));
-        	}else
-        		rightInput.add(wrap(f, getComponent(f)));
+          rightInput.add(wrap(f, getComponent(f)));
         } catch (IllegalArgumentException | IllegalAccessException e) {
           e.printStackTrace();
         }

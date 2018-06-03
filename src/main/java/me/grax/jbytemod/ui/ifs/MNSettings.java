@@ -71,11 +71,11 @@ public class MNSettings extends MyInternalFrame {
         new JAnnotationEditor("Annotations", mn, "visibleAnnotations").setVisible(true);
     });
     input.add(annotations);
-    labels.add(new JLabel("Invis Annotations:"));
+    labels.add(new JLabel("Invisible Annotations:"));
     JButton invisAnnotations = new JButton(JByteMod.res.getResource("edit"));
     invisAnnotations.addActionListener(a -> {
       if (!JAnnotationEditor.isOpen("invisibleAnnotations"))
-        new JAnnotationEditor("Invis Annotations", mn, "invisibleAnnotations").setVisible(true);
+        new JAnnotationEditor("Invisible Annotations", mn, "invisibleAnnotations").setVisible(true);
     });
     input.add(invisAnnotations);
     this.add(panel, BorderLayout.CENTER);

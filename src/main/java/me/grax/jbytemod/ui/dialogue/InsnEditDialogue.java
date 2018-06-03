@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,12 +16,14 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
 
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
@@ -350,11 +353,12 @@ public class InsnEditDialogue extends ClassDialogue {
     return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
         || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
         || (canBeNull.contains(name)) || (name.equals("access")) || (name.equals("version")) || (textFieldToolTips.containsKey(name))
+        || (getObject() instanceof IntInsnNode) && (name.equals("operand"))
         || ((getObject() instanceof MethodInsnNode) && ((name.equals("name")) || (name.equals("owner"))));
   }
 
   /**
-   * Only gets called if name is modified special
+   * Only gets called if name has special input
    */
   @Override
   protected Component getModifiedSpecial(Object o, String name, Class<?> type) {
@@ -445,7 +449,7 @@ public class InsnEditDialogue extends ClassDialogue {
               }
             }
           }
-          if(!set) {
+          if (!set) {
             nameField.setToolTipText("");
           }
         }
@@ -453,6 +457,19 @@ public class InsnEditDialogue extends ClassDialogue {
       return nameField;
     } else if ("owner".equals(name)) {
       return ownerField = new JTextField(o.toString());
+    } else if ("operand".equals(name)) {
+      NumberFormat format = NumberFormat.getInstance();
+      format.setGroupingUsed(false);
+      NumberFormatter formatter = new NumberFormatter(format);
+      formatter.setValueClass(Integer.class);
+      formatter.setMinimum(Integer.MIN_VALUE);
+      formatter.setMaximum(Integer.MAX_VALUE);
+      formatter.setAllowsInvalid(false);
+      formatter.setCommitsOnValidEdit(true);
+      formatter.setOverwriteMode(true);
+      JFormattedTextField numberField = new JFormattedTextField(formatter);
+      numberField.setValue(o);
+      return numberField;
     } else if (textFieldToolTips.containsKey(name)) {
       JTextField jtf = new JTextField((String) o);
       jtf.setToolTipText(textFieldToolTips.get(name));

@@ -94,11 +94,11 @@ public class CNSettings extends MyInternalFrame {
         new JAnnotationEditor("Annotations", cn, "visibleAnnotations").setVisible(true);
     });
     input.add(annotations);
-    labels.add(new JLabel("Invis Annotations:"));
+    labels.add(new JLabel("Invisible Annotations:"));
     JButton invisAnnotations = new JButton(JByteMod.res.getResource("edit"));
     invisAnnotations.addActionListener(a -> {
       if (!JAnnotationEditor.isOpen("invisibleAnnotations"))
-        new JAnnotationEditor("Invis Annotations", cn, "invisibleAnnotations").setVisible(true);
+        new JAnnotationEditor("Invisible Annotations", cn, "invisibleAnnotations").setVisible(true);
     });
     input.add(invisAnnotations);
     this.add(panel, BorderLayout.CENTER);
