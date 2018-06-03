@@ -76,6 +76,7 @@ public class JListEditor extends JFrame {
           for (int j = selectedRows.length - 1; j >= 0; j--) {
             lm.removeRow(selectedRows[j]);
           }
+          recalcIndex(lm);
         }
       });
       actions.add(remove);
@@ -108,6 +109,12 @@ public class JListEditor extends JFrame {
       new ErrorDisplay(e1);
       setVisible(false);
     }
+  }
+  
+  public void recalcIndex(DefaultTableModel lm) {
+	  for (int i = 0; i < lm.getRowCount(); i++) {
+        lm.setValueAt(i, i, 0);
+	  }
   }
 
   public static boolean isOpen() {

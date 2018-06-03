@@ -36,6 +36,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
+import me.grax.jbytemod.ui.JAnnotationEditor;
 import me.grax.jbytemod.ui.JSearch;
 import me.grax.jbytemod.ui.dialogue.InsnEditDialogue;
 import me.grax.jbytemod.ui.lists.entries.FieldEntry;
@@ -248,6 +249,22 @@ public class MyCodeList extends JList<InstrEntry> {
 	    });
 	    menu.add(add);
 	    menu.add(copyText());
+	    JMenuItem annotations = new JMenuItem("Edit Annotations");
+	    annotations.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	    	  if (!JAnnotationEditor.isOpen("visibleAnnotations"))
+	    		  new JAnnotationEditor("Annotations", fle.getFn(), "visibleAnnotations").setVisible(true);
+	      }
+	    });
+	    menu.add(annotations);
+	    JMenuItem invisAnnotations = new JMenuItem("Edit Invis Annotations");
+	    invisAnnotations.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	    	  if (!JAnnotationEditor.isOpen("invisibleAnnotations"))
+	    		  new JAnnotationEditor("Invis Annotations", fle.getFn(), "invisibleAnnotations").setVisible(true);
+	      }
+	    });
+	    menu.add(invisAnnotations);
 	    menu.show(jbm, (int) jbm.getMousePosition().getX(), (int) jbm.getMousePosition().getY());
 	  }
   }
