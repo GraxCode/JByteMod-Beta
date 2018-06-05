@@ -125,11 +125,11 @@ public class JAnnotationEditor extends JFrame {
           } catch (Exception e1) {
             new ErrorDisplay(e1);
           }
-          open.remove(field);
+          open.remove(JAnnotationEditor.this);
         }
       });
     } catch (Throwable e1) {
-      open.remove(field);
+      open.remove(JAnnotationEditor.this);
       new ErrorDisplay(e1);
       setVisible(false);
     }
@@ -348,13 +348,13 @@ public class JAnnotationEditor extends JFrame {
       leftText.add(new JLabel("Type: "));
       JComboBox<String> type = new JComboBox<String>(new String[] { "String", "Byte", "Boolean", "Character", "Short", "Integer", "Long", "Float",
           "Double", "Type", "String[]", "AnnotationNode", "List" });
-      type.addActionListener(e -> {
-        value = null;
-      });
       rightInput.add(type);
       if (value != null) {
         type.setSelectedItem(getClassName(value));
       }
+      type.addActionListener(e -> {
+        value = null;
+      });
       if (value != null && type.getSelectedItem().equals("Type"))
         value = ((org.objectweb.asm.Type) value).toString();
       JButton valuesButton = new JButton("Edit Value");
@@ -567,6 +567,9 @@ public class JAnnotationEditor extends JFrame {
       case "AnnotationNode":
         value = new AnnotationNode("");
         break;
+      case "List":
+    	value = new ArrayList<>();
+    	break;
       }
     }
   }
@@ -688,13 +691,13 @@ public class JAnnotationEditor extends JFrame {
       leftText.add(new JLabel("Type: "));
       JComboBox<String> type = new JComboBox<String>(new String[] { "String", "Byte", "Boolean", "Character", "Short", "Integer", "Long", "Float",
           "Double", "Type", "String[]", "AnnotationNode" });
-      type.addActionListener(e -> {
-        value = null;
-      });
       rightInput.add(type);
       if (value != null) {
         type.setSelectedItem(getClassName(value));
       }
+      type.addActionListener(e -> {
+          value = null;
+      });
       if (value != null && type.getSelectedItem().equals("Type"))
         value = ((org.objectweb.asm.Type) value).toString();
       JButton valuesButton = new JButton("Edit Value");
