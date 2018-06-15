@@ -47,7 +47,7 @@ public class MNSettings extends MyInternalFrame {
     JTextField desc = new JTextField(mn.desc);
     input.add(desc);
     labels.add(new JLabel("Method Access:"));
-    JFormattedTextField access = ClassDialogue.createNumberField();
+    JFormattedTextField access = ClassDialogue.createNumberField(Integer.class, 0, Short.MAX_VALUE);
     access.setValue(mn.access);
     input.add(SwingUtils.withButton(access, "...", e -> {
       JAccessHelper jah = new JAccessHelper(mn, "access", access);
@@ -57,11 +57,11 @@ public class MNSettings extends MyInternalFrame {
     JTextField signature = new JTextField(mn.signature);
     input.add(signature);
     labels.add(new JLabel("Method MaxLocals:"));
-    JFormattedTextField maxL = ClassDialogue.createNumberField();
+    JFormattedTextField maxL = ClassDialogue.createNumberField(Integer.class, 0, Short.MAX_VALUE);
     maxL.setValue(mn.maxLocals);
     input.add(maxL);
     labels.add(new JLabel("Method MaxStack:"));
-    JFormattedTextField maxS = ClassDialogue.createNumberField();
+    JFormattedTextField maxS = ClassDialogue.createNumberField(Integer.class, 0, Short.MAX_VALUE);
     maxS.setValue(mn.maxStack);
     input.add(maxS);
     labels.add(new JLabel("Annotations:"));

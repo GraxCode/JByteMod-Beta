@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -33,6 +37,7 @@ import javax.swing.text.Document;
 import javax.swing.text.NumberFormatter;
 import javax.swing.text.PlainDocument;
 
+import org.jfree.chart.plot.ThermometerPlot;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
@@ -121,7 +126,6 @@ public class ClassDialogue {
   }
 
   private Object getValue(Class<?> type, Component child) {
-    System.out.println();
     switch (noChilds.indexOf(type.getName())) {
     case 0:
       JTextField jtf = (JTextField) child;
@@ -143,9 +147,32 @@ public class ClassDialogue {
     case 8:
       jtf = (JTextField) child;
       return Type.getType(jtf.getText());
-    default:
-      throw new RuntimeException("" + noChilds.indexOf(type.getName()));
     }
+    if (Number.class.isAssignableFrom(type) || (type.isPrimitive() && !char.class.isAssignableFrom(type))) {
+      return getNumberInputValue(type, child);
+    }
+    throw new RuntimeException("" + noChilds.indexOf(type.getName()));
+  }
+
+  private Object getNumberInputValue(Class<?> type, Component child) {
+    Object num = parseNumber(type, String.valueOf(((JFormattedTextField) child).getValue()));
+    if (num != null) {
+      return num;
+    }
+    return ((JFormattedTextField) child).getValue();
+  }
+
+  public static Object parseNumber(Class<?> type, String number) {
+    for (java.lang.reflect.Method m : type.getDeclaredMethods()) {
+      if (m.getName().startsWith("parse") && m.getParameterTypes().length == 1 && m.getParameterTypes()[0].getName().equals(String.class.getName())) {
+        try {
+          return m.invoke(null, number);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return null;
   }
 
   private JPanel initializePanel() {
@@ -322,7 +349,7 @@ public class ClassDialogue {
       return new JTextField(String.valueOf(o));
     case 1:
     case 2:
-      JFormattedTextField numberField = createNumberField();
+      JFormattedTextField numberField = createNumberField(Integer.class, Integer.MIN_VALUE, Integer.MAX_VALUE);
       numberField.setValue(o);
       return numberField;
     case 3:
@@ -335,9 +362,24 @@ public class ClassDialogue {
       return new JTextField(new String((char[]) o));
     case 8:
       return new JTextField(new String(((Type) o).getInternalName()));
-    default:
-      throw new RuntimeException();
     }
+    if (Number.class.isAssignableFrom(c) || (c.isPrimitive() && !char.class.isAssignableFrom(c))) {
+      try {
+        return getNumberInput(o);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    throw new RuntimeException();
+  }
+
+  private Component getNumberInput(Object o) throws Exception {
+    System.out.println(o.getClass());
+    Object maxValue = parseNumber(o.getClass(), o.getClass().getDeclaredField("MAX_VALUE").get(null).toString());
+    Object minValue = parseNumber(o.getClass(), o.getClass().getDeclaredField("MIN_VALUE").get(null).toString());
+    JFormattedTextField numberField = createNumberField(o.getClass(), minValue, maxValue);
+    numberField.setValue(o);
+    return numberField;
   }
 
   private String formatText(String string) {
@@ -349,24 +391,23 @@ public class ClassDialogue {
   }
 
   private boolean hasNoChilds(Class<?> type) {
-    return noChilds.contains(type.getName());
+    return noChilds.contains(type.getName()) || Number.class.isAssignableFrom(type) || (type.isPrimitive());
   }
 
-  private static NumberFormatter formatter = null;
-
-  public static JFormattedTextField createNumberField() {
-    if (formatter == null) {
-      NumberFormat format = NumberFormat.getInstance();
-      format.setGroupingUsed(false);
-      formatter = new NumberFormatter(format);
-      formatter.setValueClass(Integer.class);
-      formatter.setMinimum(0);
-      formatter.setMaximum(Integer.MAX_VALUE);
-      formatter.setAllowsInvalid(false);
-      formatter.setCommitsOnValidEdit(true);
-      formatter.setOverwriteMode(true);
-    }
-    return new JFormattedTextField(formatter);
+  @SuppressWarnings("rawtypes")
+  public static JFormattedTextField createNumberField(Class<?> type, Object minValue, Object maxValue) {
+    NumberFormat format = NumberFormat.getInstance();
+    format.setGroupingUsed(false);
+    format.setMaximumFractionDigits(10);
+    NumberFormatter formatter = new NumberFormatter(format);
+    formatter.setValueClass(type);
+    formatter.setMinimum((Comparable) minValue);
+    formatter.setMaximum((Comparable) maxValue);
+    formatter.setAllowsInvalid(false);
+    formatter.setCommitsOnValidEdit(true);
+    formatter.setOverwriteMode(true);
+    JFormattedTextField jftf = new JFormattedTextField(formatter);
+    return jftf;
   }
 
   public static class WrappedPanel extends JPanel {

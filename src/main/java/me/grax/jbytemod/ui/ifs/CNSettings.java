@@ -51,7 +51,7 @@ public class CNSettings extends MyInternalFrame {
     JTextField sd = new JTextField(cn.sourceDebug);
     input.add(sd);
     labels.add(new JLabel("Class Access:"));
-    JFormattedTextField access = ClassDialogue.createNumberField();
+    JFormattedTextField access = ClassDialogue.createNumberField(Integer.class, 0, Short.MAX_VALUE);
     access.setValue(cn.access);
     input.add(SwingUtils.withButton(access, "...", e -> {
       JAccessHelper jah = new JAccessHelper(cn, "access", access);
@@ -59,7 +59,7 @@ public class CNSettings extends MyInternalFrame {
 
     }));
     labels.add(new JLabel("Class Version:"));
-    JFormattedTextField version = ClassDialogue.createNumberField();
+    JFormattedTextField version = ClassDialogue.createNumberField(Integer.class, 0, Short.MAX_VALUE);
     version.setValue(cn.version);
     input.add(SwingUtils.withButton(version, "?", e -> {
       JOptionPane.showMessageDialog(this,

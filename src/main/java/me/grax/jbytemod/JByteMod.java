@@ -108,7 +108,7 @@ public class JByteMod extends JFrame {
     frame.setVisible(true);
   }
 
-  private static void initialize() {
+  public static void initialize() {
     LOGGER = new Logging();
     res = new LanguageRes();
     ops = new Options();

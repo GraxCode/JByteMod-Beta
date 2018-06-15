@@ -372,7 +372,7 @@ public class MyMenuBar extends JMenuBar {
         break;
       case INT:
         jm = new JMenu(lr.getResource(op.getName()));
-        JFormattedTextField jnf = ClassDialogue.createNumberField();
+        JFormattedTextField jnf = ClassDialogue.createNumberField(Integer.class, 0, Integer.MAX_VALUE);
         jnf.setValue(op.getInteger());
         jnf.setPreferredSize(new Dimension(Math.max((int) jnf.getPreferredSize().getWidth(), 64), (int) jnf.getPreferredSize().getHeight()));
         jm.add(jnf);
