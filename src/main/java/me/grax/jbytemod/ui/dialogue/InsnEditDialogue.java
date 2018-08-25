@@ -353,7 +353,6 @@ public class InsnEditDialogue extends ClassDialogue {
     return type.getName().equals(LabelNode.class.getName()) || (name.equals("tag") && type.getName().equals(int.class.getName())) //invokedynamic tag
         || (name.equals("type") && type.getName().equals(int.class.getName())) //frame type
         || (canBeNull.contains(name)) || (name.equals("access")) || (name.equals("version")) || (textFieldToolTips.containsKey(name))
-        || (getObject() instanceof IntInsnNode) && (name.equals("operand"))
         || ((getObject() instanceof MethodInsnNode) && ((name.equals("name")) || (name.equals("owner"))));
   }
 
