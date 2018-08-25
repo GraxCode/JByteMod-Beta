@@ -88,6 +88,8 @@ public class ErrorList extends JList<Mistake> {
         }
       }
       this.setModel(lm);
+    } else {
+      this.setModel(new LazyListModel<Mistake>());
     }
   }
 
