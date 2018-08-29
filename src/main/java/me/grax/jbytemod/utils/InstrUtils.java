@@ -40,7 +40,12 @@ public class InstrUtils {
       break;
     case AbstractInsnNode.METHOD_INSN:
       MethodInsnNode min = (MethodInsnNode) ain;
-      opc += getDisplayType(min.desc.split("\\)")[1], true) + " " + getDisplayClassRed(TextUtils.escape(min.owner)) + "." + TextUtils.escape(min.name)
+      if(min.desc.contains(")")) {
+      opc += getDisplayType(min.desc.split("\\)")[1], true);
+      } else {
+        opc += min.desc;
+      }
+      opc += " " + getDisplayClassRed(TextUtils.escape(min.owner)) + "." + TextUtils.escape(min.name)
           + "(" + getDisplayArgs(TextUtils.escape(min.desc)) + ")";
       break;
     case AbstractInsnNode.VAR_INSN:
@@ -133,6 +138,7 @@ public class InstrUtils {
   }
 
   public static String getDisplayArgs(String rawType) {
+    if(!rawType.contains(")")) return "?";
     return getDisplayType(rawType.split("\\)")[0].substring(1), true);
   }
 
