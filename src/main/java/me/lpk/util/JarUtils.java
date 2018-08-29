@@ -128,9 +128,9 @@ public class JarUtils {
     try {
       JarOutputStream out = new JarOutputStream(new java.io.FileOutputStream(fileName));
       for (String entry : outBytes.keySet()) {
-        String ext = entry.contains(".") ? "" : ".class";
-        out.putNextEntry(new ZipEntry(entry + ext));
-        out.write(outBytes.get(entry));
+        out.putNextEntry(new ZipEntry(entry));
+        if (!entry.endsWith("/"))
+          out.write(outBytes.get(entry));
         out.closeEntry();
       }
       out.close();

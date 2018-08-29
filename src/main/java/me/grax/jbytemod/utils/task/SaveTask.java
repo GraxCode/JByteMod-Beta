@@ -53,7 +53,7 @@ public class SaveTask extends SwingWorker<Void, Integer> {
         ClassNode node = classes.get(s);
         ClassWriter writer = new ClassWriter(flags);
         node.accept(writer);
-        outputBytes.put(s, writer.toByteArray());
+        outputBytes.put(s + ".class", writer.toByteArray());
         publish((int) ((i++ / size) * 50d));
       }
       publish(50);

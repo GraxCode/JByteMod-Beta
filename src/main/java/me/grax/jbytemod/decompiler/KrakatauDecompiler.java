@@ -99,7 +99,7 @@ public class KrakatauDecompiler extends Decompiler {
 
   private File createTempJar(byte[] b) {
     File temp = new File(tempDir, b.hashCode() + ".jar");
-    JarUtils.saveAsJar(Collections.singletonMap(cn.name, b), temp.getAbsolutePath());
+    JarUtils.saveAsJar(Collections.singletonMap(cn.name + ".class", b), temp.getAbsolutePath());
     return temp;
   }
 
