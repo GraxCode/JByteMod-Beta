@@ -58,6 +58,7 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
 
   public String decompile(byte[] b, MethodNode mn) {
     try {
+    	//TODO decompile method only
       this.bytes = b;
       HashMap<String, Object> map = new HashMap<>();
       for (String key : options.keySet()) {

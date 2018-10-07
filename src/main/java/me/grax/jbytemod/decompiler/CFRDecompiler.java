@@ -20,7 +20,6 @@ import org.benf.cfr.reader.state.ClassFileSourceImpl;
 import org.benf.cfr.reader.state.DCCommonState;
 import org.benf.cfr.reader.util.bytestream.BaseByteData;
 import org.benf.cfr.reader.util.getopt.OptionsImpl;
-import org.benf.cfr.reader.util.output.DumperFactory;
 import org.benf.cfr.reader.util.output.ToStringDumper;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -152,7 +151,7 @@ public class CFRDecompiler extends Decompiler {
   }
 
   private static DCCommonState initDCState(Map<String, String> optionsMap, ClassFileSource classFileSource) {
-    OptionsImpl options = new OptionsImpl(null, null, optionsMap);
+    OptionsImpl options = new OptionsImpl(optionsMap);
     if (classFileSource == null) classFileSource = new ClassFileSourceImpl(options);
     DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
     return dcCommonState;
