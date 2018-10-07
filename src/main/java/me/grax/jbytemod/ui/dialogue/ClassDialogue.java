@@ -374,7 +374,6 @@ public class ClassDialogue {
   }
 
   private Component getNumberInput(Object o) throws Exception {
-    System.out.println(o.getClass());
     Object maxValue = parseNumber(o.getClass(), o.getClass().getDeclaredField("MAX_VALUE").get(null).toString());
     Object minValue = parseNumber(o.getClass(), o.getClass().getDeclaredField("MIN_VALUE").get(null).toString());
     JFormattedTextField numberField = createNumberField(o.getClass(), minValue, maxValue);

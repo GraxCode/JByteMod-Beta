@@ -90,7 +90,6 @@ public class LoadTask extends SwingWorker<Void, Integer> {
     publish((int) (((float) loaded++ / (float) jarSize) * 100f));
     String name = en.getName();
     try (InputStream jis = jar.getInputStream(en)) {
-      System.out.println(name + " " + en.isDirectory());
       if (name.endsWith(".class")) {
         byte[] bytes = IOUtils.toByteArray(jis);
         String cafebabe = String.format("%02X%02X%02X%02X", bytes[0], bytes[1], bytes[2], bytes[3]);

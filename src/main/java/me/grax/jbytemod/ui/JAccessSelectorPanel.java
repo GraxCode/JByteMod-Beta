@@ -351,7 +351,6 @@ public class JAccessSelectorPanel extends JPanel implements Opcodes {
             visibility -= acc.getValue();
           } else {
             visibility |= acc.getValue();
-            System.out.println("add acc");
           }
         });
         jtb.setFont(new Font(jtb.getFont().getName(), Font.PLAIN, 10));

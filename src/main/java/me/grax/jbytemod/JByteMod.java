@@ -80,7 +80,7 @@ public class JByteMod extends JFrame {
 
   public static JByteMod instance;
   public static Color border;
-  private static final String jbytemod = "JByteMod 1.8.1";
+  private static final String jbytemod = "JByteMod 1.9.0";
   static {
     try {
       System.loadLibrary("attach");
