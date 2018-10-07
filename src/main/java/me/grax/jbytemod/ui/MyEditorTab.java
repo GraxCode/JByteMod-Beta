@@ -83,7 +83,7 @@ public class MyEditorTab extends JPanel {
         center.add(decompiler);
         center.revalidate();
         repaint();
-        decompiler.decompile(jbm.getCurrentNode(), false);
+        decompiler.decompile(jbm.getCurrentNode(), jbm.getCurrentMethod(), false);
       }
     });
     analysisBtn = new WebBreadcrumbToggleButton(analysisText);
@@ -132,7 +132,7 @@ public class MyEditorTab extends JPanel {
 
   public void selectClass(ClassNode cn) {
     if (decompilerBtn.isSelected()) {
-      decompiler.decompile(cn, false);
+      decompiler.decompile(cn, null, false);
     }
     if (analysisBtn.isSelected()) {
       analysis.clear();
@@ -142,7 +142,7 @@ public class MyEditorTab extends JPanel {
 
   public void selectMethod(ClassNode cn, MethodNode mn) {
     if (decompilerBtn.isSelected()) {
-      decompiler.decompile(cn, false);
+      decompiler.decompile(cn, mn, false);
     }
     if (analysisBtn.isSelected()) {
       analysis.generateList();

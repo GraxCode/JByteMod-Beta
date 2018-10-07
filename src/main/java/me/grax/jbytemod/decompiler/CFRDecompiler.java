@@ -5,12 +5,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.benf.cfr.reader.PluginRunner;
 import org.benf.cfr.reader.api.ClassFileSource;
 import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
+import org.benf.cfr.reader.entities.ClassFile;
+import org.benf.cfr.reader.entities.Method;
+import org.benf.cfr.reader.entities.constantpool.ConstantPool;
+import org.benf.cfr.reader.state.ClassFileSourceImpl;
+import org.benf.cfr.reader.state.DCCommonState;
+import org.benf.cfr.reader.util.bytestream.BaseByteData;
+import org.benf.cfr.reader.util.getopt.OptionsImpl;
+import org.benf.cfr.reader.util.output.DumperFactory;
+import org.benf.cfr.reader.util.output.ToStringDumper;
+import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.DecompilerPanel;
@@ -78,14 +90,14 @@ public class CFRDecompiler extends Decompiler {
     options.put("usenametable", "true");
   }
 
-  public String decompile(byte[] b) {
+  public String decompile(byte[] b, MethodNode mn) {
     try {
       HashMap<String, String> ops = new HashMap<>();
       ops.put("comments", "false");
       for (String key : options.keySet()) {
         ops.put(key, String.valueOf(JByteMod.ops.get("cfr_" + key).getBoolean()));
       }
-      PluginRunner runner = new PluginRunner(ops, new ClassFileSource() {
+      ClassFileSource cfs = new ClassFileSource() {
 
         @Override
         public void informAnalysisRelativePathDetail(String a, String b) {
@@ -109,7 +121,24 @@ public class CFRDecompiler extends Decompiler {
         public Collection<String> addJar(String arg0) {
           throw new RuntimeException();
         }
-      });
+      };
+      PluginRunner runner = new PluginRunner(ops, cfs);
+      if(mn != null) {
+        BaseByteData data = new BaseByteData(b);
+        ClassFile cf = new ClassFile(data, "", initDCState(ops, cfs));
+      	Field cpf = Method.class.getDeclaredField("cp");
+      	Field descI = Method.class.getDeclaredField("descriptorIndex");
+      	descI.setAccessible(true);
+      	cpf.setAccessible(true);
+        for(Method m : cf.getMethodByName(mn.name)) {
+        	ConstantPool cp = (ConstantPool) cpf.get(m);
+        	if(cp.getUTF8Entry(descI.getInt(m)).getValue().equals(mn.desc)) {
+        		ToStringDumper tsd = new ToStringDumper();
+        		m.dump(tsd, true);
+        		return tsd.toString();
+        	}
+        }
+      }
       String decompilation = runner.getDecompilationFor(cn.name);
       System.gc(); //cfr has a performance bug
       return decompilation.substring(37); //small hack to remove watermark
@@ -120,6 +149,13 @@ public class CFRDecompiler extends Decompiler {
       e.printStackTrace(pw);
       return sw.toString();
     }
+  }
+
+  private static DCCommonState initDCState(Map<String, String> optionsMap, ClassFileSource classFileSource) {
+    OptionsImpl options = new OptionsImpl(null, null, optionsMap);
+    if (classFileSource == null) classFileSource = new ClassFileSourceImpl(options);
+    DCCommonState dcCommonState = new DCCommonState(options, classFileSource);
+    return dcCommonState;
   }
 
   protected Pair<byte[], String> getSystemClass(String name, String path) throws IOException {

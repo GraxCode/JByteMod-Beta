@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.benf.cfr.reader.bytecode.analysis.parse.utils.Pair;
+import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.DecompilerPanel;
@@ -30,7 +31,7 @@ public class KrakatauDecompiler extends Decompiler {
     super(jbm, dp);
   }
 
-  public String decompile(byte[] b) {
+  public String decompile(byte[] b, MethodNode mn) {
     try {
       File tempJar = createTempJar(b);
       File outputZip = new File(tempDir, b.hashCode() + ".zip");

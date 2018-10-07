@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.decompiler.CFRDecompiler;
@@ -49,7 +50,7 @@ public class DecompilerTab extends JPanel {
       public void actionPerformed(ActionEvent e) {
         DecompilerTab.this.decompiler = (Decompilers) decompilerCombo.getSelectedItem();
         label.setText(decompiler.getName() + " " + decompiler.getVersion());
-        decompile(Decompiler.last, true);
+        decompile(Decompiler.last, Decompiler.lastMn, true);
       }
     });
     rs.add(decompilerCombo);
@@ -58,7 +59,7 @@ public class DecompilerTab extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        decompile(Decompiler.last, true);
+        decompile(Decompiler.last, Decompiler.lastMn, true);
       }
     });
     rs.add(reload);
@@ -69,7 +70,7 @@ public class DecompilerTab extends JPanel {
     this.add(scp, BorderLayout.CENTER);
   }
 
-  public void decompile(ClassNode cn, boolean deleteCache) {
+  public void decompile(ClassNode cn, MethodNode mn, boolean deleteCache) {
     if (cn == null) {
       return;
     }
@@ -88,7 +89,7 @@ public class DecompilerTab extends JPanel {
       d = new KrakatauDecompiler(jbm, dp);
       break;
     }
-    d.setNode(cn);
+    d.setNode(cn, mn);
     if (deleteCache) {
       d.deleteCache();
     }

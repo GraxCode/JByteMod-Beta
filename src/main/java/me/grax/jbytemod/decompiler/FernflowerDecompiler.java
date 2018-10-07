@@ -15,6 +15,7 @@ import org.jetbrains.java.decompiler.struct.ContextUnit;
 import org.jetbrains.java.decompiler.struct.StructClass;
 import org.jetbrains.java.decompiler.struct.StructContext;
 import org.jetbrains.java.decompiler.struct.lazy.LazyLoader;
+import org.objectweb.asm.tree.MethodNode;
 
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.ui.DecompilerPanel;
@@ -55,7 +56,7 @@ public class FernflowerDecompiler extends Decompiler implements IBytecodeProvide
     super(jbm, dp);
   }
 
-  public String decompile(byte[] b) {
+  public String decompile(byte[] b, MethodNode mn) {
     try {
       this.bytes = b;
       HashMap<String, Object> map = new HashMap<>();

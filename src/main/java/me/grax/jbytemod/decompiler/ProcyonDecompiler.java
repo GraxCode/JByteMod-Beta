@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 
+import org.objectweb.asm.tree.MethodNode;
+
 import com.strobel.assembler.InputTypeLoader;
 import com.strobel.assembler.metadata.Buffer;
 import com.strobel.assembler.metadata.ITypeLoader;
@@ -24,8 +26,9 @@ public class ProcyonDecompiler extends Decompiler {
     super(jbm, dp);
   }
 
-  public String decompile(byte[] b) {
+  public String decompile(byte[] b, MethodNode mn) {
     try {
+    //TODO decompile method only
       DecompilerSettings settings = new DecompilerSettings();
       try {
         for (Field f : settings.getClass().getDeclaredFields()) {
