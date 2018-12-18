@@ -280,7 +280,7 @@ public class ClassDialogue {
         }
         rightInput.add(wrap(f, edit));
       }
-      leftText.add(new JLabel(formatText(f.getName()) + ": "));
+      leftText.add(new JLabel(getFieldName(f.getName(), f.getType()) + ": "));
     }
 
     mainPanel.add(leftText, BorderLayout.WEST);
@@ -313,6 +313,10 @@ public class ClassDialogue {
 
   protected boolean isModifiedSpecial(String name, Class<?> type) {
     return false;
+  }
+
+  protected String getFieldName(String name, Class<?> type) {
+    return formatText(name);
   }
 
   protected Component wrap(Field f, Component component) {

@@ -268,7 +268,7 @@ public class InsnEditDialogue extends ClassDialogue {
 
   @Override
   protected boolean ignore(String name) {
-    return name.equals("itf") || name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
+    return name.toLowerCase().contains("annotation") || name.equals("visited") || name.equals("tryCatchBlocks")
         || name.equals("localVariables") || name.equals("instructions") || name.equals("preLoad") || name.equals("attrs") || name.equals("extraBytes")
         || name.equals("methods") || name.equals("fields") || name.equals("local") || name.equals("stack") || name.equals("hash")
         || name.equals("parameters") || name.equals("exceptions") || name.equals("innerClasses") || name.equals("module");
@@ -541,6 +541,14 @@ public class InsnEditDialogue extends ClassDialogue {
       return jtf;
     }
     return null;
+  }
+
+  @Override
+  protected String getFieldName(String name, Class<?> type) {
+    if("itf".equals(name)) {
+      return "Interface";
+    }
+    return super.getFieldName(name, type);
   }
 
   public static boolean canEdit(AbstractInsnNode ain) {
