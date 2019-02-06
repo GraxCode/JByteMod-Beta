@@ -255,14 +255,14 @@ public class MyMenuBar extends JMenuBar {
     utils.add(Utils2);
     
     //From old version of JbyteMod by Grax
-    JMenuItem source_debug = new JMenuItem("Rename SourceFiles");
+    JMenuItem source_debug = new JMenuItem(JByteMod.res.getResource("rename_sourcefiles"));
     source_debug.addActionListener(new ActionListener() {
 
         @Override
         public void actionPerformed(final ActionEvent e) {
         	if(jbm.getFile().getClasses() == null)
         		return;
-            if (JOptionPane.showConfirmDialog(null, "Are you sure that you want to rename all SourceFile attributes to debug names?", "Confirm", 0) == 0) {
+        	if (JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("rename_sourcefiles_warnning"), JByteMod.res.getResource("confirm"), 0) == 0) {
                 int i = 0;
                 for (final ClassNode c : jbm.getFile().getClasses().values()) {
                     c.sourceFile = "Class" + i++ + ".java";
@@ -273,7 +273,7 @@ public class MyMenuBar extends JMenuBar {
     Utils2.add(source_debug);
     
    //From old version of JbyteMod by Grax
-    JMenuItem source_debug2 = new JMenuItem("Find SourceFiles");
+    JMenuItem source_debug2 = new JMenuItem(JByteMod.res.getResource("find_sourcefiles"));
     source_debug2.addActionListener(new ActionListener() {
 
         @Override
@@ -286,11 +286,11 @@ public class MyMenuBar extends JMenuBar {
             final JPanel labels = new JPanel(new GridLayout(0, 1));
             panel.add(labels, "West");
             panel.add(input, "Center");
-            panel.add(new JLabel("Warning: This could take some time\n on big jars!"), "South");
-            labels.add(new JLabel("SourceFile:"));
+            //panel.add(new JLabel(JByteMod.res.getResource("big_jar_warn")), "South");
+            labels.add(new JLabel(JByteMod.res.getResource("find_sourcefiles_input_name")));
             final JTextField cst = new JTextField();
             input.add(cst);
-            if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Select Class by SourceFile", 2) == 0 && !cst.getText().isEmpty()) {
+            if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, JByteMod.res.getResource("find_sourcefiles_select_by_name"), 2) == 0 && !cst.getText().isEmpty()) {
                 for (final ClassNode cn : jbm.getFile().getClasses().values()) {
                 	//Use Contains is Better
                     if (cn.sourceFile != null && cn.sourceFile.contains(cst.getText())) {
@@ -304,7 +304,7 @@ public class MyMenuBar extends JMenuBar {
     Utils2.add(source_debug2);
     
   //From old version of JbyteMod by Grax
-    JMenuItem clazz_find = new JMenuItem("Find Class by Name");
+    JMenuItem clazz_find = new JMenuItem(JByteMod.res.getResource("find_class_by_name"));
     clazz_find.addActionListener(new ActionListener() {
 
         @Override
@@ -317,11 +317,11 @@ public class MyMenuBar extends JMenuBar {
             final JPanel labels = new JPanel(new GridLayout(0, 1));
             panel.add(labels, "West");
             panel.add(input, "Center");
-            panel.add(new JLabel("Warning: This could take some time\n on big jars!"), "South");
-            labels.add(new JLabel("Class Name:"));
+            //panel.add(new JLabel(JByteMod.res.getResource("big_jar_warn")), "South");
+            labels.add(new JLabel(JByteMod.res.getResource("find_class_input_name")));
             final JTextField cst = new JTextField();
             input.add(cst);
-            if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, "Select Class by Name", 2) == 0 && !cst.getText().isEmpty()) {
+            if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, JByteMod.res.getResource("find_class_select_by_name"), 2) == 0 && !cst.getText().isEmpty()) {
                 for (final ClassNode cn : jbm.getFile().getClasses().values()) {
                     if (cn.name != null && cn.name.contains(cst.getText())) {
                         LazyListModel<SearchEntry> model = new LazyListModel<>();
@@ -336,7 +336,7 @@ public class MyMenuBar extends JMenuBar {
     Utils2.add(clazz_find);
     
   //From old version of JbyteMod by Grax
-    JMenuItem clazz_main = new JMenuItem("Find MainClass");
+    JMenuItem clazz_main = new JMenuItem(JByteMod.res.getResource("find_main_class"));
     clazz_main.addActionListener(new ActionListener() {
 
         @Override
@@ -358,7 +358,7 @@ public class MyMenuBar extends JMenuBar {
     Utils2.add(clazz_main);
     
   //From https://github.com/java-deobfuscator
-    JMenuItem HeadSign_fix = new JMenuItem("SignatureFix");
+    JMenuItem HeadSign_fix = new JMenuItem(JByteMod.res.getResource("signaturefix"));
     HeadSign_fix.addActionListener(new ActionListener() {
 
 			@Override
@@ -404,13 +404,13 @@ public class MyMenuBar extends JMenuBar {
 				} catch (Throwable x) {
 					x.printStackTrace();
 				}
-				JOptionPane.showConfirmDialog(null, "Finished", "SignatureFix", 1);
+				JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("finish_tip"), JByteMod.res.getResource("signaturefix"), 1);
         }
     });
     Utils2.add(HeadSign_fix);
     
     //From https://github.com/java-deobfuscator and https://github.com/ItzSomebody/Radon/
-    JMenuItem access_fix = new JMenuItem("AccessFixer");
+    JMenuItem access_fix = new JMenuItem(JByteMod.res.getResource("accessfixer"));
     access_fix.addActionListener(new ActionListener() {
 
         @Override
@@ -425,8 +425,7 @@ public class MyMenuBar extends JMenuBar {
 							classNode.access &= ~(Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE);
 
 						classNode.methods.forEach(methodNode -> {
-							if (!(methodNode == null) && !hasAnnotations(methodNode)
-									&& !methodNode.name.startsWith("<"))
+							if (!(methodNode == null) && !hasAnnotations(methodNode))
 								methodNode.access &= ~(Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE);
 						});
 						classNode.fields.forEach(fieldNode -> {
@@ -437,7 +436,7 @@ public class MyMenuBar extends JMenuBar {
 				} catch (Throwable x) {
 					x.printStackTrace();
 				}
-				JOptionPane.showConfirmDialog(null, "Finished", "AccessFixer", 1);
+				JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("finish_tip"), JByteMod.res.getResource("accessfixer"), 1);
         }
     });
     Utils2.add(access_fix);
@@ -504,7 +503,8 @@ public class MyMenuBar extends JMenuBar {
   protected void openProcessSelection() {
 	// I don't know why this can get none   
     //List<VirtualMachineDescriptor> list = VirtualMachine.list();
-	  List<VirtualMachineDescriptor> list = new WindowsAttachProvider().listVirtualMachines();
+	//Windows Only....  
+	List<VirtualMachineDescriptor> list = new WindowsAttachProvider().listVirtualMachines();
     VirtualMachine vm = null;
     try {
       if (list.isEmpty()) {
@@ -524,8 +524,8 @@ public class MyMenuBar extends JMenuBar {
       }
     } catch (Throwable t) {
       if (t.getMessage() != null) {
-        JOptionPane.showMessageDialog(null, t.getMessage()
-        		 + "Attach Error Do you really put attach.dll in right place?");
+        JOptionPane.showMessageDialog(null, "<" + t.getMessage()
+        		 + "> " +JByteMod.res.getResource("attach_error"));
       } else {
         new ErrorDisplay(t);
       }
