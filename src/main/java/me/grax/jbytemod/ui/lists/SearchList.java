@@ -22,6 +22,7 @@ import me.grax.jbytemod.ui.lists.entries.SearchEntry;
 import me.grax.jbytemod.utils.list.LazyListModel;
 import me.grax.jbytemod.utils.task.search.LdcTask;
 import me.grax.jbytemod.utils.task.search.ReferenceTask;
+import me.grax.jbytemod.utils.task.search.SFTask;
 
 public class SearchList extends JList<SearchEntry> {
 
@@ -79,4 +80,8 @@ public class SearchList extends JList<SearchEntry> {
   public void searchForFMInsn(String owner, String name, String desc, boolean exact, boolean field) {
     new ReferenceTask(this, jbm, owner, name, desc, exact, field).execute();
   }
+
+	public void searchForSF(String sf) {
+		new SFTask(this, jbm, sf).execute();		
+	}
 }

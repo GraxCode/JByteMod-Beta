@@ -100,18 +100,17 @@
    <string name="no_jar_found">Couldn't find itself as jar!</string>
    <string name="no_vm_found">Couldn't find any VM's! Enter your process id.</string>
    <string name="rename_sourcefiles">Rename SourceFiles</string>
-   <string name="rename_sourcefiles_warnning">Are you sure that you want to rename all SourceFile attributes to debug names?</string>
-   <string name="find_sourcefiles">Find SourceFile By Name</string>
-   <string name="find_sourcefiles_input_name">Target:</string>
-   <string name="find_sourcefiles_select_by_name">Are you sure to find target Class by SourceFile Name?</string>
-   <string name="find_class_by_name">Find Class By Name</string>
-   <string name="find_class_input_name">Target:</string>
-   <string name="find_class_select_by_name">Are you sure to find target Class By Name?</string>
-   <string name="find_main_class">Find Main Classes</string>
-   <string name="signaturefix">SignatureFix</string>
+   <string name="rename_sourcefiles_warnning">Are you sure you want to replace all SourceFile attributes with debug names?</string>
+   <string name="find_sourcefiles">Class by SourceFile</string>
+   <string name="find_sourcefiles_input_name">SourceFile:</string>
+   <string name="find_class_by_name">Class by Name</string>
+   <string name="find_class_input_name">Name:</string>
+   <string name="find_main_class">Main Classes</string>
+   <string name="signaturefix">Signature Fixer</string>
    <string name="finish_tip">Finished</string>
-   <string name="accessfixer">AccessFixer</string>
-   <string name="attach_error">Attach Error Do you really put attach.dll in right place?(Usually in jdk's bin path)Try use '-Djava.library.path' !</string>
+   <string name="accessfixer">Access Fixer</string>
+   <string name="attach_error">Is attach.dll located in the right place? Try using '-Djava.library.path'!</string>
+   <string name="deobf_tools">Deobfuscation Tools</string>
 
    
    <!-- Decompiler Options -->
