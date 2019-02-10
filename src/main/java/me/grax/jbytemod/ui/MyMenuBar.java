@@ -36,10 +36,14 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.IOUtils;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.util.CheckClassAdapter;
 
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
@@ -51,8 +55,15 @@ import me.grax.jbytemod.res.LanguageRes;
 import me.grax.jbytemod.res.Option;
 import me.grax.jbytemod.res.Options;
 import me.grax.jbytemod.ui.dialogue.ClassDialogue;
+import me.grax.jbytemod.ui.lists.entries.SearchEntry;
 import me.grax.jbytemod.utils.ErrorDisplay;
+import me.grax.jbytemod.utils.TextUtils;
 import me.grax.jbytemod.utils.attach.AttachUtils;
+import me.grax.jbytemod.utils.list.LazyListModel;
+import me.itzsomebody.radon.utils.BytecodeUtils;
+import me.lpk.analysis.Sandbox;
+import me.lpk.util.OpUtils;
+import sun.tools.attach.WindowsAttachProvider;
 
 public class MyMenuBar extends JMenuBar {
 
@@ -239,6 +250,197 @@ public class MyMenuBar extends JMenuBar {
       }
     });
     searchUtils.add(email);
+    //Utils:
+    JMenu Utils2 = new JMenu(JByteMod.res.getResource("Utils"));
+    utils.add(Utils2);
+    
+    //From old version of JbyteMod by Grax
+    JMenuItem source_debug = new JMenuItem(JByteMod.res.getResource("rename_sourcefiles"));
+    source_debug.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+        	if(jbm.getFile().getClasses() == null)
+        		return;
+        	if (JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("rename_sourcefiles_warnning"), JByteMod.res.getResource("confirm"), 0) == 0) {
+                int i = 0;
+                for (final ClassNode c : jbm.getFile().getClasses().values()) {
+                    c.sourceFile = "Class" + i++ + ".java";
+                }
+            }
+        }
+    });
+    Utils2.add(source_debug);
+    
+   //From old version of JbyteMod by Grax
+    JMenuItem source_debug2 = new JMenuItem(JByteMod.res.getResource("find_sourcefiles"));
+    source_debug2.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            if (jbm.getFile().getClasses() == null) {
+            	return;
+            }
+            final JPanel panel = new JPanel(new BorderLayout(5, 5));
+            final JPanel input = new JPanel(new GridLayout(0, 1));
+            final JPanel labels = new JPanel(new GridLayout(0, 1));
+            panel.add(labels, "West");
+            panel.add(input, "Center");
+            //panel.add(new JLabel(JByteMod.res.getResource("big_jar_warn")), "South");
+            labels.add(new JLabel(JByteMod.res.getResource("find_sourcefiles_input_name")));
+            final JTextField cst = new JTextField();
+            input.add(cst);
+            if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, JByteMod.res.getResource("find_sourcefiles_select_by_name"), 2) == 0 && !cst.getText().isEmpty()) {
+                for (final ClassNode cn : jbm.getFile().getClasses().values()) {
+                	//Use Contains is Better
+                    if (cn.sourceFile != null && cn.sourceFile.contains(cst.getText())) {
+                    	jbm.selectClass(cn);
+                        break;
+                    }
+                }
+            }
+        }
+    });
+    Utils2.add(source_debug2);
+    
+  //From old version of JbyteMod by Grax
+    JMenuItem clazz_find = new JMenuItem(JByteMod.res.getResource("find_class_by_name"));
+    clazz_find.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            if (jbm.getFile().getClasses() == null) {
+                return;
+            }
+            final JPanel panel = new JPanel(new BorderLayout(5, 5));
+            final JPanel input = new JPanel(new GridLayout(0, 1));
+            final JPanel labels = new JPanel(new GridLayout(0, 1));
+            panel.add(labels, "West");
+            panel.add(input, "Center");
+            //panel.add(new JLabel(JByteMod.res.getResource("big_jar_warn")), "South");
+            labels.add(new JLabel(JByteMod.res.getResource("find_class_input_name")));
+            final JTextField cst = new JTextField();
+            input.add(cst);
+            if (JOptionPane.showConfirmDialog(JByteMod.instance, panel, JByteMod.res.getResource("find_class_select_by_name"), 2) == 0 && !cst.getText().isEmpty()) {
+                for (final ClassNode cn : jbm.getFile().getClasses().values()) {
+                    if (cn.name != null && cn.name.contains(cst.getText())) {
+                        LazyListModel<SearchEntry> model = new LazyListModel<>();
+                        model.addElement(new SearchEntry(cn, cn.methods.get(0), TextUtils.escape(TextUtils.max(cn.name, 100))));
+                        jbm.getSearchList().setModel(model);
+                        break;
+                    }
+                }
+            }
+        }
+    });
+    Utils2.add(clazz_find);
+    
+  //From old version of JbyteMod by Grax
+    JMenuItem clazz_main = new JMenuItem(JByteMod.res.getResource("find_main_class"));
+    clazz_main.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            if (jbm.getFile().getClasses() == null) {
+                return;
+            }
+            for (final ClassNode c : jbm.getFile().getClasses().values()) {
+                for (final MethodNode m : c.methods) {
+                    if (m.name.equals("main") && m.desc.equals("([Ljava/lang/String;)V")) {
+                    	 LazyListModel<SearchEntry> model = new LazyListModel<>();
+                         model.addElement(new SearchEntry(c, m, TextUtils.escape(TextUtils.max(c.name, 100))));
+                         jbm.getSearchList().setModel(model);
+                    }
+                }
+            }
+        }
+    });
+    Utils2.add(clazz_main);
+    
+  //From https://github.com/java-deobfuscator
+    JMenuItem HeadSign_fix = new JMenuItem(JByteMod.res.getResource("signaturefix"));
+    HeadSign_fix.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				if (jbm.getFile().getClasses() == null) {
+					return;
+				}
+				try {
+					for (final ClassNode classNode : jbm.getFile().getClasses().values()) {
+						if (classNode.signature != null) {
+							try {
+								CheckClassAdapter.checkClassSignature(classNode.signature);
+							} catch (IllegalArgumentException IAE) {
+								classNode.signature = null;
+							} catch (Throwable x) {
+								x.printStackTrace();
+							}
+						}
+						classNode.methods.forEach(methodNode -> {
+							if (methodNode.signature != null) {
+								try {
+									CheckClassAdapter.checkMethodSignature(methodNode.signature);
+								} catch (IllegalArgumentException IAE) {
+									methodNode.signature = null;
+								} catch (Throwable x) {
+									x.printStackTrace();
+								}
+							}
+						});
+						classNode.fields.forEach(fieldNode -> {
+							if (fieldNode.signature != null) {
+								try {
+									CheckClassAdapter.checkFieldSignature(fieldNode.signature);
+								} catch (IllegalArgumentException IAE) {
+									fieldNode.signature = null;
+								} catch (Throwable x) {
+									x.printStackTrace();
+								}
+							}
+						});
+
+					}
+				} catch (Throwable x) {
+					x.printStackTrace();
+				}
+				JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("finish_tip"), JByteMod.res.getResource("signaturefix"), 1);
+        }
+    });
+    Utils2.add(HeadSign_fix);
+    
+    //From https://github.com/java-deobfuscator and https://github.com/ItzSomebody/Radon/
+    JMenuItem access_fix = new JMenuItem(JByteMod.res.getResource("accessfixer"));
+    access_fix.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+				if (jbm.getFile().getClasses() == null) {
+					return;
+				}
+				try {
+					for (final ClassNode classNode : jbm.getFile().getClasses().values()) {
+
+						if (!hasAnnotations(classNode))
+							classNode.access &= ~(Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE);
+
+						classNode.methods.forEach(methodNode -> {
+							if (!(methodNode == null) && !hasAnnotations(methodNode))
+								methodNode.access &= ~(Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE);
+						});
+						classNode.fields.forEach(fieldNode -> {
+							if (!(fieldNode == null) && !hasAnnotations(fieldNode))
+								fieldNode.access &= ~(Opcodes.ACC_SYNTHETIC | Opcodes.ACC_BRIDGE);
+						});
+					}
+				} catch (Throwable x) {
+					x.printStackTrace();
+				}
+				JOptionPane.showConfirmDialog(null, JByteMod.res.getResource("finish_tip"), JByteMod.res.getResource("accessfixer"), 1);
+        }
+    });
+    Utils2.add(access_fix);
+    
     this.add(getSettings());
     JMenu help = new JMenu(JByteMod.res.getResource("help"));
     JMenuItem about = new JMenuItem(JByteMod.res.getResource("about"));
@@ -275,9 +477,34 @@ public class MyMenuBar extends JMenuBar {
     help.add(licenses);
     this.add(help);
   }
+  
+	private void replace(MethodNode method,boolean proxy) {
+			//todo
+	}
+  
+	//From https://github.com/ItzSomebody/Radon/
+	public static boolean hasAnnotations(ClassNode classNode) {
+		return (classNode.visibleAnnotations != null && !classNode.visibleAnnotations.isEmpty())
+				|| (classNode.invisibleAnnotations != null && !classNode.invisibleAnnotations.isEmpty());
+	}
+
+	//From https://github.com/ItzSomebody/Radon/
+	public static boolean hasAnnotations(MethodNode methodNode) {
+		return (methodNode.visibleAnnotations != null && !methodNode.visibleAnnotations.isEmpty())
+				|| (methodNode.invisibleAnnotations != null && !methodNode.invisibleAnnotations.isEmpty());
+	}
+
+	//From https://github.com/ItzSomebody/Radon/
+	public static boolean hasAnnotations(FieldNode fieldNode) {
+		return (fieldNode.visibleAnnotations != null && !fieldNode.visibleAnnotations.isEmpty())
+				|| (fieldNode.invisibleAnnotations != null && !fieldNode.invisibleAnnotations.isEmpty());
+	}
 
   protected void openProcessSelection() {
-    List<VirtualMachineDescriptor> list = VirtualMachine.list();
+	// I don't know why this can get none   
+    //List<VirtualMachineDescriptor> list = VirtualMachine.list();
+	//Windows Only....  
+	List<VirtualMachineDescriptor> list = new WindowsAttachProvider().listVirtualMachines();
     VirtualMachine vm = null;
     try {
       if (list.isEmpty()) {
@@ -297,7 +524,8 @@ public class MyMenuBar extends JMenuBar {
       }
     } catch (Throwable t) {
       if (t.getMessage() != null) {
-        JOptionPane.showMessageDialog(null, t.getMessage());
+        JOptionPane.showMessageDialog(null, "<" + t.getMessage()
+        		 + "> " +JByteMod.res.getResource("attach_error"));
       } else {
         new ErrorDisplay(t);
       }
@@ -558,6 +786,7 @@ public class MyMenuBar extends JMenuBar {
       boolean isClass = jbm.getFile().isSingleEntry();
       JFileChooser jfc = new JFileChooser(new File(System.getProperty("user.home") + File.separator + "Desktop"));
       jfc.setAcceptAllFileFilterUsed(false);
+      jfc.setDialogTitle("Save");
       jfc.setFileFilter(new FileNameExtensionFilter(isClass ? "Java Class (*.class)" : "Java Package (*.jar)", isClass ? "class" : "jar"));
       int result = jfc.showSaveDialog(this);
       if (result == JFileChooser.APPROVE_OPTION) {
