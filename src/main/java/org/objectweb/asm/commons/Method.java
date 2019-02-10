@@ -29,6 +29,7 @@ package org.objectweb.asm.commons;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.objectweb.asm.Type;
 
 /**

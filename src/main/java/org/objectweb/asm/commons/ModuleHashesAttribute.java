@@ -30,6 +30,7 @@ package org.objectweb.asm.commons;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ByteVector;
 import org.objectweb.asm.ClassReader;

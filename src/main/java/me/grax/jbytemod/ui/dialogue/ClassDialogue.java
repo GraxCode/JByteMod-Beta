@@ -4,10 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -37,7 +33,6 @@ import javax.swing.text.Document;
 import javax.swing.text.NumberFormatter;
 import javax.swing.text.PlainDocument;
 
-import org.jfree.chart.plot.ThermometerPlot;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
