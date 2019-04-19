@@ -97,7 +97,7 @@ public class LoadTask extends SwingWorker<Void, Integer> {
 		publish((int) (((float) loaded++ / (float) jarSize) * 100f));
 		String name = zipEntry.getName();
 		try (InputStream jis = jar.getInputStream(zipEntry)) {
-			if (name.endsWith(".class")) {
+			if (name.endsWith(".class") && !zipEntry.isDirectory()) {
 				synchronized (classes) {
 					byte[] bytes = IOUtils.toByteArray(jis);
 					String cafebabe = String.format("%02X%02X%02X%02X", bytes[0], bytes[1], bytes[2], bytes[3]);
