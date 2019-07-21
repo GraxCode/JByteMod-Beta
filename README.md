@@ -1,6 +1,6 @@
 # JByteMod-Beta
-JByteMod is a multifunctional bytecode editor with syntax highlighting and live decompiling.
-New in 1.4.0: Method graphing features
+JByteMod is a multifunctional bytecode editor with syntax highlighting and live decompiling and method graphing.
+The successor of JByteMod: https://github.com/GraxCode/Cafebabe
 
 ![Screenshot 1](https://i.imgur.com/9RUqMYC.png)
 ![Screenshot 2](https://i.imgur.com/Cjj1Dh0.png)
