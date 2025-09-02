@@ -67,6 +67,11 @@ public class ClassNode extends ClassVisitor {
   public String name;
 
   /**
+   * The internal path of the jar file.
+   */
+  public String innerPath;
+
+  /**
    * The signature of the class. May be <tt>null</tt>.
    */
   public String signature;

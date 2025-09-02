@@ -1,19 +1,17 @@
 package me.grax.jbytemod.utils.task;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.SwingWorker;
-
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.tree.ClassNode;
-
 import me.grax.jbytemod.JByteMod;
 import me.grax.jbytemod.JarArchive;
 import me.grax.jbytemod.ui.PageEndPanel;
 import me.lpk.util.JarUtils;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
+
+import javax.swing.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
 
 public class SaveTask extends SwingWorker<Void, Integer> {
 
@@ -53,12 +51,17 @@ public class SaveTask extends SwingWorker<Void, Integer> {
         ClassNode node = classes.get(s);
         ClassWriter writer = new ClassWriter(flags);
         node.accept(writer);
-        outputBytes.put(s + ".class", writer.toByteArray());
-        publish((int) ((i++ / size) * 50d));
+        String name;
+        if (node.innerPath != null && !node.innerPath.isEmpty()) {
+          name = node.innerPath;
+        } else {
+          name = s + ".class";
+        }
+        outputBytes.put(name, writer.toByteArray());
+        publish((int) ((i++ / size) * 20d));
       }
-      publish(50);
       JByteMod.LOGGER.log("Saving..");
-      JarUtils.saveAsJar(outputBytes, output.getAbsolutePath());
+      JarUtils.saveAsJar(outputBytes, output.getAbsolutePath(), process -> publish((int) (20d + process*80d)));
       JByteMod.LOGGER.log("Saving successful!");
     } catch (Exception e) {
       e.printStackTrace();

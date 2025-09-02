@@ -1,5 +1,8 @@
 package me.lpk.util;
 
+import org.apache.commons.io.IOUtils;
+import org.objectweb.asm.tree.ClassNode;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,15 +11,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.stream.Stream;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.apache.commons.io.IOUtils;
-import org.objectweb.asm.tree.ClassNode;
 
 public class JarUtils {
   /**
@@ -125,13 +127,34 @@ public class JarUtils {
    * @param fileName
    */
   public static void saveAsJar(Map<String, byte[]> outBytes, String fileName) {
+    saveAsJar(outBytes, fileName, null);
+  }
+  public static void saveAsJar(Map<String, byte[]> outBytes, String fileName, Consumer<Double> progress) {
     try {
       JarOutputStream out = new JarOutputStream(new java.io.FileOutputStream(fileName));
+      double i = 1;
+      double size = outBytes.size();
       for (String entry : outBytes.keySet()) {
-        out.putNextEntry(new ZipEntry(entry));
-        if (!entry.endsWith("/"))
+        JarEntry jarEntry = new JarEntry(entry);
+
+        if (entry.endsWith("/")) {
+          out.putNextEntry(jarEntry);
+        } else {
+          byte[] content = outBytes.get(entry);
+          if (entry.endsWith(".jar")) {
+            jarEntry.setMethod(JarEntry.STORED);
+            jarEntry.setSize(content.length);
+            jarEntry.setCompressedSize(content.length);
+            CRC32 crc32 = new CRC32();
+            crc32.update(content);
+            jarEntry.setCrc(crc32.getValue());
+          }
+          out.putNextEntry(jarEntry);
           out.write(outBytes.get(entry));
+        }
         out.closeEntry();
+        if (progress != null)
+          progress.accept(i++/size);
       }
       out.close();
     } catch (IOException e) {

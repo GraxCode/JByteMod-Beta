@@ -1,11 +1,10 @@
 package me.lpk.util.drop;
 
+import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.List;
-
-import javax.swing.TransferHandler;
 
 public class JarDropHandler extends TransferHandler {
   private static final long serialVersionUID = 1232L;
@@ -37,10 +36,7 @@ public class JarDropHandler extends TransferHandler {
     }
     user.preLoadJars(id);
     for (File jar : data) {
-      if (jar.getName().toLowerCase().endsWith(".jar")) {
-        user.onJarLoad(id, jar);
-        break;
-      }
+      user.onJarLoad(id, jar);
     }
     return true;
   }
